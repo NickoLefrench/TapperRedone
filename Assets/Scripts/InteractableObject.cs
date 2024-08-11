@@ -25,4 +25,9 @@ public class InteractableObject : MonoBehaviour
             Debug.Log("Player left the interaction zone");
         }
     }
+
+    public virtual void Interact(GameObject player)
+	{
+		Debug.Log("Player interacted with an object");
+	}
 }
