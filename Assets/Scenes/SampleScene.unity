@@ -571,8 +571,6 @@ GameObject:
   - component: {fileID: 1395126473}
   - component: {fileID: 1395126472}
   - component: {fileID: 1395126475}
-  - component: {fileID: 1395126474}
-  - component: {fileID: 1395126476}
   m_Layer: 3
   m_Name: BeerTap
   m_TagString: Untagged
@@ -647,18 +645,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1395126474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1395126471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f498b68674903d4cb4d5d197a382c04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &1395126475
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -704,28 +690,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.37331137, y: 0.34508774}
   m_EdgeRadius: 0
---- !u!114 &1395126476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1395126471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 396c7e2ba0cd7784892fcce93bf02cb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionMessage: The Player has interacted with the object
-  itemToSpawn:
-    itemName: Beer
-    itemIcon: {fileID: 21300000, guid: 4fbb9fea8751f414aa6e19ead45d6b46, type: 3}
-    amount: 0
-    itemType: 0
-  interactionDistance: 3
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!1 &1568234302
 GameObject:
   m_ObjectHideFlags: 0
