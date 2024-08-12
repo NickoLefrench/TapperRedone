@@ -4,19 +4,12 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
-    public Rigidbody2D myRigidbody;
     public float WalkSpeed;
     public LayerMask interactableLayer; // Layer for interactable objects
     public float interactionRange = 2f; // Range to detect interactable objects
 
-    public Inventory playerInventory;
+    public Inventory playerInventory = new ();
     public Transform dropTarget; // Assign this in the inspector where the item should be dropped, i.e the npcs or drop location...maybe it should be on a layer?
-
-    // Start is called before the first frame update
-    void awake()
-    {
-        playerInventory = new Inventory(); //initializing the inventory to the player
-    }
 
     // Update is called once per frame
     void Update()
@@ -31,14 +24,14 @@ public class PlayerScript : MonoBehaviour
         //player go left
         if (Input.GetKey(KeyCode.A) == true)
         {
-            myRigidbody.velocity = Vector2.left * WalkSpeed;
+            transform.Translate(Vector2.left * WalkSpeed);
         }
 
         //player go right
         if (Input.GetKey(KeyCode.D) == true)
-        {
-            myRigidbody.velocity = Vector2.right * WalkSpeed;
-        }
+		{
+			transform.Translate(Vector2.right * WalkSpeed);
+		}
 
         //player interact
         if (Input.GetKey(KeyCode.E) == true)
