@@ -11,6 +11,8 @@ public class Inventory : MonoBehaviour
     public List<Item> items = new List<Item>();
     public GameObject itemPrefab; // Assign this in the inspector
 
+    public int MaxStack = 1;
+
     public void AddItem(Item item)
     {
         items.Add(item);
