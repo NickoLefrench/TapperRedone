@@ -13,9 +13,9 @@ public class PlayerScript : MonoBehaviour
     public Transform dropTarget; // Assign this in the inspector where the item should be dropped, i.e the npcs or drop location...maybe it should be on a layer?
 
     // Start is called before the first frame update
-    void Start()
+    void awake()
     {
-        
+        playerInventory = new Inventory(); //initializing the inventory to the player
     }
 
     // Update is called once per frame
@@ -72,10 +72,10 @@ public class PlayerScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F)) //player drops current item in invertory holding F for a cx
         {
-            if (playerInventory.items.Count > 0)
+            if (playerInventory.itemsList.Count > 0)
             {
                 // Drop the first item in the inventory as an example
-                Item itemToDrop = playerInventory.items[0];
+                Item itemToDrop = playerInventory.itemsList[0];
                 playerInventory.DropItem(itemToDrop, dropTarget.position);
             }
         }

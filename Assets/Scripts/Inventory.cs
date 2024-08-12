@@ -8,21 +8,33 @@ public class Inventory : MonoBehaviour
     //player should only be able to pick up 2 items at a time
     //player can carry only 1 drink at a time
 
-    public List<Item> items = new List<Item>();
+    public List<Item> itemsList = new List<Item>(); //creatin glist and initialize it
     public GameObject itemPrefab; // Assign this in the inspector
 
     public int MaxStack = 1;
 
+    public Inventory()
+    {
+        AddItem(new Item { itemType = Item.ItemType.Beer, amount = 1 }); //adding item beer to inventory 
+       
+        //AddItem(new Item { itemType = Item.ItemType.RedIngredient, amount = 1 });
+        //AddItem(new Item { itemType = Item.ItemType.BlueIngredient, amount = 1 });
+        //AddItem(new Item { itemType = Item.ItemType.YellowIngredient, amount = 1 });
+        //AddItem(new Item { itemType = Item.ItemType.Cocktail, amount = 1 });
+        
+        Debug.Log(itemsList.Count);
+    }
+
     public void AddItem(Item item)
     {
-        items.Add(item);
+        itemsList.Add(item);
         Debug.Log("Item added: " + item.itemName);
     }
 
     public void DropItem(Item item, Vector3 dropPosition)
     {
         // Remove the item from the inventory
-        items.Remove(item);
+        itemsList.Remove(item);
 
         if (itemPrefab == null) //confirm that there is an item prefab associated in the inventory script inthe scene
         {
