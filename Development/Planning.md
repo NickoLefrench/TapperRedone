@@ -23,9 +23,9 @@ We don't want to start doing menus when we don't know what the game even plays l
 	- [ ] Bartender can pick up items from "sources", up to limits
 	- [ ] Bartender can drop things at "sinks"
 	- [ ] Inventory can "craft" (if inventory has X combination, can replace it by Y combination)
-- [ ] Tunables
-	- [ ] Think of a way to store any "design" variables - score per drink, time of minigames, etc.
-	- [ ] Store it in data
+- [x] Tunables
+	- [x] Think of a way to store any "design" variables - score per drink, time of minigames, etc.
+	- [x] Store it in data
 - [ ] Score mechanics
 
 ### Gameplay
