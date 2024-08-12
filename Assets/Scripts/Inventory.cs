@@ -24,10 +24,27 @@ public class Inventory : MonoBehaviour
         // Remove the item from the inventory
         items.Remove(item);
 
+        if (itemPrefab == null) //confirm that there is an item prefab associated in the inventory script inthe scene
+        {
+            Debug.LogError("Item prefab is not assigned in the Inventory!");
+            return;
+        }
+
+
         // Instantiate the item prefab at the drop position
         GameObject droppedItem = Instantiate(itemPrefab, dropPosition, Quaternion.identity);
 
-        //how do i ensure its the right dopped item?
+        //confirms whther or not the player dropped the item
+        if (droppedItem != null)
+        {
+            Debug.Log("Dropped item: " + item.itemName + " at position: " + dropPosition);
+        }
+        else
+        {
+            Debug.LogError("Failed to drop the item.");
+        }
+
+        
         //If player give wrong drink to cx, then no points/money should be allocated
     }
 }
