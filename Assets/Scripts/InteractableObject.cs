@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractableObject : MonoBehaviour
+public abstract class InteractableObject : MonoBehaviour
 {
     public string interactionMessage = "The Player has interacted with the object";
+    public Item itemToSpawn;
+    public abstract void Interact(GameObject player);
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -14,6 +16,8 @@ public class InteractableObject : MonoBehaviour
             // Notify the player that interaction is possible
             Debug.Log(interactionMessage);
             // You could also use UI elements to show interaction messages
+
+            
         }
     }
 
@@ -26,8 +30,5 @@ public class InteractableObject : MonoBehaviour
         }
     }
 
-    public virtual void Interact(GameObject player)
-	{
-		Debug.Log("Player interacted with an object");
-	}
+
 }

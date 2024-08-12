@@ -9,6 +9,9 @@ public class PlayerScript : MonoBehaviour
     public LayerMask interactableLayer; // Layer for interactable objects
     public float interactionRange = 2f; // Range to detect interactable objects
 
+    public Inventory playerInventory;
+    public Transform dropTarget; // Assign this in the inspector where the item should be dropped, i.e the npcs or drop location...maybe it should be on a layer?
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +53,31 @@ public class PlayerScript : MonoBehaviour
         {
             Debug.Log(" The player tried to interact");
             CheckForInteractable();
+        }
+
+        //debug code to ensure that an item has been assigned to the inventory
+        if (playerInventory == null)
+        {
+            Debug.LogError("Player inventory is not assigned!");
+            return;
+        }
+
+        //debug code to ensure that that confirms that there is a drop point
+        //drop point should/will eventually be npcs who walk up to the bar and have ordered their drink
+        if (dropTarget == null)
+        {
+            Debug.LogError("Drop target is not assigned!");
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F)) //player drops current item in invertory holding F for a cx
+        {
+            if (playerInventory.items.Count > 0)
+            {
+                // Drop the first item in the inventory as an example
+                Item itemToDrop = playerInventory.items[0];
+                playerInventory.DropItem(itemToDrop, dropTarget.position);
+            }
         }
     }
 

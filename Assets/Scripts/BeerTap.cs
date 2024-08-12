@@ -7,8 +7,6 @@ public class BeerTap : InteractableObject
 
     //this class specifes that the player interacted with the beer tap and should spawn a beer in the players inventory
 
-    public Item itemToSpawn;
-
 
 
     public override void Interact(GameObject player)
