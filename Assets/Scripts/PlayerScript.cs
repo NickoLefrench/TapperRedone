@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSript : MonoBehaviour{
-
+public class PlayerScript : MonoBehaviour
+{
     public Rigidbody2D myRigidbody;
     public float WalkSpeed;
     public LayerMask interactableLayer; // Layer for interactable objects
