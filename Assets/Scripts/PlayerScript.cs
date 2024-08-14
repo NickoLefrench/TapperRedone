@@ -21,12 +21,19 @@ public class PlayerScript : MonoBehaviour
 
     void HandleMovement()
     {
-        // Player direction, based on horizontal movement axis
-        Vector3 horizontalMovement = Vector3.right * Input.GetAxis("Horizontal");
-        // Multiply by speed and time to get distance
-        transform.Translate(horizontalMovement * WalkSpeed * Time.deltaTime);
+        //player go left
+        if (Input.GetKey(KeyCode.A) == true)
+        {
+            transform.Translate(Vector2.left * WalkSpeed);
+        }
 
-        // Player interactions
+        //player go right
+        if (Input.GetKey(KeyCode.D) == true)
+		{
+			transform.Translate(Vector2.right * WalkSpeed);
+		}
+
+        //player interact
         if (Input.GetKey(KeyCode.E) == true)
         {
             Debug.Log(" The player tried to interact");

@@ -14,7 +14,7 @@ We don't want to start doing menus when we don't know what the game even plays l
 ### Systems
 - [x] Set up player movement
 	- [x] Movement is currently physics-based.
-	- [x] Movement uses direct key bindings, instead of Axis bindings
+	- [ ] Movement uses direct key bindings, instead of Axis bindings
 - [x] Set up colliders for physics and interactions
 	- [ ] Currently, both event-based and polling-based collision checking is done - are both necessary?
 - [ ] Inventory system
