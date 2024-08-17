@@ -20,5 +20,13 @@ public class Item
         YellowIngredient,
         Cocktail,
     }
+
+    public bool IsDrink
+    {
+        get
+        {
+            return itemType == ItemType.Beer || itemType == ItemType.Cocktail;
+        }
+    }
 }
 

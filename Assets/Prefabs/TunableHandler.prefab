@@ -51,3 +51,6 @@ MonoBehaviour:
   - Name: NPC.ORDER_TIME.MIN
     Tunable:
       Value: 90
+  - Name: INVENTORY.MAX_INGREDIENTS
+    Tunable:
+      Value: 3

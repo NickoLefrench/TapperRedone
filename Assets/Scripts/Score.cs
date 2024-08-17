@@ -18,8 +18,10 @@ public class Score : MonoBehaviour
         // Get a reference to the text component.
         // Since we are using the base class type <TMP_Text> this component could be either a <TextMeshPro> or <TextMeshProUGUI> component.
         ScoreText = GetComponent<TextMeshPro>();
-
-        ScoreText.text = score.ToString() + " Space Shillings";
+        if (ScoreText != null)
+        {
+            ScoreText.text = score.ToString() + " Space Shillings";
+        }
     }
 
     // Update is called once per frame

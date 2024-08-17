@@ -2,33 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// A player's Inventory is what he currently carries; in this game, he is expected to be able to carry either one drink or up to X ingredients.
 public class Inventory : MonoBehaviour
 {
-    //this class is to manage the items the player can pick up
-    //player should only be able to pick up 2 items at a time
-    //player can carry only 1 drink at a time
-
-    public List<Item> itemsList = new List<Item>(); //creatin glist and initialize it
+    public List<Item> itemsList = new(); //creating list and initialize it
     public GameObject itemPrefab; // Assign this in the inspector
 
-    public int MaxStack = 1;
+    private int MaxIngredients = 0;
 
-    public Inventory()
+	private void Start()
+	{
+        MaxIngredients = TunableHandler.GetTunableInt("INVENTORY.MAX_INGREDIENTS");
+	}
+
+	public void AddItem(Item item)
     {
-        AddItem(new Item { itemType = Item.ItemType.Beer, amount = 1 }); //adding item beer to inventory 
-       
-        //AddItem(new Item { itemType = Item.ItemType.RedIngredient, amount = 1 });
-        //AddItem(new Item { itemType = Item.ItemType.BlueIngredient, amount = 1 });
-        //AddItem(new Item { itemType = Item.ItemType.YellowIngredient, amount = 1 });
-        //AddItem(new Item { itemType = Item.ItemType.Cocktail, amount = 1 });
-        
-        Debug.Log(itemsList.Count);
+        if (CanAddItem(item))
+        {
+            itemsList.Add(item);
+            Debug.Log("Item added: " + item.itemName);
+        }
+        else
+        {
+            Debug.Log("Could not add item " + item.itemName);
+        }
     }
 
-    public void AddItem(Item item)
+    private bool CanAddItem(Item item)
     {
-        itemsList.Add(item);
-        Debug.Log("Item added: " + item.itemName);
+        // To complete
+        // If it is a drink, make sure we have an empty invent.
+        if (item.IsDrink)
+        {
+            return itemsList.Count == 0;
+        }
+
+        // Nothing else can be added yet
+        return false;
     }
 
     public void DropItem(Item item, Vector3 dropPosition)

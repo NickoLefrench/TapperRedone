@@ -53,6 +53,11 @@ public class TunableHandler : MonoBehaviour, ISerializationCallbackReceiver
 		return 0f;
 	}
 
+	public static int GetTunableInt(string name)
+	{
+		return Mathf.RoundToInt(GetTunableFloat(name));
+	}
+
 	// Runtime data structure, name pointing to value
 	private Dictionary<string, TunableEntry> _tunables = new();
 
