@@ -16,12 +16,12 @@ We don't want to start doing menus when we don't know what the game even plays l
 	- [x] Movement is currently physics-based.
 	- [x] Movement uses direct key bindings, instead of Axis bindings
 - [x] Set up colliders for physics and interactions
-	- [ ] Currently, both event-based and polling-based collision checking is done - are both necessary?
+	- [x] Currently, both event-based and polling-based collision checking is done - are both necessary?
 - [ ] Inventory system
-	- [ ] Bartender has an inventory and can carry multiple things
+	- [x] Bartender has an inventory and can carry multiple things
 	- [ ] Whatever is carried is visible through prefabs spawning on a "tray"
-	- [ ] Bartender can pick up items from "sources", up to limits
-	- [ ] Bartender can drop things at "sinks"
+	- [x] Bartender can pick up items from "sources", up to limits
+	- [x] Bartender can drop things at "sinks"
 	- [ ] Inventory can "craft" (if inventory has X combination, can replace it by Y combination)
 - [x] Tunables
 	- [x] Think of a way to store any "design" variables - score per drink, time of minigames, etc.
@@ -33,12 +33,12 @@ We don't want to start doing menus when we don't know what the game even plays l
 	- [ ] Interact with tap
 	- [ ] Mini-game
 	- [ ] Beer added to inventory on end of interaction
-	- [ ] Can deliver beer to a different interactable (say a trash can)
+	- [x] Can deliver beer to a different interactable (say a trash can)
 - [ ] NPCs
-	- [ ] One static NPC with only beer orders
-	- [ ] NPC can arrive, wait, order, wait, drink, leave money, leave
+	- [x] One static NPC with only beer orders
+	- [x] NPC can arrive, wait, order, wait, drink, leave money, leave
 	- [ ] Many NPCs, with different places to go to
-	- [ ] Waiting timer on NPCs
+	- [x] Waiting timer on NPCs
 - [ ] Cocktails
 	- [ ] Interact with ingredients and carry in inventory
 	- [ ] Shaker mini game
