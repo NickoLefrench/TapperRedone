@@ -41,6 +41,25 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
+    public bool HasItemOfType(Item.ItemType itemType)
+    {
+        return itemsList.Exists(item => item.itemType == itemType);
+    }
+
+    public Item RemoveFirstItemOfType(Item.ItemType itemType)
+    {
+        Item foundItem = itemsList.Find(item => item.itemType == itemType);
+        if (foundItem == null)
+        {
+            return null;
+        }
+        else
+        {
+            itemsList.Remove(foundItem);
+            return foundItem;
+        }
+    }
+
     public void DropItem(Item item, Vector3 dropPosition)
     {
         // Remove the item from the inventory

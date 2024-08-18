@@ -47,10 +47,15 @@ public class TunableHandler : MonoBehaviour, ISerializationCallbackReceiver
 	// Main accessor - get a variable by its name
 	public static float GetTunableFloat(string name)
 	{
-		if (Instance._tunables.TryGetValue(name, out TunableEntry entry)) 
+		if (Instance._tunables.TryGetValue(name, out TunableEntry entry))
+		{
 			return entry.Value;
-
-		return 0f;
+		}
+		else
+		{
+			Debug.LogWarning($"Requested tunable {name} but no value set for it");
+			return 0f;
+		}
 	}
 
 	public static int GetTunableInt(string name)

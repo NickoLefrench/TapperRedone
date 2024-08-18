@@ -7,8 +7,15 @@ public class PlayerScript : MonoBehaviour
     public float WalkSpeed;
     public LayerMask interactableLayer; // Layer for interactable objects
     public float interactionRange = 2f; // Range to detect interactable objects
-
     public Transform dropTarget; // Assign this in the inspector where the item should be dropped, i.e the npcs or drop location...maybe it should be on a layer?
+
+	public Inventory CurrentInventory
+	{
+		get
+		{
+			return GetComponent<Inventory>();
+		}
+	}
 
     private List<InteractableObject> availableInteractables = new();
 
@@ -49,8 +56,7 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F)) //player drops current item in invertory holding F for a cx
 		{
 			//debug code to ensure that an item has been assigned to the inventory
-			Inventory playerInventory = GetComponent<Inventory>();
-			if (playerInventory == null)
+			if (CurrentInventory == null)
 			{
 				Debug.LogError("Player inventory is not assigned!");
 				return;
@@ -64,11 +70,11 @@ public class PlayerScript : MonoBehaviour
 				return;
 			}
 
-			if (playerInventory.itemsList.Count > 0)
+			if (CurrentInventory.itemsList.Count > 0)
             {
                 // Drop the first item in the inventory as an example
-                Item itemToDrop = playerInventory.itemsList[0];
-                playerInventory.DropItem(itemToDrop, dropTarget.position);
+                Item itemToDrop = CurrentInventory.itemsList[0];
+                CurrentInventory.DropItem(itemToDrop, dropTarget.position);
             }
         }
     }
@@ -85,9 +91,28 @@ public class PlayerScript : MonoBehaviour
 		}
 		else
 		{
-			availableInteractables[0].Interact(gameObject);
+			availableInteractables[0].Interact(this);
 		}
     }
+
+	public Item AttemptInventoryTransaction(Item.ItemType itemType)
+	{
+		if (CurrentInventory == null)
+		{
+			Debug.LogWarning("Inventory not assigned!");
+			return null;
+		}
+
+		if (!CurrentInventory.HasItemOfType(itemType))
+		{
+			Debug.Log($"Could not complete item transaction for item type {itemType}.");
+			return null;
+		}
+
+		Item returnedItem = CurrentInventory.RemoveFirstItemOfType(itemType);
+		Debug.Log($"Inventory transaction returns item {returnedItem.itemName}");
+		return returnedItem;
+	}
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
