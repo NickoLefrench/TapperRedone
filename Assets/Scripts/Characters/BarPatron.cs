@@ -146,7 +146,7 @@ public class BarPatron : InteractableObject
 		}
 	}
 
-	public override void Interact(PlayerScript player)
+	public override void Interact(PlayerInteraction player)
 	{
 		base.Interact(player);
 		if (CurrentState != State.WaitingOrder)

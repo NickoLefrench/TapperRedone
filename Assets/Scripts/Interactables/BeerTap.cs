@@ -7,7 +7,7 @@ public class BeerTap : InteractableObject
 {
     public Item itemToSpawn;
 
-    public override void Interact(PlayerScript player)
+    public override void Interact(PlayerInteraction player)
     {
         base.Interact(player);
         // PourMiniGame();

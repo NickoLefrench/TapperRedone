@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour
+public class PlayerInteraction : MonoBehaviour
 {
-    public float WalkSpeed;
-    public LayerMask interactableLayer; // Layer for interactable objects
-    public float interactionRange = 2f; // Range to detect interactable objects
     public Transform dropTarget; // Assign this in the inspector where the item should be dropped, i.e the npcs or drop location...maybe it should be on a layer?
 
 	public Inventory CurrentInventory
@@ -18,26 +15,8 @@ public class PlayerScript : MonoBehaviour
 	}
 
     private List<InteractableObject> availableInteractables = new();
-
-	// Fixed update is called on a fixed time clock, and is used for physics updates
-	private void FixedUpdate()
-	{
-		HandleMovement();
-	}
-
-	void HandleMovement()
-	{
-		Rigidbody2D r2 = GetComponent<Rigidbody2D>();
-		if (r2)
-		{
-			// Player direction, based on horizontal movement axis
-			Vector2 horizontalMovement = Vector2.right * Input.GetAxis("Horizontal");
-			// Multiply by speed and time to get distance
-			Vector2 positionDelta = horizontalMovement * WalkSpeed * Time.fixedDeltaTime;
-
-			r2.MovePosition(r2.position + positionDelta);
-		}
-	}
+	private float nextInteractionAllowedTime = -1f;
+	private const float INTERACT_DELAY = 0.5f;
 
 	// Update is called once per frame
 	void Update()
@@ -47,10 +26,14 @@ public class PlayerScript : MonoBehaviour
 
     private void HandleInteraction()
     {
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E) && nextInteractionAllowedTime <= Time.time)
         {
             Debug.Log(" The player tried to interact");
-            CheckForInteractable();
+			bool foundInteractable = CheckForInteractable();
+			if (foundInteractable)
+			{
+				nextInteractionAllowedTime = Time.time + INTERACT_DELAY;
+			}
         }
 
         if (Input.GetKeyDown(KeyCode.F)) //player drops current item in invertory holding F for a cx
@@ -79,7 +62,7 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-	private void CheckForInteractable()
+	private bool CheckForInteractable()
 	{
 		availableInteractables.RemoveAll(obj => obj == null);
 		if (availableInteractables.Count == 0)
@@ -93,7 +76,10 @@ public class PlayerScript : MonoBehaviour
 		else
 		{
 			availableInteractables[0].Interact(this);
+			return true;
 		}
+
+		return false;
     }
 
 	public Item AttemptInventoryTransaction(Item.ItemType itemType)
