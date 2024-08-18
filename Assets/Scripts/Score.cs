@@ -1,37 +1,32 @@
 using UnityEngine.UI;
 using UnityEngine;
-
+using System;
 using TMPro;
 
 public class Score : MonoBehaviour
 {
-    int score = 0;
-    public TextMeshPro ScoreText;
+    public int score = 0;
+    public TextMeshProUGUI ScoreText;
 
     void Start()
     {
-        // ScoreText.text = score.ToString() + " Space Shillings";  w regular text ui
-    }
-
-    private void Awake()
-    {
-        // Get a reference to the text component.
-        // Since we are using the base class type <TMP_Text> this component could be either a <TextMeshPro> or <TextMeshProUGUI> component.
-        ScoreText = GetComponent<TextMeshPro>();
         if (ScoreText != null)
         {
             ScoreText.text = score.ToString() + " Space Shillings";
         }
+        else
+        {
+            Debug.LogError("ScoreText is not assigned in the inspector!");
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    // If you want to update the score dynamically:
+    public void UpdateScore(int newScore)
     {
-
-
-
-
-
-        //ScoreText.text = "Score" + score; w regular text ui
+        score = newScore;
+        if (ScoreText != null)
+        {
+            ScoreText.text = score.ToString() + " Space Shillings";
+        }
     }
 }
