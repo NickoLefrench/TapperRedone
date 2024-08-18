@@ -23,8 +23,8 @@ public class Coin : InteractableObject
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
+	private void OnTriggerEnter2D(Collider2D other)
+	{
         // Check if the player collided with the coin
         if (other.CompareTag("Player"))
         {

@@ -81,6 +81,7 @@ public class PlayerScript : MonoBehaviour
 
 	private void CheckForInteractable()
 	{
+		availableInteractables.RemoveAll(obj => obj == null);
 		if (availableInteractables.Count == 0)
 		{
 			Debug.Log("Nothing to interact with!");
@@ -123,8 +124,9 @@ public class PlayerScript : MonoBehaviour
             // And as a second safety, has the InteractableObject script
             InteractableObject interactableScript = other.GetComponent<InteractableObject>();
             if (interactableScript != null)
-            {
-                availableInteractables.Add(interactableScript);
+			{
+				availableInteractables.RemoveAll(obj => obj == null);
+				availableInteractables.Add(interactableScript);
 				Debug.Log("Intersected interactable object " + other.gameObject.name + "; available interactable objects: " + availableInteractables.Count);
 			}
 		}
@@ -140,6 +142,7 @@ public class PlayerScript : MonoBehaviour
 			if (interactableScript != null)
 			{
 				availableInteractables.Remove(interactableScript);
+				availableInteractables.RemoveAll(obj => obj == null);
 				Debug.Log("Leaving interactable object " + other.gameObject.name + "; remaining interactable objects: " + availableInteractables.Count);
 			}
 		}
