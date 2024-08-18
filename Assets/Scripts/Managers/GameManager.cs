@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     {
         UpdateGameState(GameState.BaseMovement);// when the game starts, player moves around normally
 
-       
+
     }
 
     public enum GameState

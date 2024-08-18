@@ -8,6 +8,7 @@ public class PatronManager : MonoBehaviour
 {
 	public BarPatron PatronPrefab;
 	public GameObject SpawnLocation;
+	public GameObject SeatsParent;
 
 	private int patronCounter = 0;
 	private int maxPatrons;
@@ -24,7 +25,7 @@ public class PatronManager : MonoBehaviour
 
 	public void Update()
 	{
-		managedPatrons.RemoveAll(patron => patron == null);
+		managedPatrons.RemoveAll(patron => (patron == null || patron.CurrentState == BarPatron.State.Despawning));
 		if (managedPatrons.Count < maxPatrons && lastSpawnTime + respawnTimer <= Time.time)
 		{
 			SpawnNewPatron();
@@ -33,10 +34,12 @@ public class PatronManager : MonoBehaviour
 
 	private void SpawnNewPatron()
 	{
-		BarPatron newPatron = Instantiate<BarPatron>(PatronPrefab, SpawnLocation.transform);
+		BarPatron newPatron = Instantiate<BarPatron>(PatronPrefab);
 		patronCounter++;
 		newPatron.gameObject.name = $"Patron {patronCounter}";
 		managedPatrons.Add(newPatron);
 		lastSpawnTime = Time.time;
+		int randomSeat = UnityEngine.Random.Range(0, SeatsParent.transform.childCount);
+		newPatron.Setup(SpawnLocation.transform, SeatsParent.transform.GetChild(randomSeat));
 	}
 }

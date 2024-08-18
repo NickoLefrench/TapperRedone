@@ -54,3 +54,18 @@ MonoBehaviour:
   - Name: INVENTORY.MAX_INGREDIENTS
     Tunable:
       Value: 3
+  - Name: NPC.MAX_COUNT
+    Tunable:
+      Value: 1
+  - Name: NPC.RESPAWN_TIMER
+    Tunable:
+      Value: 5
+  - Name: NPC.MIN_WAIT_TIME
+    Tunable:
+      Value: 90
+  - Name: NPC.MAX_WAIT_TIME
+    Tunable:
+      Value: 120
+  - Name: NPC.DRINKING_TIME
+    Tunable:
+      Value: 3

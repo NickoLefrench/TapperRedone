@@ -22,10 +22,10 @@ public class BarPatron : InteractableObject
 	public Item.ItemType OrderItem { get; private set; }
 
 	private Vector3 spawnPosition;
-	private GameObject seat;
+	private Transform seat;
 	private Item receivedItem = null;
 
-	public BarPatron(Transform spawnTransform, GameObject assignedSeat)
+	public void Setup(Transform spawnTransform, Transform assignedSeat)
 	{
 		spawnPosition = spawnTransform.position;
 		transform.SetPositionAndRotation(spawnTransform.position, spawnTransform.rotation);
@@ -45,7 +45,7 @@ public class BarPatron : InteractableObject
 			break;
 		case State.WalkingIn:
 			// Move towards seat on the horizontal axis
-			bool reachedSeat = MoveTowards(seat.transform.position);
+			bool reachedSeat = MoveTowards(seat.position);
 			if (reachedSeat)
 			{
 				UpdateState(State.Ordering);
@@ -84,7 +84,7 @@ public class BarPatron : InteractableObject
 			break;
 		case State.Despawning:
 			// Bye-bye!
-			Destroy(this);
+			Destroy(gameObject);
 			break;
 		default:
 			throw new NotImplementedException($"Missing implementation for state {CurrentState} in BarPatron.Update");
@@ -104,12 +104,19 @@ public class BarPatron : InteractableObject
 		float targetX = targetPosition.x;
 		float distanceLeft = Mathf.Abs(targetX - hereX);
 		float distanceExpected = WalkSpeed * Time.deltaTime;
-		bool willReachTarget = distanceExpected <= distanceLeft;
+		bool willReachTarget = distanceLeft <= distanceExpected;
 		float distance = willReachTarget ? distanceLeft : distanceExpected;
-		
-		Vector3 movementDirection = Mathf.Sign(targetX - hereX) * Vector3.right;
+
+		float directionSign = Mathf.Sign(targetX - hereX);
+		Vector3 movementDirection = directionSign * Vector3.right;
 		Vector3 movementDelta = movementDirection * distance;
 		transform.Translate(movementDelta);
+
+		SpriteRenderer selfRender = GetComponent<SpriteRenderer>();
+		if (selfRender != null)
+		{
+			selfRender.flipX = directionSign < 0;
+		}
 
 		return willReachTarget;
 	}
@@ -151,6 +158,7 @@ public class BarPatron : InteractableObject
 		if (returnedItem != null)
 		{
 			receivedItem = returnedItem;
+			StateTimeRemaining = TunableHandler.GetTunableFloat("NPC.DRINKING_TIME");
 			UpdateState(State.Drinking);
 		}
 	}
