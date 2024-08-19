@@ -19,15 +19,20 @@ public class GameManager : MonoBehaviour
     public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
 
     private void Awake()
-    {
-        Instance = this;
-    }
+	{
+		if (Instance != null && Instance != this)
+		{
+			Destroy(this);
+			return;
+		}
+
+		Instance = this;
+	}
 
     private void Start()
     {
-        UpdateGameState(GameState.BaseMovement);// when the game starts, player moves around normally
-
-
+		// when the game starts, player moves around normally
+		UpdateGameState(GameState.BaseMovement);
     }
 
     public enum GameState
@@ -42,7 +47,8 @@ public class GameManager : MonoBehaviour
 
     public void UpdateGameState(GameState newState) //what mode is the player currently in
     {
-        State = newState;
+		Debug.Log($"Updating state of GameManager from {State} to {newState}");
+		State = newState;
 
         switch (newState)
         {
@@ -81,6 +87,7 @@ public class GameManager : MonoBehaviour
     public void BeerMiniGame()
     {
         // Start the Beer Mini Game
+        tickRectTransform.anchoredPosition.Set(0, 0);
         LeanTween.moveX(tickRectTransform, barEndPosition, timeToMove).setOnComplete(() => {
             // Update the game state to return to BaseMovement when the animation is complete
             UpdateGameState(GameState.BaseMovement);
@@ -104,11 +111,14 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        ProcessPause();
+
         if (State == GameState.BeerMiniGame) //checking each frame if the player hit the button at the correct time to receive the score bonus
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetButtonDown("BeerPour"))
             {
                 float tickPosition = tickRectTransform.anchoredPosition.x;
+                Debug.Log("Tick position: " + tickPosition);
                 if (tickPosition >= perfectRangeStart && tickPosition <= perfectRangeEnd)
                 {
                     OnPerfectTiming();
@@ -121,15 +131,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void OnPerfectTiming()
+    private void ProcessPause()
     {
-        // Handle successful timing
-        UpdateGameState(GameState.BaseMovement); //add score bonu here if mini game success +add item to inventory
+        if (Input.GetButtonDown("Pause"))
+        {
+            Time.timeScale = Time.timeScale > 0f ? 0f : 1f;
+        }
+    }
+
+    void OnPerfectTiming()
+	{
+		Debug.Log($"Perfect beer mini game timing!");
+		// Handle successful timing
+		UpdateGameState(GameState.BaseMovement); //add score bonu here if mini game success +add item to inventory
     }
 
     void OnMissedTiming() //no score bonus, just add the item to inventory
-    {
-        // Handle missed timing
-        UpdateGameState(GameState.BaseMovement);
+	{
+		Debug.Log($"Missed beer mini game timing.");
+		// Handle missed timing
+		UpdateGameState(GameState.BaseMovement);
     }
 }

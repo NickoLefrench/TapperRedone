@@ -26,7 +26,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleInteraction()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetButtonDown("Interact"))
         {
             Debug.Log(" The player tried to interact");
 			bool foundInteractable = CheckForInteractable();

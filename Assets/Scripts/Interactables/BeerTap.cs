@@ -10,17 +10,20 @@ public class BeerTap : InteractableObject
     public override void Interact(PlayerInteraction player)
     {
         base.Interact(player);
-        // PourMiniGame();
-        Inventory playerInventory = player.GetComponent<Inventory>();
-        if (playerInventory != null && itemToSpawn != null)
-        {
-            playerInventory.AddItem(itemToSpawn);
-        }
+        PourMiniGame();
+        // AwardBeer(player);
     }
 
     void PourMiniGame()
     {
-
+        GameManager.Instance.UpdateGameState(GameManager.GameState.BeerMiniGame);
     }
 
+    private void AwardBeer(PlayerInteraction player)
+    {
+		if (player.CurrentInventory != null && itemToSpawn != null)
+		{
+			player.CurrentInventory.AddItem(itemToSpawn);
+		}
+	}
 }

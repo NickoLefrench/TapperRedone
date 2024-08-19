@@ -93,8 +93,8 @@ public class BarPatron : InteractableObject
 
 	private void UpdateState(State state)
 	{
-		Debug.Log($"Updating state of {gameObject.name} from {this.CurrentState} to {state}");
-		this.CurrentState = state;
+		Debug.Log($"Updating state of {gameObject.name} from {CurrentState} to {state}");
+		CurrentState = state;
 	}
 
 	// Returns whether target is reached as part of this frame
