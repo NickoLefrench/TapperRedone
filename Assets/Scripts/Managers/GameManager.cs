@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void BeerMiniGame()
+    public  void BeerMiniGame()
     {
         // Start the Beer Mini Game
         tickRectTransform.anchoredPosition.Set(0, 0);
