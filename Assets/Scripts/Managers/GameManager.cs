@@ -4,17 +4,22 @@ using UnityEngine;
 using DentedPixel;
 using System;
 
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public GameState State;
 
+    //assing the following in the director
     public RectTransform tickRectTransform; // Reference to the tick (slider handle)
-    public float barEndPosition; // The end position of the tick on the bar
-    public float timeToMove = 2f; // Time for the tick to move across the bar
+    public float barEndPosition; // The end position of the tick on the bar, Set this in the Inspector
+    public float timeToMove = 2f; // Time for the tick to move across the bar, Set this in the Inspector
 
     public float perfectRangeStart; // Start of the perfect timing range
     public float perfectRangeEnd; // End of the perfect timing range
+
+
+  //  private BeerMiniGameController beerMiniGameController;
 
     public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
 
@@ -33,6 +38,9 @@ public class GameManager : MonoBehaviour
     {
 		// when the game starts, player moves around normally
 		UpdateGameState(GameState.BaseMovement);
+
+        // Initialize the BeerMiniGameController with the necessary parameters
+      //  beerMiniGameController = new BeerMiniGameController(tickRectTransform, stationaryTickRectTransform, barEndPosition, timeToMove);
     }
 
     public enum GameState
@@ -86,12 +94,17 @@ public class GameManager : MonoBehaviour
 
     public  void BeerMiniGame()
     {
+
+        // Start the Beer Mini Game using the controller
+     //  beerMiniGameController.StartBeerMiniGame(this);
+
+       /* tickRectTransform.anchoredPosition = new Vector2(0, 0);
         // Start the Beer Mini Game
         tickRectTransform.anchoredPosition.Set(0, 0);
         LeanTween.moveX(tickRectTransform, barEndPosition, timeToMove).setOnComplete(() => {
             // Update the game state to return to BaseMovement when the animation is complete
             UpdateGameState(GameState.BaseMovement);
-        });
+        });*/
     }
 
     public void CocktailMiniGame()
