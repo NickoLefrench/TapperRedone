@@ -23,7 +23,7 @@ public class BeerMiniGame : MonoBehaviour
         context.StartCoroutine(MoveTickCoroutine(true));
     }
 
-    private IEnumerator MoveTickCoroutine(bool movingRight)
+    private IEnumerator MoveTickCoroutine(bool movingRight) //moves the tick to the right and bounces back at the end of the bar
     {
         while (true)
         {
@@ -42,9 +42,9 @@ public class BeerMiniGame : MonoBehaviour
         }
     }
 
-    private IEnumerator CheckForHitCoroutine()
+    private IEnumerator CheckForHitCoroutine() //instead of having this in an update function every frame, coroutine 
     {
-        while (LeanTween.isTweening(tickRectTransform))
+        while (LeanTween.isTweening(tickRectTransform)) //checks when player hits space for minigame
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {

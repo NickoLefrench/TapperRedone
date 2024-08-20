@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public float perfectRangeEnd; // End of the perfect timing range
 
 
-  //  private BeerMiniGameController beerMiniGameController;
+    private BeerMiniGame beerMiniGameController;
 
     public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
 
@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
     {
 
         // Start the Beer Mini Game using the controller
-     //  beerMiniGameController.StartBeerMiniGame(this);
+       beerMiniGameController.StartBeerMiniGame(this);
 
        /* tickRectTransform.anchoredPosition = new Vector2(0, 0);
         // Start the Beer Mini Game
@@ -157,6 +157,9 @@ public class GameManager : MonoBehaviour
 		Debug.Log($"Perfect beer mini game timing!");
 		// Handle successful timing
 		UpdateGameState(GameState.BaseMovement); //add score bonu here if mini game success +add item to inventory
+
+        //update Score Here!
+        //activate UI bonus animation
     }
 
     void OnMissedTiming() //no score bonus, just add the item to inventory
