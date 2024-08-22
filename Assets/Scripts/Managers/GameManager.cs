@@ -10,16 +10,23 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public GameState State;
 
-    //assing the following in the director
+    // Unsure if this block of text is still necessary if used in beertap
+    //assing the following in the director 
     public RectTransform tickRectTransform; // Reference to the tick (slider handle)
     public float barEndPosition; // The end position of the tick on the bar, Set this in the Inspector
     public float timeToMove = 2f; // Time for the tick to move across the bar, Set this in the Inspector
 
     public float perfectRangeStart; // Start of the perfect timing range
     public float perfectRangeEnd; // End of the perfect timing range
+                                  //
+                                  // Unsure if this block of text is still necessary if used in beertap
 
 
-    private BeerMiniGame beerMiniGameController;
+    //private BeerTap BeerMiniGame; //initialize the beer minigame
+
+    // Reference to the BeerTap object
+    public BeerTap beerTap;
+
 
     public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
 
@@ -37,10 +44,13 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
 		// when the game starts, player moves around normally
-		UpdateGameState(GameState.BaseMovement);
+		UpdateGameState(GameState.BaseMovement );
 
-        // Initialize the BeerMiniGameController with the necessary parameters
-      //  beerMiniGameController = new BeerMiniGameController(tickRectTransform, stationaryTickRectTransform, barEndPosition, timeToMove);
+        // Ensure beerTap is assigned either via Inspector or Find
+        if (beerTap == null)
+        {
+            beerTap = FindObjectOfType<BeerTap>(); // Try to find BeerTap in the scene
+        }
     }
 
     public enum GameState
@@ -53,7 +63,7 @@ public class GameManager : MonoBehaviour
         ScoreUI,
     }
 
-    public void UpdateGameState(GameState newState) //what mode is the player currently in
+    public void UpdateGameState(GameState newState, PlayerInteraction player = null) //what mode is the player currently in
     {
 		Debug.Log($"Updating state of GameManager from {State} to {newState}");
 		State = newState;
@@ -89,22 +99,29 @@ public class GameManager : MonoBehaviour
 
     public void BaseMovement()
     {
-
+        //Base Movement Logic, is regular player movement by default game boot
     }
 
     public  void BeerMiniGame()
     {
 
-        // Start the Beer Mini Game using the controller
-       beerMiniGameController.StartBeerMiniGame(this);
-
-       /* tickRectTransform.anchoredPosition = new Vector2(0, 0);
-        // Start the Beer Mini Game
-        tickRectTransform.anchoredPosition.Set(0, 0);
-        LeanTween.moveX(tickRectTransform, barEndPosition, timeToMove).setOnComplete(() => {
-            // Update the game state to return to BaseMovement when the animation is complete
-            UpdateGameState(GameState.BaseMovement);
-        });*/
+        if (beerTap != null)
+        {
+            // Passsing the polayer reference
+            PlayerInteraction player = FindObjectOfType<PlayerInteraction>(); 
+            if (player != null)
+            {
+                beerTap.StartBeerMiniGame(player);
+            }
+            else
+            {
+                Debug.LogError("PlayerInteraction not found!");
+            }
+        }
+        else
+        {
+            Debug.LogError("BeerTap not assigned or found!");
+        }
     }
 
     public void CocktailMiniGame()
