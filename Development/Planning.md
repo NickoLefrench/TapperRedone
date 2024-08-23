@@ -26,13 +26,13 @@ We don't want to start doing menus when we don't know what the game even plays l
 - [x] Tunables
 	- [x] Think of a way to store any "design" variables - score per drink, time of minigames, etc.
 	- [x] Store it in data
-- [ ] Score mechanics
+- [x] Score mechanics
 
 ### Gameplay
-- [ ] Beer pouring interaction
-	- [ ] Interact with tap
-	- [ ] Mini-game
-	- [ ] Beer added to inventory on end of interaction
+- [x] Beer pouring interaction
+	- [x] Interact with tap
+	- [x] Mini-game
+	- [x] Beer added to inventory on end of interaction
 	- [x] Can deliver beer to a different interactable (say a trash can)
 - [ ] NPCs
 	- [x] One static NPC with only beer orders
