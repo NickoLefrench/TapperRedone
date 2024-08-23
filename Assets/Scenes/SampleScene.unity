@@ -612,7 +612,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &559931666
 RectTransform:
   m_ObjectHideFlags: 0
@@ -655,10 +655,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16d3572b7f9531d4483b457ac0e63afb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tickRectTransform: {fileID: 0}
-  stationaryTickRectTransform: {fileID: 0}
-  barEndPosition: 0
-  timeToMove: 0
 --- !u!4 &686678261 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 465232021954957145, guid: 3cac18e7be9ca7e428e815776a508f79, type: 3}
@@ -1375,9 +1371,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 396c7e2ba0cd7784892fcce93bf02cb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MiniGameUIParent: {fileID: 559931665}
   tickRectTransform: {fileID: 263819821}
   stationaryTickRectTransform: {fileID: 99031540}
-  barEndPosition: 6
+  barEndPosition: 200
   timeToMove: 6
   itemToSpawn:
     itemName: Beer
