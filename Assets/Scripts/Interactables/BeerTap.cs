@@ -85,17 +85,16 @@ public class BeerTap : InteractableObject
 
 			float distance = Mathf.Abs(tickRectTransform.anchoredPosition.x - stationaryTickRectTransform.anchoredPosition.x);
 			float hitThreshold = 10f;
+			bool perfectHit = distance <= hitThreshold;
 
-			if (distance <= hitThreshold)
+			Debug.Log("BeerMiniGame: " + (perfectHit ? "Hit!" : "Missed."));
+			int score = TunableHandler.GetTunableInt("MINI_GAME.BEER.SCORE");
+			if (perfectHit)
 			{
-				Debug.Log("Hit!");
-				AwardBeer(); //player gets the beer and bonus
+				score += TunableHandler.GetTunableInt("MINI_GAME.BEER.PERFECT_BONUS");
 			}
-			else
-			{
-				Debug.Log("Missed!");
-				AwardBeer(); //player gets the beer without bonus
-			}
+			GameManager.Instance.AddScore(score);
+			AwardBeer();
 		}
 
         MiniGameUIParent.SetActive(false);

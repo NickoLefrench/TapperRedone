@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tunableSerialized:
-  - Name: SCORE.BEER_BONUS
+  - Name: MINI_GAME.BEER.SCORE
+    Tunable:
+      Value: 5
+  - Name: MINI_GAME.BEER.PERFECT_BONUS
     Tunable:
       Value: 2
-  - Name: NPC.ORDER_TIME.MIN
-    Tunable:
-      Value: 90
   - Name: INVENTORY.MAX_INGREDIENTS
     Tunable:
       Value: 3

@@ -27,12 +27,9 @@ public class Coin : InteractableObject
 	{
         // Check if the player collided with the coin
         if (other.CompareTag("Player"))
-        {
-            // Update the score
-            if (scoreScript != null)
-            {
-                scoreScript.UpdateScore(scoreScript.score + scoreValue);
-            }
+		{
+			// Update the score
+			GameManager.Instance.AddScore(scoreValue);
 
             // Destroy the coin
             Destroy(gameObject);

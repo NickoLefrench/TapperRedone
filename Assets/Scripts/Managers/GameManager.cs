@@ -9,8 +9,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public GameState State { get; private set; }
+    public int Score { get; private set; }
 
     public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
+    public static event Action<int> OnScoreChanged;
 
     private void Awake()
 	{
@@ -27,6 +29,7 @@ public class GameManager : MonoBehaviour
     {
 		// when the game starts, player moves around normally
 		UpdateGameState(GameState.BaseMovement );
+        Score = 0;
     }
 
     public enum GameState
@@ -46,10 +49,6 @@ public class GameManager : MonoBehaviour
 
         switch (newState)
         {
-            case GameState.BaseMovement:
-                BaseMovement();
-                break;
-
             case GameState.CocktailMiniGame:
                 CocktailMiniGame();
                 break;
@@ -72,9 +71,10 @@ public class GameManager : MonoBehaviour
         OnGameStateChanged?.Invoke(newState); //avoids a null being thrown
     }
 
-    public void BaseMovement()
+    public void AddScore(int addToScore)
     {
-        //Base Movement Logic, is regular player movement by default game boot
+        Score += addToScore;
+        OnScoreChanged?.Invoke(Score);
     }
 
     public void CocktailMiniGame()

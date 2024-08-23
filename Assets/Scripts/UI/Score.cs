@@ -2,31 +2,26 @@ using UnityEngine.UI;
 using UnityEngine;
 using System;
 using TMPro;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Score : MonoBehaviour
 {
-    public int score = 0;
     public TextMeshProUGUI ScoreText;
 
     void Start()
     {
-        if (ScoreText != null)
-        {
-            ScoreText.text = score.ToString() + " Space Shillings";
-        }
-        else
-        {
-            Debug.LogError("ScoreText is not assigned in the inspector!");
-        }
-    }
+        if (ScoreText == null)
+		{
+			Debug.LogError("ScoreText is not assigned in the inspector!");
+            return;
+		}
 
-    // If you want to update the score dynamically:
-    public void UpdateScore(int newScore)
-    {
-        score = newScore;
-        if (ScoreText != null)
-        {
-            ScoreText.text = score.ToString() + " Space Shillings";
-        }
-    }
+		ScoreText.text = GameManager.Instance.Score.ToString() + " Space Shillings";
+		GameManager.OnScoreChanged += OnScoreChanged;
+	}
+
+	private void OnScoreChanged(int newScore)
+	{
+		ScoreText.text = $"{newScore} Space Shillings";
+	}
 }
