@@ -15,8 +15,17 @@ public class PlayerInteraction : MonoBehaviour
 	}
 
     private List<InteractableObject> availableInteractables = new();
-	// private float nextInteractionAllowedTime = -1f;
-	// private const float INTERACT_DELAY = 0.5f;
+	private bool _allowedToInteract = true;
+
+	private void Start()
+	{
+		GameManager.OnGameStateChanged += OnGameStateChanged;
+	}
+
+	private void OnGameStateChanged(GameManager.GameState gameState)
+	{
+		_allowedToInteract = gameState == GameManager.GameState.BaseMovement;
+	}
 
 	// Update is called once per frame
 	void Update()
@@ -26,12 +35,13 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleInteraction()
     {
-        if (Input.GetButtonDown("Interact"))
+        if (_allowedToInteract && Input.GetButtonDown("Interact"))
         {
             Debug.Log(" The player tried to interact");
 			bool foundInteractable = CheckForInteractable();
         }
 
+		/*
         if (Input.GetKeyDown(KeyCode.F)) //player drops current item in invertory holding F for a cx
 		{
 			//debug code to ensure that an item has been assigned to the inventory
@@ -56,6 +66,7 @@ public class PlayerInteraction : MonoBehaviour
                 CurrentInventory.DropItem(itemToDrop, dropTarget.position);
             }
         }
+		*/
     }
 
 	private bool CheckForInteractable()

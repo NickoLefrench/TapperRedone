@@ -15,12 +15,27 @@ public class BeerTap : InteractableObject
     private PlayerInteraction player; // Store player reference
     private bool detectedInputDuringMiniGame = false;
 
-    public override void Interact(PlayerInteraction player) //BeerMiniGame Controller
+	private void Start()
+	{
+		GameManager.OnGameStateChanged += OnGameStateChanged;
+	}
+
+	private void OnGameStateChanged(GameManager.GameState gameState)
+	{
+		if (gameState != GameManager.GameState.BeerMiniGame)
+		{
+			return;
+		}
+
+		StartBeerMiniGame();
+	}
+
+	public override void Interact(PlayerInteraction player) //BeerMiniGame Controller
     {
         base.Interact(player);
         this.player = player; //store the player ref
-        PourMiniGame();
-    }
+		GameManager.Instance.UpdateGameState(GameManager.GameState.BeerMiniGame);
+	}
 
 	private void Update()
 	{
@@ -30,24 +45,20 @@ public class BeerTap : InteractableObject
         }
 	}
 
-	void PourMiniGame()
-    {
-        GameManager.Instance.UpdateGameState(GameManager.GameState.BeerMiniGame, player); //it updates the game state, keeoing the player reference
-    }
-
     private void AwardBeer()
     {
 		if (player.CurrentInventory != null && itemToSpawn != null)
 		{
 			player.CurrentInventory.AddItem(itemToSpawn);
 		}
+		GameManager.Instance.UpdateGameState(GameManager.GameState.BaseMovement);
 	}
 
-    public void StartBeerMiniGame(MonoBehaviour context)
+    public void StartBeerMiniGame()
     {
 		MiniGameUIParent.SetActive(true);
 		tickRectTransform.anchoredPosition = new Vector2(0, 0);
-        context.StartCoroutine(AnimateMiniGame(true));
+        StartCoroutine(AnimateMiniGame(true));
     }
 
     private IEnumerator AnimateMiniGame(bool movingRight) //moves the tick to the right and bounces back at the end of the bar

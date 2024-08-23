@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
 	public float WalkSpeed;
 
 	private Rigidbody2D _kinematicBody;
+	private bool _allowedToMove = true;
 
 	public void Start()
 	{
@@ -16,12 +17,22 @@ public class PlayerMovement : MonoBehaviour
 		{
 			throw new MissingComponentException("A PlayerMovement requires the same game object to have a Kinematic mode Rigidbody2D!");
 		}
+
+		GameManager.OnGameStateChanged += OnGameStateChanged;
+	}
+
+	private void OnGameStateChanged(GameManager.GameState gameState)
+	{
+		_allowedToMove = gameState == GameManager.GameState.BaseMovement;
 	}
 
 	// Fixed update is called on a fixed time clock, and is used for physics updates
 	private void FixedUpdate()
 	{
-		HandleMovement();
+		if (_allowedToMove)
+		{
+			HandleMovement();
+		}
 	}
 
 	void HandleMovement()
