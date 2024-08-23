@@ -31,15 +31,19 @@ public class BeerTap : InteractableObject
 	}
 
 	public override void Interact(PlayerInteraction player) //BeerMiniGame Controller
-    {
-        base.Interact(player);
-        this.player = player; //store the player ref
-		GameManager.Instance.UpdateGameState(GameManager.GameState.BeerMiniGame);
-	}
+	{
+		base.Interact(player);
+		this.player = player; //store the player ref
 
+		if (player.CurrentInventory.HasItemOfType(Item.ItemType.Beer) == false) //checks to see if player interacts and also not already holding beer
+		{  
+			GameManager.Instance.UpdateGameState(GameManager.GameState.BeerMiniGame);
+		}
+
+	}
 	private void Update()
 	{
-		if (Input.GetButtonDown("BeerPour"))
+		if (Input.GetButtonDown("BeerPour") )  
         {
             detectedInputDuringMiniGame = true;
         }
@@ -83,8 +87,8 @@ public class BeerTap : InteractableObject
 		{
 			detectedInputDuringMiniGame = false;
 
-			float distance = Mathf.Abs(tickRectTransform.anchoredPosition.x - stationaryTickRectTransform.anchoredPosition.x);
-			float hitThreshold = 10f;
+			float distance = Mathf.Abs(tickRectTransform.anchoredPosition.x - stationaryTickRectTransform.anchoredPosition.x); //why is the hit threshold so huge??
+			float hitThreshold = 2f;          //hit threshold, adjusted to smaller, was 10f
 			bool perfectHit = distance <= hitThreshold;
 
 			Debug.Log("BeerMiniGame: " + (perfectHit ? "Hit!" : "Missed."));
