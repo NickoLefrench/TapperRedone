@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    public Transform dropTarget; // Assign this in the inspector where the item should be dropped, i.e the npcs or drop location...maybe it should be on a layer?
-
 	public Inventory CurrentInventory
 	{
 		get
@@ -40,33 +38,6 @@ public class PlayerInteraction : MonoBehaviour
             Debug.Log(" The player tried to interact");
 			bool foundInteractable = CheckForInteractable();
         }
-
-		/*
-        if (Input.GetKeyDown(KeyCode.F)) //player drops current item in invertory holding F for a cx
-		{
-			//debug code to ensure that an item has been assigned to the inventory
-			if (CurrentInventory == null)
-			{
-				Debug.LogError("Player inventory is not assigned!");
-				return;
-			}
-
-			//debug code to ensure that that confirms that there is a drop point
-			//drop point should/will eventually be npcs who walk up to the bar and have ordered their drink
-			if (dropTarget == null)
-			{
-				Debug.LogError("Drop target is not assigned!");
-				return;
-			}
-
-			if (CurrentInventory.itemsList.Count > 0)
-            {
-                // Drop the first item in the inventory as an example
-                Item itemToDrop = CurrentInventory.itemsList[0];
-                CurrentInventory.DropItem(itemToDrop, dropTarget.position);
-            }
-        }
-		*/
     }
 
 	private bool CheckForInteractable()
