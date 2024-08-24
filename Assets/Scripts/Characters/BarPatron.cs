@@ -27,6 +27,7 @@ public class BarPatron : InteractableObject
 
 	public void Setup(Transform spawnTransform, Transform assignedSeat)
 	{
+		transform.SetParent(assignedSeat);
 		spawnPosition = spawnTransform.position;
 		transform.SetPositionAndRotation(spawnTransform.position, spawnTransform.rotation);
 		seat = assignedSeat;
@@ -84,6 +85,7 @@ public class BarPatron : InteractableObject
 			break;
 		case State.Despawning:
 			// Bye-bye!
+			GameManager.GetPatronManager().CleanupPatron(this);
 			Destroy(gameObject);
 			break;
 		default:

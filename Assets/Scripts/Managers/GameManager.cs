@@ -14,6 +14,11 @@ public class GameManager : MonoBehaviour
     public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
     public static event Action<int> OnScoreChanged;
 
+    public static PatronManager GetPatronManager()
+    {
+        return Instance.GetComponent<PatronManager>();
+    }
+
     private void Awake()
 	{
 		if (Instance != null && Instance != this)

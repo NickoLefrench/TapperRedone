@@ -34,10 +34,10 @@ We don't want to start doing menus when we don't know what the game even plays l
 	- [x] Mini-game
 	- [x] Beer added to inventory on end of interaction
 	- [x] Can deliver beer to a different interactable (say a trash can)
-- [ ] NPCs
+- [x] NPCs
 	- [x] One static NPC with only beer orders
 	- [x] NPC can arrive, wait, order, wait, drink, leave money, leave
-	- [ ] Many NPCs, with different places to go to
+	- [x] Many NPCs, with different places to go to
 	- [x] Waiting timer on NPCs
 - [ ] Cocktails
 	- [ ] Interact with ingredients and carry in inventory

@@ -56,7 +56,7 @@ MonoBehaviour:
       Value: 3
   - Name: NPC.MAX_COUNT
     Tunable:
-      Value: 1
+      Value: 2
   - Name: NPC.RESPAWN_TIMER
     Tunable:
       Value: 5
