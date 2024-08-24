@@ -95,8 +95,10 @@ public class PatronManager : MonoBehaviour
 		// Set any final properties
 		totalPatrons++;
 		currentPatrons++;
-		newPatron.gameObject.name = $"Patron {totalPatrons}";
+		string newName = $"Patron {totalPatrons}";
+		newPatron.gameObject.name = newName;
 		newPatron.Setup(SpawnLocation.transform, selectedSeat);
+		Debug.Log($"Spawned {newName} on seat {selectedSeat.name}");
 
 		nextSpawnTime = Time.time + respawnTimer;
 	}

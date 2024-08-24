@@ -15,6 +15,8 @@ public class BarPatron : InteractableObject
 	};
 
 	public float WalkSpeed;
+	public GameObject CoinsPrefab;
+	public float CoinSpawnOffsetY;
 
 	// What is the maximum time can stay in this state; means different things depending on active state
 	public float StateTimeRemaining { get; private set; }
@@ -71,6 +73,8 @@ public class BarPatron : InteractableObject
 			ranOutOfTime = AdvanceStateTime();
 			if (ranOutOfTime)
 			{
+				// Give up some coins
+				SpawnCoins();
 				// Ready to leave!
 				UpdateState(State.Leaving);
 			}
@@ -130,6 +134,12 @@ public class BarPatron : InteractableObject
 		StateTimeRemaining = UnityEngine.Random.Range(minTime, maxTime);
 		// For now, simple only Beer option.
 		OrderItem = Item.ItemType.Beer;
+	}
+
+	private void SpawnCoins()
+	{
+		Vector3 coinLocation = transform.position + new Vector3(0, CoinSpawnOffsetY, 0);
+		GameObject spawnedCoins = Instantiate(CoinsPrefab, coinLocation, Quaternion.identity);
 	}
 
 	// Returns whether state time has reached 0.

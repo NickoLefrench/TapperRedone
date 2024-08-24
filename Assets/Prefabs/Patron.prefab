@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1249784937461444520}
   - component: {fileID: 5144885464722368252}
-  - component: {fileID: 1609659703467076917}
   - component: {fileID: -6623269605174421821}
+  - component: {fileID: 1609659703467076917}
   m_Layer: 3
   m_Name: Patron
   m_TagString: Untagged
@@ -86,19 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1609659703467076917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2095910201441384221}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e9af4479c416a74281e7051770f5b56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WalkSpeed: 2.5
 --- !u!61 &-6623269605174421821
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -144,3 +131,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.32942957, y: 1.3985047}
   m_EdgeRadius: 0
+--- !u!114 &1609659703467076917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2095910201441384221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e9af4479c416a74281e7051770f5b56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WalkSpeed: 2.5
+  CoinsPrefab: {fileID: 7216825734669961348, guid: 8da803892a9b6424286afb25025b7d15, type: 3}
+  CoinSpawnOffsetY: 1.25
