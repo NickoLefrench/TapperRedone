@@ -35,7 +35,8 @@ public class BeerTap : InteractableObject
 		base.Interact(player);
 		this.player = player; //store the player ref
 
-		if (player.CurrentInventory.HasItemOfType(Item.ItemType.Beer) == false) //checks to see if player interacts and also not already holding beer
+		// Checks to see if player could receive a beer at end of interaction
+		if (player.CurrentInventory.CanAddItem(itemToSpawn))
 		{  
 			GameManager.Instance.UpdateGameState(GameManager.GameState.BeerMiniGame);
 		}

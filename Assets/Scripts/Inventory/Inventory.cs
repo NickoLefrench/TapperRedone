@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 // A player's Inventory is what he currently carries; in this game, he is expected to be able to carry either one drink or up to X ingredients.
 public class Inventory : MonoBehaviour
@@ -28,7 +30,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private bool CanAddItem(Item item)
+    public bool CanAddItem(Item item)
     {
         // To complete
         // If it is a drink, make sure we have an empty invent.
@@ -37,7 +39,15 @@ public class Inventory : MonoBehaviour
             return itemsList.Count == 0;
         }
 
-        // Nothing else can be added yet
+        // Ingredients can be added up to max
+        if (item.IsIngredient)
+        {
+            return itemsList.Count < MaxIngredients
+                && itemsList.All(item => item.IsIngredient);
+        }
+
+        // Other categories are not currently handled
+        Assert.IsTrue(false, $"CanAddItem does not know how to handle item ${item.itemName}");
         return false;
     }
 
@@ -60,6 +70,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    /*
     public void DropItem(Item item, Vector3 dropPosition)
     {
         // Remove the item from the inventory
@@ -88,4 +99,5 @@ public class Inventory : MonoBehaviour
         
         //If player give wrong drink to cx, then no points/money should be allocated
     }
+    */
 }

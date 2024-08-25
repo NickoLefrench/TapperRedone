@@ -25,7 +25,18 @@ public class Item
     {
         get
         {
-            return itemType == ItemType.Beer || itemType == ItemType.Cocktail;
+            return itemType == ItemType.Beer
+                || itemType == ItemType.Cocktail;
+        }
+    }
+
+    public bool IsIngredient
+    {
+        get
+        {
+            return itemType == ItemType.BlueIngredient
+                || itemType == ItemType.YellowIngredient
+                || itemType == ItemType.RedIngredient;
         }
     }
 }
