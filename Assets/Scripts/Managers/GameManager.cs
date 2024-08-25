@@ -8,6 +8,9 @@ using System;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+
+    public GameObject PauseScreen;
+
     public GameState State { get; private set; }
     public int Score { get; private set; }
 
@@ -37,6 +40,9 @@ public class GameManager : MonoBehaviour
         Score = 0;
     }
 
+    // PauseScreen is intentionally not part of the game state
+    // Otherwise, coming out of paused state to its previous one would restart stuff at that state
+    // One option is to separate UI state from game state.
     public enum GameState
     {
         BaseMovement,
@@ -106,7 +112,10 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetButtonDown("Pause"))
         {
-            Time.timeScale = Time.timeScale > 0f ? 0f : 1f;
+            bool pause = Time.timeScale > 0f;
+
+			Time.timeScale = pause ? 0f : 1f;
+            PauseScreen?.SetActive(pause);
         }
     }
 }
