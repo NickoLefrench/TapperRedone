@@ -1,35 +1,70 @@
-
+using System;
 using UnityEngine;
 
 public class MenuManager : MonoBehaviour
-
-    //Missing main menu UI to active baseMovement gamestate
 {
-    // Start is called before the first frame update
-    void Start()
+	public GameObject PauseScreen;
+	public GameObject MainMenuScreen;
+
+	public enum UIState
     {
-        
+        MainMenu,
+        Credits,
+        Settings,
+        Game,
+        Paused
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	public event Action<UIState> OnUIStateChanged;
 
-    private void Awake()
-    {
-        // GameManager.OnGameStateChanged += GameManagerOnOnGameStateChanged;
-         
-    }
+	public UIState State { get; private set; } = UIState.MainMenu;
 
-    private void OnDestroy()
+    public void UpdateUIState(UIState newState)
     {
-      //  GameManager.OnGameStateChanged -= GameManagerOnOnGameStateChanged;
-    }
+		Debug.Log($"Updating state of MenuManager from {State} to {newState}");
+		State = newState;
 
-   /* private void GameManagerOnGameStateChanged(GameState state) //must implement main menu UI to continue
-    {
-        throw new System.NotImplementedException();
-    }*/
+        OnUIStateChanged?.Invoke(State);
+	}
+
+	void Update()
+	{
+		ProcessPause();
+	}
+
+	public void OnStartGame()
+	{
+		if (State != UIState.MainMenu)
+		{
+			Debug.LogError($"Trying to click Main Menu Play game but currently in state {State}");
+			return;
+		}
+
+		Debug.Log("Starting game");
+		MainMenuScreen.SetActive(false);
+		UpdateUIState(UIState.Game);
+	}
+
+	private void ProcessPause()
+	{
+		// Can only swap between Pause and Game states.
+		if (Input.GetButtonDown("Pause"))
+		{
+			switch (State)
+			{
+			case UIState.Game:
+				Time.timeScale = 0f;
+				PauseScreen.SetActive(true);
+				UpdateUIState(UIState.Paused);
+				break;
+			case UIState.Paused:
+				Time.timeScale = 1f;
+				PauseScreen.SetActive(false);
+				UpdateUIState(UIState.Game);
+				break;
+			default:
+				break;
+			}
+		}
+	}
 }

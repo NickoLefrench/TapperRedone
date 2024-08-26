@@ -51,7 +51,7 @@ public class PatronManager : MonoBehaviour
 
 	public void Update()
 	{
-		if (currentPatrons < maxPatrons && nextSpawnTime <= Time.time)
+		if (GameManager.Instance.State != GameManager.GameState.Inactive && currentPatrons < maxPatrons && nextSpawnTime <= Time.time)
 		{
 			SpawnNewPatron();
 		}

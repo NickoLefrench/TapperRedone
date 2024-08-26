@@ -7,11 +7,20 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
+	public enum GameState
+	{
+        Inactive,
+		BaseMovement,
+		BeerMiniGame,
+		CocktailMiniGame,
+		Leaderboards,
+		EndofNight,
+		ScoreUI,
+	}
 
-    public GameObject PauseScreen;
+	public static GameManager Instance;
 
-    public GameState State { get; private set; }
+    public GameState State { get; private set; } = GameState.Inactive;
     public int Score { get; private set; }
 
     public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
@@ -20,6 +29,11 @@ public class GameManager : MonoBehaviour
     public static PatronManager GetPatronManager()
     {
         return Instance.GetComponent<PatronManager>();
+    }
+
+    public static MenuManager GetMenuManager()
+    {
+        return Instance.GetComponent<MenuManager>(); 
     }
 
     private void Awake()
@@ -35,23 +49,22 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-		// when the game starts, player moves around normally
-		UpdateGameState(GameState.BaseMovement );
-        Score = 0;
+		GetMenuManager().OnUIStateChanged += OnUIStateChanged;
     }
 
-    // PauseScreen is intentionally not part of the game state
-    // Otherwise, coming out of paused state to its previous one would restart stuff at that state
-    // One option is to separate UI state from game state.
-    public enum GameState
-    {
-        BaseMovement,
-        BeerMiniGame, 
-        CocktailMiniGame,
-        Leaderboards,
-        EndofNight,
-        ScoreUI,
-    }
+	private void OnUIStateChanged(MenuManager.UIState newState)
+	{
+		if (newState == MenuManager.UIState.Game)
+        {
+            OnGameStart();
+        }
+	}
+
+	public void OnGameStart()
+	{
+		UpdateGameState(GameState.BaseMovement);
+		Score = 0;
+	}
 
     public void UpdateGameState(GameState newState)
     {
@@ -101,21 +114,5 @@ public class GameManager : MonoBehaviour
     public void EndofNight()
     {
 
-    }
-
-    void Update()
-    {
-        ProcessPause();
-    }
-
-    private void ProcessPause()
-    {
-        if (Input.GetButtonDown("Pause"))
-        {
-            bool pause = Time.timeScale > 0f;
-
-			Time.timeScale = pause ? 0f : 1f;
-            PauseScreen?.SetActive(pause);
-        }
     }
 }
