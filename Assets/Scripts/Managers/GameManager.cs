@@ -52,9 +52,9 @@ public class GameManager : MonoBehaviour
 		GetMenuManager().OnUIStateChanged += OnUIStateChanged;
     }
 
-	private void OnUIStateChanged(MenuManager.UIState newState)
+	private void OnUIStateChanged(MenuManager.UIState oldState, MenuManager.UIState newState)
 	{
-		if (newState == MenuManager.UIState.Game)
+		if (oldState == MenuManager.UIState.MainMenu && newState == MenuManager.UIState.Game)
         {
             OnGameStart();
         }

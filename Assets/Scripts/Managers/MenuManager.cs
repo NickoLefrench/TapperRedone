@@ -15,16 +15,15 @@ public class MenuManager : MonoBehaviour
         Paused
     }
 
-	public event Action<UIState> OnUIStateChanged;
+	public event Action<UIState, UIState> OnUIStateChanged;
 
 	public UIState State { get; private set; } = UIState.MainMenu;
 
     public void UpdateUIState(UIState newState)
     {
 		Debug.Log($"Updating state of MenuManager from {State} to {newState}");
+        OnUIStateChanged?.Invoke(State, newState);
 		State = newState;
-
-        OnUIStateChanged?.Invoke(State);
 	}
 
 	void Update()
