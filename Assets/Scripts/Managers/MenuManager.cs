@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace FMS.TapperRedone.Managers
@@ -69,6 +70,15 @@ namespace FMS.TapperRedone.Managers
 			}
 
 			UpdateUIState(UIState.MainMenu);
+		}
+
+		public void OnQuitGame()
+		{
+#if UNITY_EDITOR
+			EditorApplication.ExitPlaymode();
+#else
+			Application.Quit();
+#endif
 		}
 
 		private void Start()
