@@ -74,7 +74,7 @@ namespace FMS.TapperRedone.Managers
         public void OnGameStart()
         {
             UpdateGameState(GameState.BaseMovement);
-            Score = 0;
+            AddScore(-Score);
         }
 
         public void UpdateGameState(GameState newState)
