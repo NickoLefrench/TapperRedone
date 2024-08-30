@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace FMS.TapperRedone.Managers
 {
+	[RequireComponent(typeof(MenuManager))]
+	[RequireComponent(typeof(PatronManager))]
     public class GameManager : MonoBehaviour
     {
         public enum GameState
@@ -24,15 +26,8 @@ namespace FMS.TapperRedone.Managers
         public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
         public static event Action<int> OnScoreChanged;
 
-        public static PatronManager GetPatronManager()
-        {
-            return Instance.GetComponent<PatronManager>();
-        }
-
-        public static MenuManager GetMenuManager()
-        {
-            return Instance.GetComponent<MenuManager>();
-        }
+        public static PatronManager PatronManager => Instance.GetComponent<PatronManager>();
+        public static MenuManager MenuManager => Instance.GetComponent<MenuManager>();
 
         private void Awake()
         {
@@ -47,7 +42,7 @@ namespace FMS.TapperRedone.Managers
 
         private void Start()
         {
-            GetMenuManager().OnUIStateChanged += OnUIStateChanged;
+            MenuManager.OnUIStateChanged += OnUIStateChanged;
             UpdateGameState(GameState.Inactive, true);
         }
 

@@ -21,8 +21,9 @@ namespace FMS.TapperRedone.Managers
 		private int totalPatrons = 0;
 		private float nextSpawnTime = Mathf.NegativeInfinity;
 		private float respawnTimer;
-
 		private Dictionary<Transform, BarPatron> managedSeats = new();
+
+		public static PatronManager Instance => GameManager.PatronManager;
 
 		public void Start()
 		{

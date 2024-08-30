@@ -95,7 +95,7 @@ namespace FMS.TapperRedone.Characters
 				break;
 			case State.Despawning:
 				// Bye-bye!
-				Managers.GameManager.GetPatronManager().CleanupPatron(this);
+				Managers.PatronManager.Instance.CleanupPatron(this);
 				Destroy(gameObject);
 				break;
 			default:

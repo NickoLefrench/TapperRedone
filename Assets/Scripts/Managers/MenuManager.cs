@@ -8,6 +8,8 @@ namespace FMS.TapperRedone.Managers
 		public GameObject PauseScreen;
 		public GameObject MainMenuScreen;
 
+		public static MenuManager Instance => GameManager.MenuManager;
+
 		public enum UIState
 		{
 			MainMenu,
