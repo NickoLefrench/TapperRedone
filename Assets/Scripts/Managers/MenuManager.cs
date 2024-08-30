@@ -1,97 +1,100 @@
 using System;
 using UnityEngine;
 
-public class MenuManager : MonoBehaviour
+namespace FMS.TapperRedone.Managers
 {
-	public GameObject PauseScreen;
-	public GameObject MainMenuScreen;
-
-	public enum UIState
-    {
-        MainMenu,
-        Credits,
-        Settings,
-        Game,
-        Paused
-    }
-
-	public event Action<UIState, UIState> OnUIStateChanged;
-
-	public UIState State { get; private set; }
-	private bool RequiresTimeScale => State == UIState.Game;
-
-	public void UpdateUIState(UIState newState)
+	public class MenuManager : MonoBehaviour
 	{
-		UpdateUIState(newState, false);
-	}
+		public GameObject PauseScreen;
+		public GameObject MainMenuScreen;
 
-	private void UpdateUIState(UIState newState, bool forced)
-    {
-		if (newState == State && !forced)
+		public enum UIState
 		{
-			return;
+			MainMenu,
+			Credits,
+			Settings,
+			Game,
+			Paused
 		}
 
-		Debug.Log($"Updating state of MenuManager from {State} to {newState}");
-		UIState oldState = State;
-		State = newState;
+		public event Action<UIState, UIState> OnUIStateChanged;
 
-		PauseScreen.SetActive(newState == UIState.Paused);
-		MainMenuScreen.SetActive(newState == UIState.MainMenu);
-		// Should this be in GameManager? 
-		Time.timeScale = RequiresTimeScale ? 1.0f : 0.0f;
+		public UIState State { get; private set; }
+		private bool RequiresTimeScale => State == UIState.Game;
 
-		OnUIStateChanged?.Invoke(oldState, newState);
-	}
-
-	public void OnStartGame()
-	{
-		if (State != UIState.MainMenu)
+		public void UpdateUIState(UIState newState)
 		{
-			Debug.LogError($"Trying to click Main Menu Play game but currently in forbidden UI state {State}");
-			return;
+			UpdateUIState(newState, false);
 		}
 
-		Debug.Log("Starting game");
-		UpdateUIState(UIState.Game);
-	}
-
-	public void OnMainMenu()
-	{
-		if (State != UIState.Paused)
+		private void UpdateUIState(UIState newState, bool forced)
 		{
-			Debug.LogError($"Trying to go to Main Menu but currently in forbidden UI state {State}");
-			return;
-		}
-
-		UpdateUIState(UIState.MainMenu);
-	}
-
-	private void Start()
-	{
-		UpdateUIState(UIState.MainMenu, true);
-	}
-
-	private void Update()
-	{
-		ProcessPause();
-	}
-
-	private void ProcessPause()
-	{
-		// Can only swap between Pause and Game states.
-		if (Input.GetButtonDown("Pause"))
-		{
-			switch (State)
+			if (newState == State && !forced)
 			{
-			case UIState.Game:
-				UpdateUIState(UIState.Paused);
-				break;
-			case UIState.Paused:
-				UpdateUIState(UIState.Game);
-				break;
-			default:
-				break;
+				return;
+			}
+
+			Debug.Log($"Updating state of MenuManager from {State} to {newState}");
+			UIState oldState = State;
+			State = newState;
+
+			PauseScreen.SetActive(newState == UIState.Paused);
+			MainMenuScreen.SetActive(newState == UIState.MainMenu);
+			// Should this be in GameManager? 
+			Time.timeScale = RequiresTimeScale ? 1.0f : 0.0f;
+
+			OnUIStateChanged?.Invoke(oldState, newState);
+		}
+
+		public void OnStartGame()
+		{
+			if (State != UIState.MainMenu)
+			{
+				Debug.LogError($"Trying to click Main Menu Play game but currently in forbidden UI state {State}");
+				return;
+			}
+
+			Debug.Log("Starting game");
+			UpdateUIState(UIState.Game);
+		}
+
+		public void OnMainMenu()
+		{
+			if (State != UIState.Paused)
+			{
+				Debug.LogError($"Trying to go to Main Menu but currently in forbidden UI state {State}");
+				return;
+			}
+
+			UpdateUIState(UIState.MainMenu);
+		}
+
+		private void Start()
+		{
+			UpdateUIState(UIState.MainMenu, true);
+		}
+
+		private void Update()
+		{
+			ProcessPause();
+		}
+
+		private void ProcessPause()
+		{
+			// Can only swap between Pause and Game states.
+			if (Input.GetButtonDown("Pause"))
+			{
+				switch (State)
+				{
+				case UIState.Game:
+					UpdateUIState(UIState.Paused);
+					break;
+				case UIState.Paused:
+					UpdateUIState(UIState.Game);
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}

@@ -1,38 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Coin : InteractableObject
+namespace FMS.TapperRedone.Interactables
 {
-    public int scoreValue = 5; // The value of the coin
-    private Score scoreScript; // Reference to the Score script
-
-    // Start is called before the first frame update
-    void Start()
+    public class Coin : InteractableObject
     {
-        // Find the Score script attached to the Canvas
-        GameObject canvas = GameObject.Find("Canvas");
-        if (canvas != null)
+        public int scoreValue = 5; // The value of the coin
+
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            scoreScript = canvas.GetComponent<Score>();
-        }
+            // Check if the player collided with the coin
+            if (other.CompareTag("Player"))
+            {
+                // Update the score
+                Managers.GameManager.Instance.AddScore(scoreValue);
 
-        if (scoreScript == null)
-        {
-            Debug.LogError("Score script not found on the Canvas!");
-        }
-    }
-
-	private void OnTriggerEnter2D(Collider2D other)
-	{
-        // Check if the player collided with the coin
-        if (other.CompareTag("Player"))
-		{
-			// Update the score
-			GameManager.Instance.AddScore(scoreValue);
-
-            // Destroy the coin
-            Destroy(gameObject);
+                // Destroy the coin
+                Destroy(gameObject);
+            }
         }
     }
 }

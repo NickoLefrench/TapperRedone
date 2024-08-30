@@ -1,47 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class PlayerMovement : MonoBehaviour
+using FMS.TapperRedone.Managers;
+
+namespace FMS.TapperRedone.Characters
 {
-	public float WalkSpeed;
-
-	private Rigidbody2D _kinematicBody;
-	private bool _allowedToMove = true;
-
-	public void Start()
+	public class PlayerMovement : MonoBehaviour
 	{
-		_kinematicBody = GetComponent<Rigidbody2D>();
-		if ( _kinematicBody == null || _kinematicBody.bodyType != RigidbodyType2D.Kinematic)
+		public float WalkSpeed;
+
+		private Rigidbody2D _kinematicBody;
+		private bool _allowedToMove = true;
+
+		public void Start()
 		{
-			throw new MissingComponentException("A PlayerMovement requires the same game object to have a Kinematic mode Rigidbody2D!");
+			_kinematicBody = GetComponent<Rigidbody2D>();
+			if (_kinematicBody == null || _kinematicBody.bodyType != RigidbodyType2D.Kinematic)
+			{
+				throw new MissingComponentException("A PlayerMovement requires the same game object to have a Kinematic mode Rigidbody2D!");
+			}
+
+			GameManager.OnGameStateChanged += OnGameStateChanged;
 		}
 
-		GameManager.OnGameStateChanged += OnGameStateChanged;
-	}
-
-	private void OnGameStateChanged(GameManager.GameState gameState)
-	{
-		_allowedToMove = gameState == GameManager.GameState.BaseMovement;
-	}
-
-	// Fixed update is called on a fixed time clock, and is used for physics updates
-	private void FixedUpdate()
-	{
-		if (_allowedToMove)
+		private void OnGameStateChanged(GameManager.GameState gameState)
 		{
-			HandleMovement();
+			_allowedToMove = gameState == GameManager.GameState.BaseMovement;
 		}
-	}
 
-	void HandleMovement()
-	{
-		// Player direction, based on horizontal movement axis
-		Vector2 horizontalMovement = Vector2.right * Input.GetAxis("Horizontal");
-		// Multiply by speed and time to get distance
-		Vector2 positionDelta = horizontalMovement * WalkSpeed * Time.fixedDeltaTime;
+		// Fixed update is called on a fixed time clock, and is used for physics updates
+		private void FixedUpdate()
+		{
+			if (_allowedToMove)
+			{
+				HandleMovement();
+			}
+		}
 
-		_kinematicBody.MovePosition(_kinematicBody.position + positionDelta);
+		void HandleMovement()
+		{
+			// Player direction, based on horizontal movement axis
+			Vector2 horizontalMovement = Vector2.right * Input.GetAxis("Horizontal");
+			// Multiply by speed and time to get distance
+			Vector2 positionDelta = horizontalMovement * WalkSpeed * Time.fixedDeltaTime;
+
+			_kinematicBody.MovePosition(_kinematicBody.position + positionDelta);
+		}
 	}
 }

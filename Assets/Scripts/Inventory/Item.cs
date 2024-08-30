@@ -1,43 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-// Item.cs
-[System.Serializable]
-public class Item
+namespace FMS.TapperRedone.Inventory
 {
-    public string itemName;
-    public Sprite itemIcon; // Optionally use an icon
-    public int amount;
-    public ItemType itemType;
-
-    public enum ItemType //the items that the player will be able to pick up
+    // Can this be a struct instead?
+    [System.Serializable]
+    public class Item
     {
-        Beer,
-        Coin,
-        RedIngredient,
-        BlueIngredient,
-        YellowIngredient,
-        Cocktail,
-    }
+        public string itemName;
+        public Sprite itemIcon; // Optionally use an icon
+        public int amount;
+        public ItemType itemType;
 
-    public bool IsDrink
-    {
-        get
+        public enum ItemType //the items that the player will be able to pick up
         {
-            return itemType == ItemType.Beer
-                || itemType == ItemType.Cocktail;
+            Beer,
+            Coin,
+            RedIngredient,
+            BlueIngredient,
+            YellowIngredient,
+            Cocktail,
         }
-    }
 
-    public bool IsIngredient
-    {
-        get
+        public bool IsDrink
         {
-            return itemType == ItemType.BlueIngredient
-                || itemType == ItemType.YellowIngredient
-                || itemType == ItemType.RedIngredient;
+            get
+            {
+                return itemType == ItemType.Beer
+                    || itemType == ItemType.Cocktail;
+            }
+        }
+
+        public bool IsIngredient
+        {
+            get
+            {
+                return itemType == ItemType.BlueIngredient
+                    || itemType == ItemType.YellowIngredient
+                    || itemType == ItemType.RedIngredient;
+            }
         }
     }
 }
-
