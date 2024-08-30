@@ -17,31 +17,64 @@ public class MenuManager : MonoBehaviour
 
 	public event Action<UIState, UIState> OnUIStateChanged;
 
-	public UIState State { get; private set; } = UIState.MainMenu;
+	public UIState State { get; private set; }
+	private bool RequiresTimeScale => State == UIState.Game;
 
-    public void UpdateUIState(UIState newState)
-    {
-		Debug.Log($"Updating state of MenuManager from {State} to {newState}");
-        OnUIStateChanged?.Invoke(State, newState);
-		State = newState;
+	public void UpdateUIState(UIState newState)
+	{
+		UpdateUIState(newState, false);
 	}
 
-	void Update()
-	{
-		ProcessPause();
+	private void UpdateUIState(UIState newState, bool forced)
+    {
+		if (newState == State && !forced)
+		{
+			return;
+		}
+
+		Debug.Log($"Updating state of MenuManager from {State} to {newState}");
+		UIState oldState = State;
+		State = newState;
+
+		PauseScreen.SetActive(newState == UIState.Paused);
+		MainMenuScreen.SetActive(newState == UIState.MainMenu);
+		// Should this be in GameManager? 
+		Time.timeScale = RequiresTimeScale ? 1.0f : 0.0f;
+
+		OnUIStateChanged?.Invoke(oldState, newState);
 	}
 
 	public void OnStartGame()
 	{
 		if (State != UIState.MainMenu)
 		{
-			Debug.LogError($"Trying to click Main Menu Play game but currently in state {State}");
+			Debug.LogError($"Trying to click Main Menu Play game but currently in forbidden UI state {State}");
 			return;
 		}
 
 		Debug.Log("Starting game");
-		MainMenuScreen.SetActive(false);
 		UpdateUIState(UIState.Game);
+	}
+
+	public void OnMainMenu()
+	{
+		if (State != UIState.Paused)
+		{
+			Debug.LogError($"Trying to go to Main Menu but currently in forbidden UI state {State}");
+			return;
+		}
+
+		UpdateUIState(UIState.MainMenu);
+	}
+
+	private void Start()
+	{
+		UpdateUIState(UIState.MainMenu, true);
+	}
+
+	private void Update()
+	{
+		ProcessPause();
 	}
 
 	private void ProcessPause()
@@ -52,13 +85,9 @@ public class MenuManager : MonoBehaviour
 			switch (State)
 			{
 			case UIState.Game:
-				Time.timeScale = 0f;
-				PauseScreen.SetActive(true);
 				UpdateUIState(UIState.Paused);
 				break;
 			case UIState.Paused:
-				Time.timeScale = 1f;
-				PauseScreen.SetActive(false);
 				UpdateUIState(UIState.Game);
 				break;
 			default:

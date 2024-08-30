@@ -50,14 +50,27 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
 		GetMenuManager().OnUIStateChanged += OnUIStateChanged;
+        UpdateGameState(GameState.Inactive, true);
     }
 
 	private void OnUIStateChanged(MenuManager.UIState oldState, MenuManager.UIState newState)
 	{
-		if (oldState == MenuManager.UIState.MainMenu && newState == MenuManager.UIState.Game)
+        switch (newState)
         {
-            OnGameStart();
-        }
+        case MenuManager.UIState.Game:
+            if (oldState == MenuManager.UIState.MainMenu)
+			{
+				OnGameStart();
+			}
+            break;
+        case MenuManager.UIState.Paused:
+            // Nothing
+            break;
+        default:
+            // Anything but game and paused, set state to Inactive.
+            UpdateGameState(GameState.Inactive);
+            break;
+		}
 	}
 
 	public void OnGameStart()
@@ -68,6 +81,16 @@ public class GameManager : MonoBehaviour
 
     public void UpdateGameState(GameState newState)
     {
+        UpdateGameState(newState, false);
+    }
+
+    private void UpdateGameState(GameState newState, bool forced)
+    {
+        if (newState == State)
+        {
+            return;
+        }
+
 		Debug.Log($"Updating state of GameManager from {State} to {newState}");
 		State = newState;
 

@@ -12,6 +12,7 @@ public class PatronManager : MonoBehaviour
 	public GameObject SpawnLocation;
 	public GameObject SeatsParent;
 
+	private bool running = false;
 	private int maxPatrons;
 	private int currentPatrons = 0;
 	private int totalPatrons = 0;
@@ -35,6 +36,35 @@ public class PatronManager : MonoBehaviour
 				managedSeats.Add(SeatsParent.transform.GetChild(i), null);
 			}
 		}
+
+		GameManager.OnGameStateChanged += OnGameStateChanged;
+	}
+
+	private void OnGameStateChanged(GameManager.GameState newState)
+	{
+		running = newState != GameManager.GameState.Inactive;
+		if (!running)
+		{
+			ResetAllPatrons();
+		}
+	}
+
+	private void ResetAllPatrons()
+	{
+		// Need to set ToList, as we are modifying the dictionary while iterating on it, and that can break iterator.
+		foreach (Transform seat in managedSeats.Keys.ToList())
+		{
+			if (managedSeats[seat] != null)
+			{
+				Destroy(managedSeats[seat].gameObject);
+				managedSeats[seat] = null;
+			}
+		}
+
+		running = false;
+		currentPatrons = 0;
+		totalPatrons = 0;
+		nextSpawnTime = Mathf.NegativeInfinity;
 	}
 
 	public void CleanupPatron(BarPatron patron)
@@ -51,7 +81,7 @@ public class PatronManager : MonoBehaviour
 
 	public void Update()
 	{
-		if (GameManager.Instance.State != GameManager.GameState.Inactive && currentPatrons < maxPatrons && nextSpawnTime <= Time.time)
+		if (running && currentPatrons < maxPatrons && nextSpawnTime <= Time.time)
 		{
 			SpawnNewPatron();
 		}
