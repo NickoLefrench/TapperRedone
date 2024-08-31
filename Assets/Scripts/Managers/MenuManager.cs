@@ -6,9 +6,6 @@ namespace FMS.TapperRedone.Managers
 {
 	public class MenuManager : MonoBehaviour
 	{
-		public GameObject PauseScreen;
-		public GameObject MainMenuScreen;
-
 		public static MenuManager Instance => GameManager.MenuManager;
 
 		public enum UIState
@@ -41,8 +38,6 @@ namespace FMS.TapperRedone.Managers
 			UIState oldState = State;
 			State = newState;
 
-			PauseScreen.SetActive(newState == UIState.Paused);
-			MainMenuScreen.SetActive(newState == UIState.MainMenu);
 			// Should this be in GameManager? 
 			Time.timeScale = RequiresTimeScale ? 1.0f : 0.0f;
 
