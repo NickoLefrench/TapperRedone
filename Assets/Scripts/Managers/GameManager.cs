@@ -26,8 +26,8 @@ namespace FMS.TapperRedone.Managers
         public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
         public static event Action<int> OnScoreChanged;
 
-        public static PatronManager PatronManager => Instance?.GetComponent<PatronManager>();
-        public static MenuManager MenuManager => Instance?.GetComponent<MenuManager>();
+        public static PatronManager PatronManager => Instance ? Instance.GetComponent<PatronManager>() : null;
+        public static MenuManager MenuManager => Instance ? Instance.GetComponent<MenuManager>() : null;
 
         private void Awake()
         {

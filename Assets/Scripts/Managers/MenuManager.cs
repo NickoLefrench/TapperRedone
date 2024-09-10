@@ -46,25 +46,13 @@ namespace FMS.TapperRedone.Managers
 
 		public void OnStartGame()
 		{
-			if (State != UIState.MainMenu)
-			{
-				Debug.LogError($"Trying to click Main Menu Play game but currently in forbidden UI state {State}");
-				return;
-			}
-
 			Debug.Log("Starting game");
-			UpdateUIState(UIState.Game);
+			SafeUpdateUIState(UIState.MainMenu, UIState.Game);
 		}
 
 		public void OnMainMenu()
 		{
-			if (State != UIState.Paused)
-			{
-				Debug.LogError($"Trying to go to Main Menu but currently in forbidden UI state {State}");
-				return;
-			}
-
-			UpdateUIState(UIState.MainMenu);
+			SafeUpdateUIState(UIState.Paused, UIState.MainMenu);
 		}
 
 		public void OnQuitGame()
@@ -74,6 +62,27 @@ namespace FMS.TapperRedone.Managers
 #else
 			Application.Quit();
 #endif
+		}
+
+		public void OnSettingsMenu()
+		{
+			SafeUpdateUIState(UIState.MainMenu, UIState.Settings);
+		}
+
+		public void OnExitSettings()
+		{
+			SafeUpdateUIState(UIState.Settings, UIState.MainMenu);
+		}
+
+		private void SafeUpdateUIState(UIState requiredState, UIState toState)
+		{
+			if (State != requiredState)
+			{
+				Debug.LogError($"Trying to go to state {toState}, from expected state {requiredState}, but currently in state {State}");
+				return;
+			}
+
+			UpdateUIState(toState);
 		}
 
 		private void Start()
