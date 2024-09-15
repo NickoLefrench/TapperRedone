@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class CocktailFridge : InteractableObject
+namespace FMS.TapperRedone.Interactables
 {
-	public Item itemToSpawn;
-
-	public override void Interact(PlayerInteraction player)
+	public class CocktailFridge : InteractableObject
 	{
-		base.Interact(player);
-		player.CurrentInventory.AddItem(itemToSpawn);
+		public Inventory.Item itemToSpawn;
+
+		public override void Interact(Characters.PlayerInteraction player)
+		{
+			base.Interact(player);
+			player.CurrentInventory.AddItem(itemToSpawn);
+		}
 	}
 }

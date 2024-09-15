@@ -1,68 +1,116 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
-public class MenuManager : MonoBehaviour
+namespace FMS.TapperRedone.Managers
 {
-	public GameObject PauseScreen;
-	public GameObject MainMenuScreen;
-
-	public enum UIState
-    {
-        MainMenu,
-        Credits,
-        Settings,
-        Game,
-        Paused
-    }
-
-	public event Action<UIState, UIState> OnUIStateChanged;
-
-	public UIState State { get; private set; } = UIState.MainMenu;
-
-    public void UpdateUIState(UIState newState)
-    {
-		Debug.Log($"Updating state of MenuManager from {State} to {newState}");
-        OnUIStateChanged?.Invoke(State, newState);
-		State = newState;
-	}
-
-	void Update()
+	public class MenuManager : MonoBehaviour
 	{
-		ProcessPause();
-	}
+		public static MenuManager Instance => GameManager.MenuManager;
 
-	public void OnStartGame()
-	{
-		if (State != UIState.MainMenu)
+		public enum UIState
 		{
-			Debug.LogError($"Trying to click Main Menu Play game but currently in state {State}");
-			return;
+			MainMenu,
+			Credits,
+			Settings,
+			Game,
+			Paused
 		}
 
-		Debug.Log("Starting game");
-		MainMenuScreen.SetActive(false);
-		UpdateUIState(UIState.Game);
-	}
+		public event Action<UIState, UIState> OnUIStateChanged;
 
-	private void ProcessPause()
-	{
-		// Can only swap between Pause and Game states.
-		if (Input.GetButtonDown("Pause"))
+		public UIState State { get; private set; }
+		private bool RequiresTimeScale => State == UIState.Game;
+
+		public void UpdateUIState(UIState newState)
 		{
-			switch (State)
+			UpdateUIState(newState, false);
+		}
+
+		private void UpdateUIState(UIState newState, bool forced)
+		{
+			if (newState == State && !forced)
 			{
-			case UIState.Game:
-				Time.timeScale = 0f;
-				PauseScreen.SetActive(true);
-				UpdateUIState(UIState.Paused);
-				break;
-			case UIState.Paused:
-				Time.timeScale = 1f;
-				PauseScreen.SetActive(false);
-				UpdateUIState(UIState.Game);
-				break;
-			default:
-				break;
+				return;
+			}
+
+			Debug.Log($"Updating state of MenuManager from {State} to {newState}");
+			UIState oldState = State;
+			State = newState;
+
+			// Should this be in GameManager? 
+			Time.timeScale = RequiresTimeScale ? 1.0f : 0.0f;
+
+			OnUIStateChanged?.Invoke(oldState, newState);
+		}
+
+		public void OnStartGame()
+		{
+			Debug.Log("Starting game");
+			SafeUpdateUIState(UIState.MainMenu, UIState.Game);
+		}
+
+		public void OnMainMenu()
+		{
+			SafeUpdateUIState(UIState.Paused, UIState.MainMenu);
+		}
+
+		public void OnQuitGame()
+		{
+#if UNITY_EDITOR
+			EditorApplication.ExitPlaymode();
+#else
+			Application.Quit();
+#endif
+		}
+
+		public void OnSettingsMenu()
+		{
+			SafeUpdateUIState(UIState.MainMenu, UIState.Settings);
+		}
+
+		public void OnExitSettings()
+		{
+			SafeUpdateUIState(UIState.Settings, UIState.MainMenu);
+		}
+
+		private void SafeUpdateUIState(UIState requiredState, UIState toState)
+		{
+			if (State != requiredState)
+			{
+				Debug.LogError($"Trying to go to state {toState}, from expected state {requiredState}, but currently in state {State}");
+				return;
+			}
+
+			UpdateUIState(toState);
+		}
+
+		private void Start()
+		{
+			UpdateUIState(UIState.MainMenu, true);
+		}
+
+		private void Update()
+		{
+			ProcessPause();
+		}
+
+		private void ProcessPause()
+		{
+			// Can only swap between Pause and Game states.
+			if (Input.GetButtonDown("Pause"))
+			{
+				switch (State)
+				{
+				case UIState.Game:
+					UpdateUIState(UIState.Paused);
+					break;
+				case UIState.Paused:
+					UpdateUIState(UIState.Game);
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}

@@ -1,78 +1,94 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using DentedPixel;
 using System;
+using UnityEngine;
 
-
-public class GameManager : MonoBehaviour
+namespace FMS.TapperRedone.Managers
 {
-	public enum GameState
-	{
-        Inactive,
-		BaseMovement,
-		BeerMiniGame,
-		CocktailMiniGame,
-		Leaderboards,
-		EndofNight,
-		ScoreUI,
-	}
-
-	public static GameManager Instance;
-
-    public GameState State { get; private set; } = GameState.Inactive;
-    public int Score { get; private set; }
-
-    public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
-    public static event Action<int> OnScoreChanged;
-
-    public static PatronManager GetPatronManager()
+	[RequireComponent(typeof(MenuManager))]
+	[RequireComponent(typeof(PatronManager))]
+    public class GameManager : MonoBehaviour
     {
-        return Instance.GetComponent<PatronManager>();
-    }
-
-    public static MenuManager GetMenuManager()
-    {
-        return Instance.GetComponent<MenuManager>(); 
-    }
-
-    private void Awake()
-	{
-		if (Instance != null && Instance != this)
-		{
-			Destroy(this);
-			return;
-		}
-
-		Instance = this;
-	}
-
-    private void Start()
-    {
-		GetMenuManager().OnUIStateChanged += OnUIStateChanged;
-    }
-
-	private void OnUIStateChanged(MenuManager.UIState oldState, MenuManager.UIState newState)
-	{
-		if (oldState == MenuManager.UIState.MainMenu && newState == MenuManager.UIState.Game)
+        public enum GameState
         {
-            OnGameStart();
+            Inactive,
+            BaseMovement,
+            BeerMiniGame,
+            CocktailMiniGame,
+            Leaderboards,
+            EndofNight,
+            ScoreUI,
         }
-	}
 
-	public void OnGameStart()
-	{
-		UpdateGameState(GameState.BaseMovement);
-		Score = 0;
-	}
+        public static GameManager Instance;
 
-    public void UpdateGameState(GameState newState)
-    {
-		Debug.Log($"Updating state of GameManager from {State} to {newState}");
-		State = newState;
+        public GameState State { get; private set; } = GameState.Inactive;
+        public int Score { get; private set; }
 
-        switch (newState)
+        public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
+        public static event Action<int> OnScoreChanged;
+
+        public static PatronManager PatronManager => Instance ? Instance.GetComponent<PatronManager>() : null;
+        public static MenuManager MenuManager => Instance ? Instance.GetComponent<MenuManager>() : null;
+
+        private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+                return;
+            }
+
+            Instance = this;
+        }
+
+        private void Start()
+        {
+            MenuManager.OnUIStateChanged += OnUIStateChanged;
+            UpdateGameState(GameState.Inactive, true);
+        }
+
+        private void OnUIStateChanged(MenuManager.UIState oldState, MenuManager.UIState newState)
+        {
+            switch (newState)
+            {
+            case MenuManager.UIState.Game:
+                if (oldState == MenuManager.UIState.MainMenu)
+                {
+                    OnGameStart();
+                }
+                break;
+            case MenuManager.UIState.Paused:
+                // Nothing
+                break;
+            default:
+                // Anything but game and paused, set state to Inactive.
+                UpdateGameState(GameState.Inactive);
+                break;
+            }
+        }
+
+        public void OnGameStart()
+        {
+            UpdateGameState(GameState.BaseMovement);
+            AddScore(-Score);
+        }
+
+        public void UpdateGameState(GameState newState)
+        {
+            UpdateGameState(newState, false);
+        }
+
+        private void UpdateGameState(GameState newState, bool forced)
+        {
+            if (newState == State && !forced)
+            {
+                return;
+            }
+
+            Debug.Log($"Updating state of GameManager from {State} to {newState}");
+            State = newState;
+
+            switch (newState)
+            {
             case GameState.CocktailMiniGame:
                 CocktailMiniGame();
                 break;
@@ -90,29 +106,30 @@ public class GameManager : MonoBehaviour
 
             default:
                 break;
+            }
+
+            OnGameStateChanged?.Invoke(newState); //avoids a null being thrown
         }
 
-        OnGameStateChanged?.Invoke(newState); //avoids a null being thrown
-    }
+        public void AddScore(int addToScore)
+        {
+            Score += addToScore;
+            OnScoreChanged?.Invoke(Score);
+        }
 
-    public void AddScore(int addToScore)
-    {
-        Score += addToScore;
-        OnScoreChanged?.Invoke(Score);
-    }
+        public void CocktailMiniGame()
+        {
 
-    public void CocktailMiniGame()
-    {
+        }
 
-    }
+        public void Leaderboards()
+        {
 
-    public void Leaderboards()
-    {
+        }
 
-    }
+        public void EndofNight()
+        {
 
-    public void EndofNight()
-    {
-
+        }
     }
 }

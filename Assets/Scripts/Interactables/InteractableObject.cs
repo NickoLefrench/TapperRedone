@@ -1,11 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class InteractableObject : MonoBehaviour
+namespace FMS.TapperRedone.Interactables
 {
-    public virtual void Interact(PlayerInteraction player)
+    public abstract class InteractableObject : MonoBehaviour
     {
-        Debug.Log($"Player {player.name} interacting with object {gameObject.name}.");
+        public virtual void Interact(Characters.PlayerInteraction player)
+        {
+            Debug.Log($"Player {player.name} interacting with object {gameObject.name}.");
+        }
     }
 }

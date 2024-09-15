@@ -1,27 +1,29 @@
-using UnityEngine.UI;
-using UnityEngine;
-using System;
 using TMPro;
-using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine;
 
-public class Score : MonoBehaviour
+using FMS.TapperRedone.Managers;
+
+namespace FMS.TapperRedone.UI
 {
-    public TextMeshProUGUI ScoreText;
+	public class Score : MonoBehaviour
+	{
+		public TextMeshProUGUI ScoreText;
 
-    void Start()
-    {
-        if (ScoreText == null)
+		void Start()
 		{
-			Debug.LogError("ScoreText is not assigned in the inspector!");
-            return;
+			if (ScoreText == null)
+			{
+				Debug.LogError("ScoreText is not assigned in the inspector!");
+				return;
+			}
+
+			ScoreText.text = GameManager.Instance.Score.ToString() + " Space Shillings";
+			GameManager.OnScoreChanged += OnScoreChanged;
 		}
 
-		ScoreText.text = GameManager.Instance.Score.ToString() + " Space Shillings";
-		GameManager.OnScoreChanged += OnScoreChanged;
-	}
-
-	private void OnScoreChanged(int newScore)
-	{
-		ScoreText.text = $"{newScore} Space Shillings";
+		private void OnScoreChanged(int newScore)
+		{
+			ScoreText.text = $"{newScore} Space Shillings";
+		}
 	}
 }
