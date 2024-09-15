@@ -9,13 +9,12 @@ namespace FMS.TapperRedone.Managers
     {
         public enum GameState
         {
-            Inactive,
-            BaseMovement,
-            BeerMiniGame,
-            CocktailMiniGame,
-            Leaderboards,
-            EndofNight,
-            ScoreUI,
+            Inactive,           // Currently not in a game night
+            StartOfNight,       // Starting - load into level, UI for night
+            MainGame,           // Normal game, allows player movement. Includes both having time, and time out but patrons still there
+            BeerMiniGame,       // Inside beer mini game
+            CocktailMiniGame,   // Inside cocktail mini game
+            EndofNight,         // Night complete, score and UI
         }
 
         public static GameManager Instance;
@@ -68,8 +67,8 @@ namespace FMS.TapperRedone.Managers
 
         public void OnGameStart()
         {
-            UpdateGameState(GameState.BaseMovement);
-            AddScore(-Score);
+            UpdateGameState(GameState.StartOfNight);
+            SetScore(0);
         }
 
         public void UpdateGameState(GameState newState)
@@ -87,49 +86,18 @@ namespace FMS.TapperRedone.Managers
             Debug.Log($"Updating state of GameManager from {State} to {newState}");
             State = newState;
 
-            switch (newState)
-            {
-            case GameState.CocktailMiniGame:
-                CocktailMiniGame();
-                break;
-
-            case GameState.Leaderboards:
-                Leaderboards();
-                break;
-
-            case GameState.EndofNight:
-                EndofNight();
-                break;
-
-            case GameState.ScoreUI: //dont think this should be included here, tbd
-                break;
-
-            default:
-                break;
-            }
-
             OnGameStateChanged?.Invoke(newState); //avoids a null being thrown
         }
 
         public void AddScore(int addToScore)
         {
-            Score += addToScore;
+            SetScore(Score + addToScore);
+        }
+
+        public void SetScore(int newScore)
+        {
+            Score = newScore;
             OnScoreChanged?.Invoke(Score);
-        }
-
-        public void CocktailMiniGame()
-        {
-
-        }
-
-        public void Leaderboards()
-        {
-
-        }
-
-        public void EndofNight()
-        {
-
         }
     }
 }

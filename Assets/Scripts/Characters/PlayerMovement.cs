@@ -24,7 +24,7 @@ namespace FMS.TapperRedone.Characters
 
 		private void OnGameStateChanged(GameManager.GameState gameState)
 		{
-			_allowedToMove = gameState == GameManager.GameState.BaseMovement;
+			_allowedToMove = gameState == GameManager.GameState.MainGame;
 		}
 
 		// Fixed update is called on a fixed time clock, and is used for physics updates

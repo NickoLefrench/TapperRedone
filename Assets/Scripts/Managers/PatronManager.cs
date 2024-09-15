@@ -46,11 +46,17 @@ namespace FMS.TapperRedone.Managers
 
 		private void OnGameStateChanged(GameManager.GameState newState)
 		{
-			running = newState != GameManager.GameState.Inactive;
-			if (!running)
+			bool newRunning = newState == GameManager.GameState.MainGame || newState == GameManager.GameState.BeerMiniGame || newState == GameManager.GameState.CocktailMiniGame;
+			if (running && !newRunning)
 			{
 				ResetAllPatrons();
 			}
+			else if (!running && newRunning)
+			{
+				nextSpawnTime = Time.time;
+			}
+
+			running = newRunning;
 		}
 
 		private void ResetAllPatrons()

@@ -62,7 +62,7 @@ namespace FMS.TapperRedone.Interactables
 			{
 				player.CurrentInventory.AddItem(itemToSpawn);
 			}
-			GameManager.Instance.UpdateGameState(GameManager.GameState.BaseMovement);
+			GameManager.Instance.UpdateGameState(GameManager.GameState.MainGame);
 		}
 
 		public void StartBeerMiniGame()
