@@ -1,3 +1,4 @@
+using FMS.TapperRedone.Data;
 using System;
 using UnityEngine;
 
@@ -22,13 +23,15 @@ namespace FMS.TapperRedone.Managers
         public GameState State { get; private set; } = GameState.Inactive;
         public int Score { get; private set; }
 
-        public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
+        private float nightEndTime;
+
+		public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
         public static event Action<int> OnScoreChanged;
 
         public static PatronManager PatronManager => Instance ? Instance.GetComponent<PatronManager>() : null;
         public static MenuManager MenuManager => Instance ? Instance.GetComponent<MenuManager>() : null;
 
-        private void Awake()
+		private void Awake()
         {
             if (Instance != null && Instance != this)
             {
@@ -45,7 +48,15 @@ namespace FMS.TapperRedone.Managers
             UpdateGameState(GameState.Inactive, true);
         }
 
-        private void OnUIStateChanged(MenuManager.UIState oldState, MenuManager.UIState newState)
+		private void Update()
+		{
+            if (State == GameState.MainGame && RemainingTime == 0.0f && PatronManager.CurrentPatrons == 0)
+            {
+                UpdateGameState(GameState.EndofNight);
+            }
+		}
+
+		private void OnUIStateChanged(MenuManager.UIState oldState, MenuManager.UIState newState)
         {
             switch (newState)
             {
@@ -65,10 +76,13 @@ namespace FMS.TapperRedone.Managers
             }
         }
 
+        public float RemainingTime => Mathf.Max(0.0f, nightEndTime - Time.time);
+
         public void OnGameStart()
         {
             UpdateGameState(GameState.StartOfNight);
             SetScore(0);
+            nightEndTime = Time.time + TunableHandler.GetTunableFloat("NIGHT.DURATION");
         }
 
         public void UpdateGameState(GameState newState)

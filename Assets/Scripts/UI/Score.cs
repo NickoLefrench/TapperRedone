@@ -5,18 +5,18 @@ using FMS.TapperRedone.Managers;
 
 namespace FMS.TapperRedone.UI
 {
+	[RequireComponent(typeof(TextMeshProUGUI))]
 	public class Score : MonoBehaviour
 	{
-		public TextMeshProUGUI ScoreText;
+		private TextMeshProUGUI ScoreText;
 
-		void Start()
+		private void Awake()
 		{
-			if (ScoreText == null)
-			{
-				Debug.LogError("ScoreText is not assigned in the inspector!");
-				return;
-			}
+			ScoreText = GetComponent<TextMeshProUGUI>();
+		}
 
+		private void Start()
+		{
 			ScoreText.text = GameManager.Instance.Score.ToString() + " Space Shillings";
 			GameManager.OnScoreChanged += OnScoreChanged;
 		}

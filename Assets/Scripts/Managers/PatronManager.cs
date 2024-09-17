@@ -15,9 +15,10 @@ namespace FMS.TapperRedone.Managers
 		public GameObject SpawnLocation;
 		public GameObject SeatsParent;
 
+		public int CurrentPatrons { get; private set; } = 0;
+
 		private bool running = false;
 		private int maxPatrons;
-		private int currentPatrons = 0;
 		private int totalPatrons = 0;
 		private float nextSpawnTime = Mathf.NegativeInfinity;
 		private float respawnTimer;
@@ -72,7 +73,7 @@ namespace FMS.TapperRedone.Managers
 			}
 
 			running = false;
-			currentPatrons = 0;
+			CurrentPatrons = 0;
 			totalPatrons = 0;
 			nextSpawnTime = Mathf.NegativeInfinity;
 		}
@@ -84,14 +85,14 @@ namespace FMS.TapperRedone.Managers
 			if (foundPair.Value == patron)
 			{
 				managedSeats[foundPair.Key] = null;
-				currentPatrons--;
+				CurrentPatrons--;
 			}
 			// nextSpawnTime = Time.time + respawnTimer;
 		}
 
 		public void Update()
 		{
-			if (running && currentPatrons < maxPatrons && nextSpawnTime <= Time.time)
+			if (running && GameManager.Instance.RemainingTime > 0.0f && CurrentPatrons < maxPatrons && nextSpawnTime <= Time.time)
 			{
 				SpawnNewPatron();
 			}
@@ -100,7 +101,7 @@ namespace FMS.TapperRedone.Managers
 		private void SpawnNewPatron()
 		{
 			// Select seat to spawn in - random from empty options
-			int randomSeat = UnityEngine.Random.Range(0, managedSeats.Count - currentPatrons);
+			int randomSeat = UnityEngine.Random.Range(0, managedSeats.Count - CurrentPatrons);
 			Transform selectedSeat = null;
 			foreach (Transform seat in managedSeats.Keys)
 			{
@@ -124,7 +125,7 @@ namespace FMS.TapperRedone.Managers
 
 			if (selectedSeat == null)
 			{
-				Debug.LogError($"Failed to find an empty seat despite {currentPatrons} out of {managedSeats.Count} seats occupied");
+				Debug.LogError($"Failed to find an empty seat despite {CurrentPatrons} out of {managedSeats.Count} seats occupied");
 				return;
 			}
 
@@ -134,7 +135,7 @@ namespace FMS.TapperRedone.Managers
 
 			// Set any final properties
 			totalPatrons++;
-			currentPatrons++;
+			CurrentPatrons++;
 			string newName = $"Patron {totalPatrons}";
 			newPatron.gameObject.name = newName;
 			newPatron.Setup(SpawnLocation.transform, selectedSeat);
