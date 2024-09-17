@@ -2644,6 +2644,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1645604104}
     m_Modifications:
+    - target: {fileID: 811727232478632287, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 811727232478632287, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 811727232478632287, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9339623
+      objectReference: {fileID: 0}
     - target: {fileID: 1919761278694646024, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_Name
       value: YellowCocktailFridge
@@ -2666,7 +2678,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3774060610794978979, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.191
       objectReference: {fileID: 0}
     - target: {fileID: 3774060610794978979, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5156,6 +5168,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1645604104}
     m_Modifications:
+    - target: {fileID: 811727232478632287, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 811727232478632287, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7002697
+      objectReference: {fileID: 0}
+    - target: {fileID: 811727232478632287, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1919761278694646024, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_Name
       value: RedCocktailFridge
@@ -5178,7 +5202,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3774060610794978979, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.21
       objectReference: {fileID: 0}
     - target: {fileID: 3774060610794978979, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5211,6 +5235,34 @@ PrefabInstance:
     - target: {fileID: 4802850863602938563, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: itemToSpawn.itemName
       value: Red
+      objectReference: {fileID: 0}
+    - target: {fileID: 4802850863602938563, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: Ingredients.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4802850863602938563, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: Ingredients.Array.data[0].itemName
+      value: RedIngredient
+      objectReference: {fileID: 0}
+    - target: {fileID: 4802850863602938563, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: Ingredients.Array.data[0].itemType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4802850863602938563, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: Ingredients.Array.data[1].itemName
+      value: BlueIngredient
+      objectReference: {fileID: 0}
+    - target: {fileID: 4802850863602938563, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: Ingredients.Array.data[1].itemType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4802850863602938563, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: Ingredients.Array.data[2].itemName
+      value: YellowIngredient
+      objectReference: {fileID: 0}
+    - target: {fileID: 4802850863602938563, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: Ingredients.Array.data[2].itemType
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6520,6 +6572,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1645604104}
     m_Modifications:
+    - target: {fileID: 811727232478632287, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 811727232478632287, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9990314
+      objectReference: {fileID: 0}
+    - target: {fileID: 811727232478632287, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1919761278694646024, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_Name
       value: BlueCocktailFridge
@@ -6542,7 +6606,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3774060610794978979, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.193
       objectReference: {fileID: 0}
     - target: {fileID: 3774060610794978979, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_LocalRotation.w
