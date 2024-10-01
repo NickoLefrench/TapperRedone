@@ -15,13 +15,14 @@ namespace FMS.TapperRedone.Managers
             MainGame,           // Normal game, allows player movement. Includes both having time, and time out but patrons still there
             BeerMiniGame,       // Inside beer mini game
             CocktailMiniGame,   // Inside cocktail mini game
-            EndofNight,         // Night complete, score and UI
+            EndofNight,         // Night complete, score and UI. Is this needed?
         }
 
         public static GameManager Instance;
 
         public GameState State { get; private set; } = GameState.Inactive;
         public int Score { get; private set; }
+        public int CurrentNight { get; private set; }
 
         private float nightEndTime;
 
@@ -53,6 +54,7 @@ namespace FMS.TapperRedone.Managers
             if (State == GameState.MainGame && RemainingTime == 0.0f && PatronManager.CurrentPatrons == 0)
             {
                 UpdateGameState(GameState.EndofNight);
+                MenuManager.UpdateUIState(MenuManager.UIState.EndOfNightScoreboard);
             }
 		}
 
@@ -63,7 +65,11 @@ namespace FMS.TapperRedone.Managers
             case MenuManager.UIState.Game:
                 if (oldState == MenuManager.UIState.MainMenu)
                 {
-                    OnGameStart();
+                    OnGameStart(1);
+                }
+                else if (oldState == MenuManager.UIState.EndOfNightScoreboard)
+                {
+                    OnGameStart(CurrentNight + 1);
                 }
                 break;
             case MenuManager.UIState.Paused:
@@ -78,8 +84,9 @@ namespace FMS.TapperRedone.Managers
 
         public float RemainingTime => Mathf.Max(0.0f, nightEndTime - Time.time);
 
-        public void OnGameStart()
+        public void OnGameStart(int newNight)
         {
+            CurrentNight = newNight;
             UpdateGameState(GameState.StartOfNight);
             SetScore(0);
             nightEndTime = Time.time + TunableHandler.GetTunableFloat("NIGHT.DURATION");

@@ -14,6 +14,7 @@ namespace FMS.TapperRedone.Managers
 			Credits,
 			Settings,
 			Game,
+			EndOfNightScoreboard,
 			Paused
 		}
 
@@ -72,6 +73,11 @@ namespace FMS.TapperRedone.Managers
 		public void OnExitSettings()
 		{
 			SafeUpdateUIState(UIState.Settings, UIState.MainMenu);
+		}
+
+		public void OnNextNight()
+		{
+			SafeUpdateUIState(UIState.EndOfNightScoreboard, UIState.Game);
 		}
 
 		private void SafeUpdateUIState(UIState requiredState, UIState toState)

@@ -43,6 +43,7 @@ namespace FMS.TapperRedone.UI
 			Color color = _nightTitle.color;
 			color.a = 0;
 			_nightTitle.color = color;
+			_nightTitle.text = $"Night {GameManager.Instance.CurrentNight}";
 		}
 
 		private void RunSequence()
