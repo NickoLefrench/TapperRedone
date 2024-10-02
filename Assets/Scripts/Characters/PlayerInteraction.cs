@@ -27,7 +27,7 @@ namespace FMS.TapperRedone.Characters
 
 		private void OnGameStateChanged(GameManager.GameState gameState)
 		{
-			_allowedToInteract = gameState == GameManager.GameState.BaseMovement;
+			_allowedToInteract = gameState == GameManager.GameState.MainGame;
 		}
 
 		// Update is called once per frame
