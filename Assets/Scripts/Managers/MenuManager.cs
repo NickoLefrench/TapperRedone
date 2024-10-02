@@ -75,7 +75,7 @@ namespace FMS.TapperRedone.Managers
 			SafeUpdateUIState(UIState.Settings, UIState.MainMenu);
 		}
 
-		public void OnNextNight()
+		public void OnNextNight() //update scroeboard in btween nights?
 		{
 			SafeUpdateUIState(UIState.EndOfNightScoreboard, UIState.Game);
 		}

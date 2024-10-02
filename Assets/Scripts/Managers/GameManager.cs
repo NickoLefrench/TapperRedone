@@ -51,14 +51,14 @@ namespace FMS.TapperRedone.Managers
 
 		private void Update()
 		{
-            if (State == GameState.MainGame && RemainingTime == 0.0f && PatronManager.CurrentPatrons == 0)
+            if (State == GameState.MainGame && RemainingTime == 0.0f && PatronManager.CurrentPatrons == 0) //Conditions for the official EON (End of night) to occur
             {
                 UpdateGameState(GameState.EndofNight);
                 MenuManager.UpdateUIState(MenuManager.UIState.EndOfNightScoreboard);
             }
 		}
 
-		private void OnUIStateChanged(MenuManager.UIState oldState, MenuManager.UIState newState)
+		private void OnUIStateChanged(MenuManager.UIState oldState, MenuManager.UIState newState) //what state is the UI in and what night
         {
             switch (newState)
             {
@@ -84,7 +84,7 @@ namespace FMS.TapperRedone.Managers
 
         public float RemainingTime => Mathf.Max(0.0f, nightEndTime - Time.time);
 
-        public void OnGameStart(int newNight)
+        public void OnGameStart(int newNight) //Start conditions of every new night
         {
             CurrentNight = newNight;
             UpdateGameState(GameState.StartOfNight);
@@ -110,7 +110,7 @@ namespace FMS.TapperRedone.Managers
             OnGameStateChanged?.Invoke(newState); //avoids a null being thrown
         }
 
-        public void AddScore(int addToScore)
+        public void AddScore(int addToScore) //score updater
         {
             SetScore(Score + addToScore);
         }
