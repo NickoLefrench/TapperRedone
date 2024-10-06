@@ -105,7 +105,7 @@ namespace FMS.TapperRedone.Interactables
 				{
 					score += TunableHandler.GetTunableInt("MINI_GAME.BEER.PERFECT_BONUS");
 				}
-				GameManager.Instance.AddScore(score);
+				GameManager.StatManager.AddScore(score);
 				AwardBeer();
 			}
 

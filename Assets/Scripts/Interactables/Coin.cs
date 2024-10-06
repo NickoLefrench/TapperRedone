@@ -12,7 +12,7 @@ namespace FMS.TapperRedone.Interactables
             if (other.CompareTag("Player"))
             {
                 // Update the score
-                Managers.GameManager.Instance.AddScore(scoreValue);
+                Managers.GameManager.StatManager.AddScore(scoreValue);
 
                 // Destroy the coin
                 Destroy(gameObject);

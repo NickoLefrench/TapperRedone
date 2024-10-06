@@ -7,7 +7,7 @@ namespace FMS.TapperRedone
 {
 	public enum StatName
 	{
-		Coins,
+		Score,
 	}
 }
 
@@ -15,6 +15,7 @@ namespace FMS.TapperRedone.Managers
 {
 	public class StatManager : MonoBehaviour
 	{
+		public static event Action<int> OnScoreChanged;
 		public static event Action<StatName, string> OnStatUpdated;
 
 		private StatHandler statHandler = new();
@@ -22,7 +23,7 @@ namespace FMS.TapperRedone.Managers
 		private void Start()
 		{
 			// Register all stats
-			statHandler.RegisterStat(new IntStat(StatName.Coins.ToString(), false, IntStat.OverrideFunc));
+			statHandler.RegisterStat(new IntStat(StatName.Score.ToString(), false, IntStat.OverrideFunc));
 
 			// Reload any stat values from deep storage
 			statHandler.LoadPersistentStats();
@@ -45,6 +46,24 @@ namespace FMS.TapperRedone.Managers
 			{
 				OnStatUpdated?.Invoke(name, statHandler.GetSessionStatAsString(name.ToString()));
 			}
+		}
+
+		public int Score
+		{
+			get
+			{
+				return GetIntStat(StatName.Score);
+			}
+			set
+			{
+				UpdateIntStat(StatName.Score, value);
+				OnScoreChanged?.Invoke(Score);
+			}
+		}
+
+		public void AddScore(int score)
+		{
+			Score += score;
 		}
 	}
 }

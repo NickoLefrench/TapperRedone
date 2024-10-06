@@ -22,13 +22,11 @@ namespace FMS.TapperRedone.Managers
         public static GameManager Instance;
 
         public GameState State { get; private set; } = GameState.Inactive;
-        public int Score { get; private set; }
         public int CurrentNight { get; private set; }
 
         private float nightEndTime;
 
 		public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
-        public static event Action<int> OnScoreChanged;
 
         public static PatronManager PatronManager => Instance ? Instance.GetComponent<PatronManager>() : null;
         public static MenuManager MenuManager => Instance ? Instance.GetComponent<MenuManager>() : null;
@@ -90,7 +88,7 @@ namespace FMS.TapperRedone.Managers
         {
             CurrentNight = newNight;
             UpdateGameState(GameState.StartOfNight);
-            SetScore(0);
+            StatManager.Score = 0;
             nightEndTime = Time.time + TunableHandler.GetTunableFloat("NIGHT.DURATION");
         }
 
@@ -110,17 +108,6 @@ namespace FMS.TapperRedone.Managers
             State = newState;
 
             OnGameStateChanged?.Invoke(newState); //avoids a null being thrown
-        }
-
-        public void AddScore(int addToScore) //score updater
-        {
-            SetScore(Score + addToScore);
-        }
-
-        public void SetScore(int newScore)
-        {
-            Score = newScore;
-            OnScoreChanged?.Invoke(Score);
         }
     }
 }

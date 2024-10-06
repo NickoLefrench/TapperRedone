@@ -52,8 +52,17 @@ namespace FMS.TapperRedone.Data
 
 		public void LoadPersistentStats()
 		{
+			if (!PlayerPrefs.HasKey(PLAYER_PREFS_KEY))
+				return;
+
 			string jsonified = PlayerPrefs.GetString(PLAYER_PREFS_KEY);
+			if (jsonified == "")
+				return;
+
 			Dictionary<string, string> parsedStats = JsonUtility.FromJson<Dictionary<string, string>>(jsonified);
+			if (parsedStats == null || parsedStats.Count == 0)
+				return;
+
 			foreach (var keyValuePair in parsedStats)
 			{
 				if (sessionStats.ContainsKey(keyValuePair.Key))
