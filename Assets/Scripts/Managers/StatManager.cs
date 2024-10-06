@@ -8,6 +8,7 @@ namespace FMS.TapperRedone
 	public enum StatName
 	{
 		Score,
+		LifetimeScore,
 	}
 }
 
@@ -24,6 +25,7 @@ namespace FMS.TapperRedone.Managers
 		{
 			// Register all stats
 			statHandler.RegisterStat(new IntStat(StatName.Score.ToString(), false, IntStat.OverrideFunc));
+			statHandler.RegisterStat(new IntStat(StatName.LifetimeScore.ToString(), true, IntStat.AddFunc));
 
 			// Reload any stat values from deep storage
 			statHandler.LoadPersistentStats();

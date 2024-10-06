@@ -54,7 +54,11 @@ namespace FMS.TapperRedone.Managers
             if (State == GameState.MainGame && RemainingTime == 0.0f && PatronManager.CurrentPatrons == 0) //Conditions for the official EON (End of night) to occur
             {
                 UpdateGameState(GameState.EndofNight);
-                MenuManager.UpdateUIState(MenuManager.UIState.EndOfNightScoreboard);
+				MenuManager.UpdateUIState(MenuManager.UIState.EndOfNightScoreboard);
+
+				// Note - this might need to move to some kind of EndOfNight handler, to run in response to the above
+				StatManager.UpdateIntStat(StatName.LifetimeScore, StatManager.Score);
+                StatManager.RequestStatSave();
             }
 		}
 
