@@ -6,7 +6,8 @@ namespace FMS.TapperRedone.Managers
 {
 	[RequireComponent(typeof(MenuManager))]
 	[RequireComponent(typeof(PatronManager))]
-    public class GameManager : MonoBehaviour
+	[RequireComponent(typeof(StatManager))]
+	public class GameManager : MonoBehaviour
     {
         public enum GameState
         {
@@ -31,6 +32,7 @@ namespace FMS.TapperRedone.Managers
 
         public static PatronManager PatronManager => Instance ? Instance.GetComponent<PatronManager>() : null;
         public static MenuManager MenuManager => Instance ? Instance.GetComponent<MenuManager>() : null;
+		public static StatManager StatManager => Instance ? Instance.GetComponent<StatManager>() : null;
 
 		private void Awake()
         {
