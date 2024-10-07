@@ -22,6 +22,8 @@ jobs:
         dotnet-version: 8.0.x
     - name: Test working directory
       run: pwd
+    - name: List directory contents
+      run: ls -la
     - name: Restore dependencies
       run: dotnet restore TapperRedone.sln
     - name: Format
