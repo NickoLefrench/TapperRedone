@@ -20,7 +20,9 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+    - name: Test working directory
+      run: pwd
     - name: Restore dependencies
-      run: dotnet restore ./TapperRedone.sln
+      run: dotnet restore TapperRedone.sln
     - name: Format
-      run: dotnet format ./TapperRedone.sln --verify-no-changes --verbosity diagnostic --include ./Assets/Scripts/
+      run: dotnet format TapperRedone.sln --verify-no-changes --verbosity diagnostic --include Assets/Scripts/
