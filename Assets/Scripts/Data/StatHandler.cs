@@ -7,9 +7,19 @@ namespace FMS.TapperRedone.Data
 	public class StatHandler
 	{
 		public const string UNKNOWN_STAT = "unknownStat";
-		private const string PLAYER_PREFS_KEY = "persistentStats";
+		private const string PLAYER_PREFS_FILENAME = "persistentStats.json";
 
 		private Dictionary<string, AbstractStat> sessionStats = new();
+
+		[System.Serializable]
+		private struct SavedStat
+		{
+			public string Name;
+			public string Value;
+		}
+
+		[SerializeField]
+		private List<SavedStat> _savedStats = new();
 
 		public void RegisterStat(AbstractStat stat)
 		{
@@ -51,36 +61,35 @@ namespace FMS.TapperRedone.Data
 		}
 
 
-		public void LoadPersistentStats()
+		public void LoadPersistentStats(ISaveFileHandler saveFileHandler)
 		{
-			// TODO Create a SaveFile handler, using JSON stored at Application.persistentDataPath.
-			if (!PlayerPrefs.HasKey(PLAYER_PREFS_KEY))
+			if (!saveFileHandler.FileExists(PLAYER_PREFS_FILENAME))
 				return;
 
-			string jsonified = PlayerPrefs.GetString(PLAYER_PREFS_KEY);
-			if (jsonified == "")
+			if (!saveFileHandler.LoadFile(PLAYER_PREFS_FILENAME, out string jsonified))
 				return;
 
-			Dictionary<string, string> parsedStats = JsonUtility.FromJson<Dictionary<string, string>>(jsonified);
-			if (parsedStats == null || parsedStats.Count == 0)
+			StatHandler parsedStats = JsonUtility.FromJson<StatHandler>(jsonified);
+			if (parsedStats == null || parsedStats._savedStats.Count == 0)
 				return;
 
-			foreach (var keyValuePair in parsedStats)
+			foreach (SavedStat savedStat in parsedStats._savedStats)
 			{
-				if (sessionStats.ContainsKey(keyValuePair.Key))
+				if (sessionStats.ContainsKey(savedStat.Name))
 				{
-					sessionStats[keyValuePair.Key].SetValueFromString(keyValuePair.Value);
+					sessionStats[savedStat.Name].SetValueFromString(savedStat.Value);
 				}
 			}
 		}
 
-		public void SavePersistentStats()
+		public void SavePersistentStats(ISaveFileHandler saveFileHandler)
 		{
-			Dictionary<string, string> savedStats = sessionStats.Values
+			_savedStats = sessionStats.Values
 				.Where(stat => stat.Lifetime)
-				.ToDictionary(stat => stat.StatName, stat => stat.GetValueAsString());
-			PlayerPrefs.SetString(PLAYER_PREFS_KEY, JsonUtility.ToJson(savedStats));
-			PlayerPrefs.Save();
+				.Select(stat => new SavedStat { Name = stat.StatName, Value = stat.GetValueAsString() })
+				.ToList();
+
+			saveFileHandler.SaveFile(PLAYER_PREFS_FILENAME, JsonUtility.ToJson(this));
 		}
 	}
 }

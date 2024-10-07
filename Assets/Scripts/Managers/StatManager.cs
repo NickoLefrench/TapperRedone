@@ -1,7 +1,6 @@
-﻿using System;
+﻿using FMS.TapperRedone.Data;
+using System;
 using UnityEngine;
-
-using FMS.TapperRedone.Data;
 
 namespace FMS.TapperRedone
 {
@@ -19,34 +18,38 @@ namespace FMS.TapperRedone.Managers
 		public static event Action<int> OnScoreChanged;
 		public static event Action<StatName, string> OnStatUpdated;
 
-		private StatHandler statHandler = new();
+		private readonly StatHandler _statHandler = new();
+		private ISaveFileHandler _saveFileHandler;
 
 		private void Start()
 		{
+			// Set up file handler
+			_saveFileHandler = new PersistentSaveFileHandler();
+
 			// Register all stats
-			statHandler.RegisterStat(new IntStat(StatName.Score.ToString(), false, IntStat.OverrideFunc));
-			statHandler.RegisterStat(new IntStat(StatName.LifetimeScore.ToString(), true, IntStat.AddFunc));
+			_statHandler.RegisterStat(new IntStat(StatName.Score.ToString(), false, IntStat.OverrideFunc));
+			_statHandler.RegisterStat(new IntStat(StatName.LifetimeScore.ToString(), true, IntStat.AddFunc));
 
 			// Reload any stat values from deep storage
-			statHandler.LoadPersistentStats();
+			_statHandler.LoadPersistentStats(_saveFileHandler);
 		}
 
 		public void RequestStatSave()
 		{
-			statHandler.SavePersistentStats();
+			_statHandler.SavePersistentStats(_saveFileHandler);
 		}
 
 		public int GetIntStat(StatName name)
 		{
-			return statHandler.GetSessionStatAsInt(name.ToString());
+			return _statHandler.GetSessionStatAsInt(name.ToString());
 		}
 
 		public void UpdateIntStat(StatName name, int updateValue)
 		{
-			bool success = statHandler.UpdateSessionStat(name.ToString(), updateValue);
+			bool success = _statHandler.UpdateSessionStat(name.ToString(), updateValue);
 			if (success)
 			{
-				OnStatUpdated?.Invoke(name, statHandler.GetSessionStatAsString(name.ToString()));
+				OnStatUpdated?.Invoke(name, _statHandler.GetSessionStatAsString(name.ToString()));
 			}
 		}
 
