@@ -6,7 +6,7 @@ namespace FMS.TapperRedone.Data
 {
 	public class StatHandler
 	{
-		public const string UNKNOWN_STAT = "unknownStat"; 
+		public const string UNKNOWN_STAT = "unknownStat";
 		private const string PLAYER_PREFS_KEY = "persistentStats";
 
 		private Dictionary<string, AbstractStat> sessionStats = new();
@@ -36,7 +36,7 @@ namespace FMS.TapperRedone.Data
 		{
 			if (sessionStats.TryGetValue(statName, out AbstractStat stat) && stat is IntStat)
 			{
-				return ((IntStat)stat).Value;
+				return ((IntStat) stat).Value;
 			}
 			return int.MinValue;
 		}
@@ -50,8 +50,10 @@ namespace FMS.TapperRedone.Data
 			return false;
 		}
 
+
 		public void LoadPersistentStats()
 		{
+			// TODO Create a SaveFile handler, using JSON stored at Application.persistentDataPath.
 			if (!PlayerPrefs.HasKey(PLAYER_PREFS_KEY))
 				return;
 
