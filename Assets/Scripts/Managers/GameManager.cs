@@ -1,11 +1,13 @@
-using FMS.TapperRedone.Data;
 using System;
+
+using FMS.TapperRedone.Data;
+
 using UnityEngine;
 
 namespace FMS.TapperRedone.Managers
 {
-	[RequireComponent(typeof(MenuManager))]
-	[RequireComponent(typeof(PatronManager))]
+    [RequireComponent(typeof(MenuManager))]
+    [RequireComponent(typeof(PatronManager))]
     public class GameManager : MonoBehaviour
     {
         public enum GameState
@@ -26,13 +28,13 @@ namespace FMS.TapperRedone.Managers
 
         private float nightEndTime;
 
-		public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
+        public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
         public static event Action<int> OnScoreChanged;
 
         public static PatronManager PatronManager => Instance ? Instance.GetComponent<PatronManager>() : null;
         public static MenuManager MenuManager => Instance ? Instance.GetComponent<MenuManager>() : null;
 
-		private void Awake()
+        private void Awake()
         {
             if (Instance != null && Instance != this)
             {
@@ -49,16 +51,16 @@ namespace FMS.TapperRedone.Managers
             UpdateGameState(GameState.Inactive, true);
         }
 
-		private void Update()
-		{
+        private void Update()
+        {
             if (State == GameState.MainGame && RemainingTime == 0.0f && PatronManager.CurrentPatrons == 0) //Conditions for the official EON (End of night) to occur
             {
                 UpdateGameState(GameState.EndofNight);
                 MenuManager.UpdateUIState(MenuManager.UIState.EndOfNightScoreboard);
             }
-		}
+        }
 
-		private void OnUIStateChanged(MenuManager.UIState oldState, MenuManager.UIState newState) //what state is the UI in and what night
+        private void OnUIStateChanged(MenuManager.UIState oldState, MenuManager.UIState newState) //what state is the UI in and what night
         {
             switch (newState)
             {

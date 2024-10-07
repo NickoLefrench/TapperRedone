@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.Assertions;
 
 using FMS.TapperRedone.Data;
+
+using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace FMS.TapperRedone.Inventory
 {
