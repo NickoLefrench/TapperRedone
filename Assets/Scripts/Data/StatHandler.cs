@@ -61,7 +61,6 @@ namespace FMS.TapperRedone.Data
             return false;
         }
 
-
         public void LoadPersistentStats(ISaveFileHandler saveFileHandler)
         {
             if (!saveFileHandler.FileExists(PLAYER_PREFS_FILENAME))

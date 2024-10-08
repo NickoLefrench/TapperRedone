@@ -18,7 +18,7 @@ namespace FMS.TapperRedone.UI
 
         private void Start()
         {
-            ScoreText.text = GameManager.StatManager.Score.ToString() + " Space Shillings";
+            OnScoreChanged(GameManager.StatManager.Score);
             StatManager.OnScoreChanged += OnScoreChanged;
         }
 
