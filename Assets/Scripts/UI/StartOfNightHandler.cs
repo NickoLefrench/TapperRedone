@@ -43,7 +43,7 @@ namespace FMS.TapperRedone.UI
             Color color = _nightTitle.color;
             color.a = 0;
             _nightTitle.color = color;
-            _nightTitle.text = $"Night {GameManager.Instance.CurrentNight}";
+            _nightTitle.text = $"Night {GameManager.StatManager.CurrentNight}";
         }
 
         private void RunSequence()
@@ -54,6 +54,7 @@ namespace FMS.TapperRedone.UI
                 return;
             }
 
+            AdjustSavedData();
             Cleanup();
             AdjustAlpha(_nightTitle, 1, _titleFadeInDuration).setOnComplete(() =>
             {
@@ -62,6 +63,14 @@ namespace FMS.TapperRedone.UI
                     GameManager.Instance.UpdateGameState(GameManager.GameState.MainGame);
                 });
             });
+        }
+
+        private void AdjustSavedData()
+        {
+            GameManager.StatManager.Score = 0;
+            GameManager.StatManager.CurrentNight++;
+
+            GameManager.StatManager.savedData.CurrentBeers = 0;
         }
     }
 }
