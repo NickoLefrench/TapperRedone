@@ -24,7 +24,6 @@ namespace FMS.TapperRedone.Managers
         public static GameManager Instance;
 
         public GameState State { get; private set; } = GameState.Inactive;
-        public int CurrentNight { get; private set; }
 
         private float nightEndTime;
 
@@ -57,10 +56,6 @@ namespace FMS.TapperRedone.Managers
             {
                 UpdateGameState(GameState.EndofNight);
                 MenuManager.UpdateUIState(MenuManager.UIState.EndOfNightScoreboard);
-
-                // Note - this might need to move to some kind of EndOfNight handler, to run in response to the above
-                StatManager.UpdateIntStat(StatName.LifetimeScore, StatManager.Score);
-                StatManager.RequestStatSave();
             }
         }
 
@@ -71,14 +66,16 @@ namespace FMS.TapperRedone.Managers
             case MenuManager.UIState.Game:
                 if (oldState == MenuManager.UIState.MainMenu)
                 {
-                    OnGameStart(1);
+                    UpdateSavedDataOnNewRun();
+                    OnGameStart();
                 }
                 else if (oldState == MenuManager.UIState.EndOfNightScoreboard)
                 {
-                    OnGameStart(CurrentNight + 1);
+                    OnGameStart();
                 }
                 break;
             case MenuManager.UIState.Paused:
+            case MenuManager.UIState.EndOfNightScoreboard:
                 // Nothing
                 break;
             default:
@@ -90,11 +87,18 @@ namespace FMS.TapperRedone.Managers
 
         public float RemainingTime => Mathf.Max(0.0f, nightEndTime - Time.time);
 
-        public void OnGameStart(int newNight) //Start conditions of every new night
+        private void UpdateSavedDataOnNewRun()
         {
-            CurrentNight = newNight;
+            SavedData savedData = StatManager.savedData;
+            savedData.RunNight = 0;
+            savedData.RunTotalScore = 0;
+            savedData.RunTotalBeers = 0;
+        }
+
+        //Start conditions of every new night
+        public void OnGameStart()
+        {
             UpdateGameState(GameState.StartOfNight);
-            StatManager.Score = 0;
             nightEndTime = Time.time + TunableHandler.GetTunableFloat("NIGHT.DURATION");
         }
 
