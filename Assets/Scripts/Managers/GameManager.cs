@@ -8,6 +8,7 @@ namespace FMS.TapperRedone.Managers
 {
     [RequireComponent(typeof(MenuManager))]
     [RequireComponent(typeof(PatronManager))]
+    [RequireComponent(typeof(StatManager))]
     public class GameManager : MonoBehaviour
     {
         public enum GameState
@@ -23,16 +24,14 @@ namespace FMS.TapperRedone.Managers
         public static GameManager Instance;
 
         public GameState State { get; private set; } = GameState.Inactive;
-        public int Score { get; private set; }
-        public int CurrentNight { get; private set; }
 
         private float nightEndTime;
 
         public static event Action<GameState> OnGameStateChanged; //to notify game of the change of state
-        public static event Action<int> OnScoreChanged;
 
         public static PatronManager PatronManager => Instance ? Instance.GetComponent<PatronManager>() : null;
         public static MenuManager MenuManager => Instance ? Instance.GetComponent<MenuManager>() : null;
+        public static StatManager StatManager => Instance ? Instance.GetComponent<StatManager>() : null;
 
         private void Awake()
         {
@@ -67,14 +66,16 @@ namespace FMS.TapperRedone.Managers
             case MenuManager.UIState.Game:
                 if (oldState == MenuManager.UIState.MainMenu)
                 {
-                    OnGameStart(1);
+                    UpdateSavedDataOnNewRun();
+                    OnGameStart();
                 }
                 else if (oldState == MenuManager.UIState.EndOfNightScoreboard)
                 {
-                    OnGameStart(CurrentNight + 1);
+                    OnGameStart();
                 }
                 break;
             case MenuManager.UIState.Paused:
+            case MenuManager.UIState.EndOfNightScoreboard:
                 // Nothing
                 break;
             default:
@@ -86,11 +87,18 @@ namespace FMS.TapperRedone.Managers
 
         public float RemainingTime => Mathf.Max(0.0f, nightEndTime - Time.time);
 
-        public void OnGameStart(int newNight) //Start conditions of every new night
+        private void UpdateSavedDataOnNewRun()
         {
-            CurrentNight = newNight;
+            SavedData savedData = StatManager.savedData;
+            savedData.RunNight = 0;
+            savedData.RunTotalScore = 0;
+            savedData.RunTotalBeers = 0;
+        }
+
+        //Start conditions of every new night
+        public void OnGameStart()
+        {
             UpdateGameState(GameState.StartOfNight);
-            SetScore(0);
             nightEndTime = Time.time + TunableHandler.GetTunableFloat("NIGHT.DURATION");
         }
 
@@ -110,17 +118,6 @@ namespace FMS.TapperRedone.Managers
             State = newState;
 
             OnGameStateChanged?.Invoke(newState); //avoids a null being thrown
-        }
-
-        public void AddScore(int addToScore) //score updater
-        {
-            SetScore(Score + addToScore);
-        }
-
-        public void SetScore(int newScore)
-        {
-            Score = newScore;
-            OnScoreChanged?.Invoke(Score);
         }
     }
 }
