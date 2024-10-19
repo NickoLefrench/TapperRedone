@@ -28,7 +28,9 @@ namespace FMS.TapperRedone.Inventory
             get
             {
                 return itemType == ItemType.Beer
-                    || itemType == ItemType.Cocktail;
+                    || itemType == ItemType.PurpleCocktail
+                    || itemType == ItemType.OrangeCocktail
+                    || itemType == ItemType.GreenCocktail;
             }
         }
 

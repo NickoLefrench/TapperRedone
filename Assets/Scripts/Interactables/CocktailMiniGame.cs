@@ -168,23 +168,57 @@ namespace FMS.TapperRedone.Interactables
             bool hasBlue = player.CurrentInventory.HasItemOfType(Inventory.Item.ItemType.BlueIngredient);
             bool hasYellow = player.CurrentInventory.HasItemOfType(Inventory.Item.ItemType.YellowIngredient);
 
-            // Determine which cocktail to give based on the ingredients the player has
-            Inventory.Item cocktailItem = null;
+            //to avoid uninitialized errors
+            Item.ItemType? cocktailItemType = null;
 
+            // Determine which cocktail to give based on the ingredients the player has
             if (hasRed && hasBlue)
             {
-                cocktailItem = GetCocktailByType(Inventory.Item.ItemType.PurpleCocktail);
+                cocktailItemType = Item.ItemType.PurpleCocktail;
                 Debug.Log("Purple cocktail created");
+
+                //remove  Red and Blue ingredients from the players inventory
+                player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.RedIngredient);
+                player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.BlueIngredient);
             }
             else if (hasRed && hasYellow) 
             {
-                cocktailItem = GetCocktailByType(Inventory.Item.ItemType.OrangeCocktail);
+                cocktailItemType = Item.ItemType.OrangeCocktail;
                 Debug.Log("Orange cocktail created");
+
+                //remove  Red and Yellow ingredients from the players inventory
+                player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.RedIngredient);
+                player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.YellowIngredient);
             }
             else if (hasBlue && hasYellow)
             {
-                cocktailItem = GetCocktailByType(Inventory.Item.ItemType.GreenCocktail);
+                cocktailItemType = Item.ItemType.GreenCocktail;
                 Debug.Log("Green cocktail created");
+
+                //remove  Red and Blue ingredients from the players inventory
+                player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.YellowIngredient);
+                player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.BlueIngredient);
+            }
+
+            // If a cocktail has been determined, create the Item and add it to the inventory
+            if (cocktailItemType.HasValue)
+            {
+                // Create a new Item for the cocktail
+                Item cocktailItem = new Item
+                {
+                    itemName = cocktailItemType.ToString(), // Set name as the type's name
+                    itemType = cocktailItemType.Value // Set the item type
+
+                    //for when we will have the specific sprite icon
+                   // itemIcon = GetCocktailIcon(cocktailItemType.Value)
+                };
+
+                // Add the cocktail to the player's inventory
+                player.CurrentInventory.AddItem(cocktailItem);
+            }
+            else
+            {
+                Debug.LogWarning("No valid cocktail could be made with the ingredients the player has.");
             }
         }
 
