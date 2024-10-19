@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using FMS.TapperRedone.Data;
 using FMS.TapperRedone.Interactables;
@@ -24,6 +25,11 @@ namespace FMS.TapperRedone.Characters
         public float WalkSpeed;
         public GameObject CoinsPrefab;
         public float CoinSpawnOffsetY;
+        public SpriteRenderer SpeechBubble;
+
+        // TODO after issue #2: Add randomization to cocktail types
+        public List<Item.ItemType> OrderOptions;
+        public List<Sprite> OrderSprites;
 
         // What is the maximum time can stay in this state; means different things depending on active state
         public float StateTimeRemaining { get; private set; }
@@ -51,6 +57,7 @@ namespace FMS.TapperRedone.Characters
             {
             case State.Spawning:
                 // A manager will spawn us only when walking in is possible - transition straight away.
+                HideSpeechBubble();
                 UpdateState(State.WalkingIn);
                 break;
             case State.WalkingIn:
@@ -73,6 +80,7 @@ namespace FMS.TapperRedone.Characters
                 {
                     // Order failed!
                     receivedItem = null;
+                    HideSpeechBubble();
                     UpdateState(State.Leaving);
                 }
                 break;
@@ -83,6 +91,7 @@ namespace FMS.TapperRedone.Characters
                     // Give up some coins
                     SpawnCoins();
                     // Ready to leave!
+                    HideSpeechBubble();
                     UpdateState(State.Leaving);
                 }
                 break;
@@ -139,8 +148,16 @@ namespace FMS.TapperRedone.Characters
             float minTime = TunableHandler.GetTunableFloat("NPC.MIN_WAIT_TIME");
             float maxTime = TunableHandler.GetTunableFloat("NPC.MAX_WAIT_TIME");
             StateTimeRemaining = UnityEngine.Random.Range(minTime, maxTime);
-            // For now, simple only Beer option.
-            OrderItem = Item.ItemType.Beer;
+
+            int chosenItemIdx = UnityEngine.Random.Range(0, OrderOptions.Count - 1);
+            OrderItem = OrderOptions[chosenItemIdx];
+            SpeechBubble.sprite = OrderSprites[chosenItemIdx];
+            SpeechBubble.gameObject.SetActive(true);
+        }
+
+        private void HideSpeechBubble()
+        {
+            SpeechBubble.gameObject.SetActive(false);
         }
 
         private void SpawnCoins()
@@ -173,12 +190,23 @@ namespace FMS.TapperRedone.Characters
                 return;
             }
 
-            Item returnedItem = player.AttemptInventoryTransaction(OrderItem);
-            if (returnedItem != null)
+            // Interact if player has a drink in inventory, take it, drink if success, straight leave if fail
+            if (player.CurrentInventory.HasDrink())
             {
+                Item returnedItem = player.CurrentInventory.RemoveDrink();
                 receivedItem = returnedItem;
-                StateTimeRemaining = TunableHandler.GetTunableFloat("NPC.DRINKING_TIME");
-                UpdateState(State.Drinking);
+                if (returnedItem.itemType == OrderItem)
+                {
+                    // Correct order fulfilled - start drinking
+                    StateTimeRemaining = TunableHandler.GetTunableFloat("NPC.DRINKING_TIME");
+                    UpdateState(State.Drinking);
+                }
+                else
+                {
+                    // Incorrect order - just leave
+                    HideSpeechBubble();
+                    UpdateState(State.Leaving);
+                }
             }
         }
     }

@@ -18,7 +18,9 @@ namespace FMS.TapperRedone.Inventory
             RedIngredient,
             BlueIngredient,
             YellowIngredient,
-            Cocktail,
+            GreenCocktail, // Blue and yellow
+            OrangeCocktail, // Red and yellow
+            PurpleCocktail, // Blue and red
         }
 
         public bool IsDrink
@@ -26,7 +28,9 @@ namespace FMS.TapperRedone.Inventory
             get
             {
                 return itemType == ItemType.Beer
-                    || itemType == ItemType.Cocktail;
+                    || itemType == ItemType.GreenCocktail
+                    || itemType == ItemType.OrangeCocktail
+                    || itemType == ItemType.PurpleCocktail;
             }
         }
 

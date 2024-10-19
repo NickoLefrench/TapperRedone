@@ -60,6 +60,25 @@ namespace FMS.TapperRedone.Inventory
             return itemsList.Exists(item => item.itemType == itemType);
         }
 
+        public bool HasDrink()
+        {
+            return itemsList.Exists(item => item.IsDrink);
+        }
+
+        public Item RemoveDrink()
+        {
+            Item foundItem = itemsList.Find(item => item.IsDrink);
+            if (foundItem == null)
+            {
+                return null;
+            }
+            else
+            {
+                itemsList.Remove(foundItem);
+                return foundItem;
+            }
+        }
+
         public Item RemoveFirstItemOfType(Item.ItemType itemType)
         {
             Item foundItem = itemsList.Find(item => item.itemType == itemType);
