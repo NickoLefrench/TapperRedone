@@ -6511,7 +6511,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1645604104}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< Updated upstream
 --- !u!61 &2021992875
+=======
+--- !u!114 &2021992873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2021992870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad4baed7a7d1d64aa8112b3124fb219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemToSpawn:
+    itemName: 
+    itemIcon: {fileID: 0}
+    amount: 0
+    itemType: 0
+  leftArrow: {fileID: 0}
+  rightArrow: {fileID: 0}
+  whiteArrowSprite: {fileID: 0}
+  blackArrowSprite: {fileID: 0}
+  leftKey: 97
+  rightKey: 100
+  arrowSwitchSpeed: 0.5
+--- !u!61 &2021992874
+>>>>>>> Stashed changes
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

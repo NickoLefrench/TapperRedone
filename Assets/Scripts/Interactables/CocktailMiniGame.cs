@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI; // For UI elements
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
 using FMS.TapperRedone.Data;
 using FMS.TapperRedone.Inventory;
@@ -26,36 +30,71 @@ namespace FMS.TapperRedone.Interactables
         private bool detectedInputDuringMiniGame = false;
         public Item itemToSpawn;
 
+<<<<<<< Updated upstream
         public KeyCode leftKey = KeyCode.A;  // Key for left arrow
         public KeyCode rightKey = KeyCode.D; // Key for right arrow
 
         public float arrowSwitchSpeed = 0.5f; // Speed at which arrows switch, adjust for difficulty
         private bool leftArrowActive = true;  // Determine which arrow is currently active
         private bool isMiniGameActive = false; // State of the minigame
+=======
+        public Image leftArrow; //sprites
+        public Image rightArrow;
+
+        public Sprite whiteArrowSprite;  // Sprite for white arrow
+        public Sprite blackArrowSprite;  // Sprite for black arrow
+
+        public KeyCode leftKey = KeyCode.A; //key inputs
+        public KeyCode rightKey = KeyCode.D;
+
+        public float arrowSwitchSpeed = 0.5f; //speed of alternating colors
+        private bool leftArrowActive = true; //det which arrow is active
+>>>>>>> Stashed changes
 
         private float scoreMultiplier = 1f;  // Score multiplier based on timing
         private float perfectHitWindow = 0.2f;  // Time window for a perfect hit
 
+<<<<<<< Updated upstream
         private Coroutine rhythmCoroutine; // Coroutine to manage rhythm game
+=======
+        private Coroutine rhythmCoroutine; // Coroutine rhythm game as thats how i see the solution for the game
+>>>>>>> Stashed changes
 
         // Start is called before the first frame update
         void Start()
         {
             GameManager.OnGameStateChanged += OnGameStateChanged;
 
+<<<<<<< Updated upstream
             // Set initial sprites
             spriteRenderer = GetComponent<SpriteRenderer>();
 
             // Initialize the sprite to start with left arrow unpressed
             spriteRenderer.sprite = leftUIUnpressed;
 
+=======
+            leftArrow.sprite = whiteArrowSprite;
+            rightArrow.sprite = blackArrowSprite;
+>>>>>>> Stashed changes
         }
 
         // Update is called once per frame
         void Update()
         {
+<<<<<<< Updated upstream
             // Only run the mini-game logic if the game state is CocktailMiniGame
             if (GameManager.Instance.State == GameManager.GameState.CocktailMiniGame)
+=======
+            //if (GameManager.Instance.CurrentGameState == GameManager.GameState.CocktailMiniGame)
+            {
+                DetectPlayerInput();
+            }
+        }
+
+        private void OnGameStateChanged(GameManager.GameState gameState) //changes gamestate to cocktail minigame
+        {
+            if (gameState != GameManager.GameState.CocktailMiniGame)
+>>>>>>> Stashed changes
             {
                 DetectPlayerInput();
             }
@@ -93,9 +132,56 @@ namespace FMS.TapperRedone.Interactables
         private void StartCocktailMiniGame() //rythm mini game
         {
             detectedInputDuringMiniGame = false;
+<<<<<<< Updated upstream
 
             // Start the rhythm switching coroutine
             rhythmCoroutine = StartCoroutine(SwitchArrowsCoroutine());
+=======
+            rhythmCoroutine = StartCoroutine(SwitchArrowsCoroutine());
+        }
+
+        private IEnumerator SwitchArrowsCoroutine()
+        {
+         //   while (GameManager.Instance.CurrentGameState == GameManager.GameState.CocktailMiniGame)
+            {
+                leftArrowActive = !leftArrowActive;
+
+                // Alternate between sprites for the left and right arrows
+                leftArrow.sprite = leftArrowActive ? whiteArrowSprite : blackArrowSprite;
+                rightArrow.sprite = leftArrowActive ? blackArrowSprite : whiteArrowSprite;
+
+                // Wait for the defined switch speed
+                yield return new WaitForSeconds(arrowSwitchSpeed);
+            }
+        }
+
+        private void DetectPlayerInput() //to work in tandum with coroutine, checks players input timing
+        {
+            if (leftArrowActive && Input.GetKeyDown(leftKey))
+            {
+                float timeSinceSwitch = arrowSwitchSpeed - Mathf.Abs(Time.time % arrowSwitchSpeed);
+                CalculateScore(timeSinceSwitch);
+            }
+            else if (!leftArrowActive && Input.GetKeyDown(rightKey))
+            {
+                float timeSinceSwitch = arrowSwitchSpeed - Mathf.Abs(Time.time % arrowSwitchSpeed);
+                CalculateScore(timeSinceSwitch);
+            }
+        }
+
+        private void CalculateScore(float timeSinceSwitch)
+        {
+            if (timeSinceSwitch <= perfectHitWindow)
+            {
+                scoreMultiplier += 0.5f;
+                Debug.Log("Perfect hit! Score multiplier: " + scoreMultiplier);
+            }
+            else
+            {
+                scoreMultiplier += 0.2f;
+                Debug.Log("Good hit! Score multiplier: " + scoreMultiplier);
+            }
+>>>>>>> Stashed changes
         }
 
         private IEnumerator SwitchArrowsCoroutine()

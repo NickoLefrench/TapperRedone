@@ -119,7 +119,7 @@ namespace FMS.TapperRedone.Managers
 
         public void CocktailMiniGame()
         {
-
+           // StartCocktailMiniGame();
         }
 
         public void Leaderboards()
