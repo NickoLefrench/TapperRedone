@@ -73,9 +73,9 @@ namespace FMS.TapperRedone.Interactables
                 StartCocktailMiniGame();
             }
             // Otherwise, end the mini-game
-            else
+            else 
             {
-                EndCocktailMiniGame();
+                EndCocktailMiniGame(false);
             }
         }
 
@@ -225,11 +225,14 @@ namespace FMS.TapperRedone.Interactables
         }
 
         // Call this when the minigame ends
-        public void EndCocktailMiniGame()
+        public void EndCocktailMiniGame(bool givesDrink)
         {
             isMiniGameActive = false;
 
-            GiveCorrespondingDrink();
+            if (givesDrink)
+            {
+                GiveCorrespondingDrink();
+            }
 
             if (rhythmCoroutine != null)
             {
