@@ -28,6 +28,7 @@ namespace FMS.TapperRedone.Interactables
 
         public KeyCode leftKey = KeyCode.A;  // Key for left arrow
         public KeyCode rightKey = KeyCode.D; // Key for right arrow
+        public KeyCode Quit = KeyCode.Escape;
 
         public float arrowSwitchSpeed = 0.5f; // Speed at which arrows switch, adjust for difficulty
         private bool leftArrowActive = true;  // Determine which arrow is currently active
@@ -62,6 +63,11 @@ namespace FMS.TapperRedone.Interactables
             {
                 DetectPlayerInput();
             }
+
+            if (Input.GetKeyDown(Quit))
+            {
+                EndCocktailMiniGame(false);
+            }
         }
 
         //changes gamestate to cocktail minigame
@@ -72,9 +78,9 @@ namespace FMS.TapperRedone.Interactables
             {
                 StartCocktailMiniGame();
             }
-            // Otherwise, end the mini-game
-            else 
+            else if (isMiniGameActive)
             {
+                // Only end the mini-game if it was active
                 EndCocktailMiniGame(false);
             }
         }
@@ -88,13 +94,17 @@ namespace FMS.TapperRedone.Interactables
             // Checks to see if player could receive a beer at end of interaction
             if (player.CurrentInventory.CanAddItem(itemToSpawn)) //must add detection to see if cx has ingredients
             {
-                GameManager.Instance.UpdateGameState(GameManager.GameState.CocktailMiniGame);
+              //  GameManager.Instance.UpdateGameState(GameManager.GameState.CocktailMiniGame); - legacy code, seeiong if other option works
+
+                GameManager.Instance.StartCocktailMiniGame();
             }
 
         }
 
         private void StartCocktailMiniGame() //rythm mini game
         {
+            isMiniGameActive = true;
+
             detectedInputDuringMiniGame = false;
 
             rhythmCoroutine = StartCoroutine(SwitchArrowsCoroutine());
@@ -229,15 +239,22 @@ namespace FMS.TapperRedone.Interactables
         {
             isMiniGameActive = false;
 
-            if (givesDrink)
+            //only gives drink if allowed
+                if (givesDrink)
             {
                 GiveCorrespondingDrink();
             }
 
+                //end the rythm coroutine
             if (rhythmCoroutine != null)
             {
                 StopCoroutine(rhythmCoroutine);
             }
+
+            // Return to base state via GameManager
+            GameManager.Instance.EndCocktailMiniGame();
         }
+
+        
     }
 }

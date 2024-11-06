@@ -90,7 +90,7 @@ namespace FMS.TapperRedone.Managers
             switch (newState)
             {
             case GameState.CocktailMiniGame:
-                CocktailMiniGame();
+                StartCocktailMiniGame();//initiate cocktail minigame
                 break;
 
             case GameState.Leaderboards:
@@ -117,11 +117,6 @@ namespace FMS.TapperRedone.Managers
             OnScoreChanged?.Invoke(Score);
         }
 
-        public void CocktailMiniGame()
-        {
-           // StartCocktailMiniGame();
-        }
-
         public void Leaderboards()
         {
 
@@ -130,6 +125,16 @@ namespace FMS.TapperRedone.Managers
         public void EndofNight()
         {
 
+        }
+
+        public void StartCocktailMiniGame()
+        {
+            UpdateGameState(GameState.CocktailMiniGame);
+        }
+
+        public void EndCocktailMiniGame()
+        {
+            UpdateGameState(GameState.BaseMovement); // Return to BaseMovement or any other appropriate state
         }
     }
 }
