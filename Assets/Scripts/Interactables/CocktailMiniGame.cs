@@ -37,6 +37,8 @@ namespace FMS.TapperRedone.Interactables
         private float scoreMultiplier = 1f;  // Score multiplier based on timing
         private float perfectHitWindow = 0.2f;  // Time window for a perfect hit
 
+        public CanvasGroup cocktailCanvasGroup; // Reference to your Canvas Group for the mini-game UI
+
 
         private Coroutine rhythmCoroutine; // Coroutine to manage rhythm game
 
@@ -106,6 +108,14 @@ namespace FMS.TapperRedone.Interactables
             isMiniGameActive = true;
 
             detectedInputDuringMiniGame = false;
+
+            // Enable the Canvas for the UI arrows
+            if (cocktailCanvasGroup != null)
+            {
+                cocktailCanvasGroup.alpha = 1f;
+                cocktailCanvasGroup.interactable = true;
+                cocktailCanvasGroup.blocksRaycasts = true;
+            }
 
             rhythmCoroutine = StartCoroutine(SwitchArrowsCoroutine());
         }
@@ -239,8 +249,16 @@ namespace FMS.TapperRedone.Interactables
         {
             isMiniGameActive = false;
 
+            // Disable the Canvas for the UI arrows
+            if (cocktailCanvasGroup != null)
+            {
+                cocktailCanvasGroup.alpha = 0f;
+                cocktailCanvasGroup.interactable = false;
+                cocktailCanvasGroup.blocksRaycasts = false;
+            }
+
             //only gives drink if allowed
-                if (givesDrink)
+            if (givesDrink)
             {
                 GiveCorrespondingDrink();
             }

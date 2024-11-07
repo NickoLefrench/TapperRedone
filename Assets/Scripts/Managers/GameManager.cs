@@ -129,11 +129,13 @@ namespace FMS.TapperRedone.Managers
 
         public void StartCocktailMiniGame()
         {
+            Debug.Log("The Cocktail Minigame has begon");
             UpdateGameState(GameState.CocktailMiniGame);
         }
 
         public void EndCocktailMiniGame()
         {
+            Debug.Log("The Cocktail Minigame has ended, returning to regular movement");
             UpdateGameState(GameState.BaseMovement); // Return to BaseMovement or any other appropriate state
         }
     }
