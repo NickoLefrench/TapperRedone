@@ -20,7 +20,9 @@ namespace FMS.TapperRedone.Interactables
         public Sprite rightUIPressed;
         public Sprite rightUIUnpressed;
 
-        private SpriteRenderer spriteRenderer; // Ref to cocktail SpriteRenderer
+        public SpriteRenderer cocktailShakerRenderer; // Assign this with the Cocktail Shaker's Sprite Renderer in the Inspector
+        public GameObject leftArrow; // Assign the LeftArrow object here
+        public GameObject rightArrow; // Assign the RightArrow object here
 
         private PlayerInteraction player; // Store player reference
         private bool detectedInputDuringMiniGame = false;
@@ -28,7 +30,7 @@ namespace FMS.TapperRedone.Interactables
 
         public KeyCode leftKey = KeyCode.A;  // Key for left arrow
         public KeyCode rightKey = KeyCode.D; // Key for right arrow
-        public KeyCode Quit = KeyCode.Escape;
+        public KeyCode Quit = KeyCode.Space; //hit E to quit, escape pauses game entirely
 
         public float arrowSwitchSpeed = 0.5f; // Speed at which arrows switch, adjust for difficulty
         private bool leftArrowActive = true;  // Determine which arrow is currently active
@@ -48,11 +50,15 @@ namespace FMS.TapperRedone.Interactables
         {
             GameManager.OnGameStateChanged += OnGameStateChanged;
 
-            // Set initial sprites
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            // Set the Cocktail Shaker to be visible at the start
+            if (cocktailShakerRenderer != null)
+            {
+                cocktailShakerRenderer.enabled = true;
+            }
 
-            // Initialize the sprite to start with left arrow unpressed
-            spriteRenderer.sprite = leftUIUnpressed;
+            // Ensure arrows are hidden until the minigame starts
+            if (leftArrow != null) leftArrow.SetActive(false);
+            if (rightArrow != null) rightArrow.SetActive(false);
 
 
         }
@@ -109,6 +115,14 @@ namespace FMS.TapperRedone.Interactables
 
             detectedInputDuringMiniGame = false;
 
+            // Hide or show relevant elements for the minigame
+            if (cocktailShakerRenderer != null)
+            {
+                cocktailShakerRenderer.enabled = true; // Ensure it remains visible during gameplay
+            }
+            if (leftArrow != null) leftArrow.SetActive(true);
+            if (rightArrow != null) rightArrow.SetActive(true);
+
             // Enable the Canvas for the UI arrows
             if (cocktailCanvasGroup != null)
             {
@@ -128,17 +142,23 @@ namespace FMS.TapperRedone.Interactables
                 leftArrowActive = !leftArrowActive;
 
                 // Switch the sprite based on active arrow
+                //Sets the sprite property of the Image component on each arrow to either the pressed or unpressed state
                 if (leftArrowActive)
                 {
-                    spriteRenderer.sprite = leftUIUnpressed;  // Left arrow active (unpressed)
+                    leftArrow.GetComponent<Image>().sprite = leftUIUnpressed;
+                    rightArrow.GetComponent<Image>().sprite = rightUIPressed; 
                 }
                 else
                 {
-                    spriteRenderer.sprite = rightUIPressed;   // Right arrow active (pressed)
+                    leftArrow.GetComponent<Image>().sprite = leftUIPressed;
+                    rightArrow.GetComponent<Image>().sprite = rightUIUnpressed;  
                 }
 
                 // Wait for the defined switch speed
                 yield return new WaitForSeconds(arrowSwitchSpeed);
+
+                Debug.Log(leftArrow);  // Check if leftArrow is null
+                Debug.Log(rightArrow); // Check if rightArrow is null
             }
         }
 
@@ -248,6 +268,14 @@ namespace FMS.TapperRedone.Interactables
         public void EndCocktailMiniGame(bool givesDrink)
         {
             isMiniGameActive = false;
+
+            // Revert any UI or gameplay visibility settings here
+            if (cocktailShakerRenderer != null)
+            {
+                cocktailShakerRenderer.enabled = true; // Keep it visible post-gameplay as needed
+            }
+            if (leftArrow != null) leftArrow.SetActive(false);
+            if (rightArrow != null) rightArrow.SetActive(false);
 
             // Disable the Canvas for the UI arrows
             if (cocktailCanvasGroup != null)
