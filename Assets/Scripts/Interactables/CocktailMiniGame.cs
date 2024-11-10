@@ -120,8 +120,20 @@ namespace FMS.TapperRedone.Interactables
             {
                 cocktailShakerRenderer.enabled = true; // Ensure it remains visible during gameplay
             }
-            if (leftArrow != null) leftArrow.SetActive(true);
-            if (rightArrow != null) rightArrow.SetActive(true);
+
+            // Set initial left arrow sprite
+            if (leftArrow != null) 
+            { 
+                leftArrow.SetActive(true);
+                leftArrow.GetComponent<Image>().sprite = leftUIUnpressed;
+            }
+
+            // Set initial right arrow sprite
+            if (rightArrow != null)
+            {
+                rightArrow.SetActive(true);
+                rightArrow.GetComponent<Image>().sprite = rightUIUnpressed;
+            }
 
             // Enable the Canvas for the UI arrows
             if (cocktailCanvasGroup != null)
@@ -145,20 +157,28 @@ namespace FMS.TapperRedone.Interactables
                 //Sets the sprite property of the Image component on each arrow to either the pressed or unpressed state
                 if (leftArrowActive)
                 {
-                    leftArrow.GetComponent<Image>().sprite = leftUIUnpressed;
-                    rightArrow.GetComponent<Image>().sprite = rightUIPressed; 
+                    if (leftArrow != null && leftArrow.GetComponent<Image>() != null)
+                        leftArrow.GetComponent<Image>().sprite = leftUIUnpressed;
+
+                    if (rightArrow != null && rightArrow.GetComponent<Image>() != null)
+                        rightArrow.GetComponent<Image>().sprite = rightUIPressed; 
                 }
                 else
                 {
-                    leftArrow.GetComponent<Image>().sprite = leftUIPressed;
-                    rightArrow.GetComponent<Image>().sprite = rightUIUnpressed;  
+                    if (leftArrow != null && leftArrow.GetComponent<Image>() != null)
+                        leftArrow.GetComponent<Image>().sprite = leftUIPressed;
+
+                    if (rightArrow != null && rightArrow.GetComponent<Image>() != null)
+                        rightArrow.GetComponent<Image>().sprite = rightUIUnpressed;  
                 }
 
                 // Wait for the defined switch speed
                 yield return new WaitForSeconds(arrowSwitchSpeed);
 
+                //debugging to see if left and right arrows are assigned and alternating
                 Debug.Log(leftArrow);  // Check if leftArrow is null
                 Debug.Log(rightArrow); // Check if rightArrow is null
+                Debug.Log("LeftArrowActive: " + leftArrowActive + ", Left Arrow: " + leftArrow.GetComponent<Image>().sprite.name + ", Right Arrow: " + rightArrow.GetComponent<Image>().sprite.name);
             }
         }
 
