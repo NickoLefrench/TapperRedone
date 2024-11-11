@@ -30,7 +30,7 @@ namespace FMS.TapperRedone.Interactables
 
         public KeyCode leftKey = KeyCode.A;  // Key for left arrow
         public KeyCode rightKey = KeyCode.D; // Key for right arrow
-        public KeyCode Quit = KeyCode.Space; //hit E to quit, escape pauses game entirely
+        public KeyCode Quit = KeyCode.Q; //hit Q to quit, escape pauses game entirely
 
         public float arrowSwitchSpeed = 0.5f; // Speed at which arrows switch, adjust for difficulty
         private bool leftArrowActive = true;  // Determine which arrow is currently active
@@ -41,6 +41,8 @@ namespace FMS.TapperRedone.Interactables
 
         public CanvasGroup cocktailCanvasGroup; // Reference to your Canvas Group for the mini-game UI
 
+        [Tooltip("Duration of the mini-game in seconds.")]
+        public float miniGameDuration = 10f; // Default to 10 seconds, can be adjusted in the inspector
 
         private Coroutine rhythmCoroutine; // Coroutine to manage rhythm game
 
@@ -66,15 +68,19 @@ namespace FMS.TapperRedone.Interactables
         // Update is called once per frame
         void Update()
         {
+           /* if (isMiniGameActive && Input.GetKeyDown(Quit))       LEGACY
+            {
+                Debug.Log("Player quit the mini-game.");
+                EndCocktailMiniGame(givesDrink: false); // Ends the game without giving drink
+            }*/
+
+            if (isMiniGameActive)
+                CheckForQuit();
+
             // Only run the mini-game logic if the game state is CocktailMiniGame
             if (GameManager.Instance.State == GameManager.GameState.CocktailMiniGame)
             {
                 DetectPlayerInput();
-            }
-
-            if (Input.GetKeyDown(Quit))
-            {
-                EndCocktailMiniGame(false);
             }
         }
 
@@ -144,12 +150,22 @@ namespace FMS.TapperRedone.Interactables
             }
 
             rhythmCoroutine = StartCoroutine(SwitchArrowsCoroutine());
+
+            // Start the timer coroutine for automatic end
+            StartCoroutine(MiniGameTimer());
         }
 
         private IEnumerator SwitchArrowsCoroutine()
         {
             while (GameManager.Instance.State == GameManager.GameState.CocktailMiniGame)
             {
+                if (Input.GetKeyDown(Quit))
+                {
+                    Debug.Log("Quit key pressed");
+                    EndCocktailMiniGame(false);
+                    yield break; // Exit the coroutine
+                }
+
                 // Alternate between left and right arrow
                 leftArrowActive = !leftArrowActive;
 
@@ -185,6 +201,15 @@ namespace FMS.TapperRedone.Interactables
         //check if player hit the btn at the right time, works in tandem with coroutine
         private void DetectPlayerInput()
         {
+           //putting quit option here to see if the player can quit by hitting Q
+            if (Input.GetKeyDown(Quit))
+            {
+                Debug.Log("Quit key pressed");
+                EndCocktailMiniGame(false);
+                return; // Ensure we stop further processing in this frame
+            }
+
+
             //arrowSwitchSpeed contorls how quickly arrows alternate, adjust for difficulty
             //perfectHitWindow defines how much time after the switch is considered a perfect hit to gain the score multiplier
 
@@ -287,9 +312,12 @@ namespace FMS.TapperRedone.Interactables
         // Call this when the minigame ends
         public void EndCocktailMiniGame(bool givesDrink)
         {
+            // Stop all coroutines to ensure the game stops completely
+            StopAllCoroutines();
+
             isMiniGameActive = false;
 
-            // Revert any UI or gameplay visibility settings here
+            // Revert any UI or gameplay visibility settings here, returns visibility
             if (cocktailShakerRenderer != null)
             {
                 cocktailShakerRenderer.enabled = true; // Keep it visible post-gameplay as needed
@@ -305,9 +333,10 @@ namespace FMS.TapperRedone.Interactables
                 cocktailCanvasGroup.blocksRaycasts = false;
             }
 
-            //only gives drink if allowed
+            //only gives drink if the game ended naturally with the timer runing out
             if (givesDrink)
             {
+                Debug.Log("Giving drink to player");
                 GiveCorrespondingDrink();
             }
 
@@ -321,6 +350,25 @@ namespace FMS.TapperRedone.Interactables
             GameManager.Instance.EndCocktailMiniGame();
         }
 
-        
+        private IEnumerator MiniGameTimer()
+        {
+            yield return new WaitForSeconds(miniGameDuration);
+
+            if (isMiniGameActive) // Only end if still active (not manually quit)
+            {
+                Debug.Log("Minigame Timer Ran out");
+                EndCocktailMiniGame(givesDrink: true); // Ends game and gives drink if timer runs out
+            }
+        }
+
+        //stupid quit function since update, detect player input and the switcxh arrows coroutine are all not detecting player hitting Q to quit
+        private void CheckForQuit()
+        {
+            if (Input.GetKeyDown(Quit))
+            {
+                Debug.Log("Player attempted to quit the mini-game.");
+                EndCocktailMiniGame(givesDrink: false); // Ends without giving drink
+            }
+        }
     }
 }
