@@ -20,31 +20,31 @@ namespace FMS.TapperRedone.Interactables
         public Sprite rightUIPressed;
         public Sprite rightUIUnpressed;
 
-        public SpriteRenderer cocktailShakerRenderer; // Assign this with the Cocktail Shaker's Sprite Renderer in the Inspector
-        public GameObject leftArrow; // Assign the LeftArrow object here
-        public GameObject rightArrow; // Assign the RightArrow object here
+        public SpriteRenderer cocktailShakerRenderer;       // Assign this with the Cocktail Shaker's Sprite Renderer in the Inspector
+        public GameObject leftArrow;                        // Assign the LeftArrow object here
+        public GameObject rightArrow;                       // Assign the RightArrow object here
 
-        private PlayerInteraction player; // Store player reference
+        private PlayerInteraction player;                   // Store player reference
         private bool detectedInputDuringMiniGame = false;
         public Item itemToSpawn;
+            
+        public KeyCode leftKey = KeyCode.A;                 // Key for left arrow
+        public KeyCode rightKey = KeyCode.D;                // Key for right arrow
+        public KeyCode Quit = KeyCode.Q;                    //hit Q to quit, escape pauses game entirely
 
-        public KeyCode leftKey = KeyCode.A;  // Key for left arrow
-        public KeyCode rightKey = KeyCode.D; // Key for right arrow
-        public KeyCode Quit = KeyCode.Q; //hit Q to quit, escape pauses game entirely
+        public float arrowSwitchSpeed = 0.5f;               // Speed at which arrows switch, adjust for difficulty
+        private bool leftArrowActive = true;                // Determine which arrow is currently active
+        private bool isMiniGameActive = false;              // State of the minigame
 
-        public float arrowSwitchSpeed = 0.5f; // Speed at which arrows switch, adjust for difficulty
-        private bool leftArrowActive = true;  // Determine which arrow is currently active
-        private bool isMiniGameActive = false; // State of the minigame
+        private float scoreMultiplier = 1f;                 // Score multiplier based on timing
+        private float perfectHitWindow = 0.2f;              // Time window for a perfect hit
 
-        private float scoreMultiplier = 1f;  // Score multiplier based on timing
-        private float perfectHitWindow = 0.2f;  // Time window for a perfect hit
-
-        public CanvasGroup cocktailCanvasGroup; // Reference to your Canvas Group for the mini-game UI
+        public CanvasGroup cocktailCanvasGroup;             // Reference to your Canvas Group for the mini-game UI
 
         [Tooltip("Duration of the mini-game in seconds.")]
-        public float miniGameDuration = 10f; // Default to 10 seconds, can be adjusted in the inspector
+        public float miniGameDuration = 10f;                // Default to 10 seconds, can be adjusted in the inspector
 
-        private Coroutine rhythmCoroutine; // Coroutine to manage rhythm game
+        private Coroutine rhythmCoroutine;                  // Coroutine to manage rhythm game
 
 
         // Start is called before the first frame update
@@ -68,11 +68,6 @@ namespace FMS.TapperRedone.Interactables
         // Update is called once per frame
         void Update()
         {
-           /* if (isMiniGameActive && Input.GetKeyDown(Quit))       LEGACY
-            {
-                Debug.Log("Player quit the mini-game.");
-                EndCocktailMiniGame(givesDrink: false); // Ends the game without giving drink
-            }*/
 
             if (isMiniGameActive)
                 CheckForQuit();
@@ -102,11 +97,13 @@ namespace FMS.TapperRedone.Interactables
         //CocktailMiniGame Controller, similar to beer
         public override void Interact(PlayerInteraction player) 
         {
+            //store the player ref
             base.Interact(player);
-            this.player = player; //store the player ref
+            this.player = player; 
 
             // Checks to see if player could receive a beer at end of interaction
-            if (player.CurrentInventory.CanAddItem(itemToSpawn)) //must add detection to see if cx has ingredients
+            //must add detection to see if cx has ingredients
+            if (player.CurrentInventory.CanAddItem(itemToSpawn)) 
             {
               //  GameManager.Instance.UpdateGameState(GameManager.GameState.CocktailMiniGame); - legacy code, seeiong if other option works
 
@@ -115,7 +112,8 @@ namespace FMS.TapperRedone.Interactables
 
         }
 
-        private void StartCocktailMiniGame() //rythm mini game
+        //rythm mini game
+        private void StartCocktailMiniGame()
         {
             isMiniGameActive = true;
 
@@ -124,7 +122,8 @@ namespace FMS.TapperRedone.Interactables
             // Hide or show relevant elements for the minigame
             if (cocktailShakerRenderer != null)
             {
-                cocktailShakerRenderer.enabled = true; // Ensure it remains visible during gameplay
+                // Ensure it remains visible during gameplay
+                cocktailShakerRenderer.enabled = true; 
             }
 
             // Set initial left arrow sprite
@@ -163,7 +162,9 @@ namespace FMS.TapperRedone.Interactables
                 {
                     Debug.Log("Quit key pressed");
                     EndCocktailMiniGame(false);
-                    yield break; // Exit the coroutine
+
+                    // Exit the coroutine
+                    yield break; 
                 }
 
                 // Alternate between left and right arrow
@@ -192,8 +193,12 @@ namespace FMS.TapperRedone.Interactables
                 yield return new WaitForSeconds(arrowSwitchSpeed);
 
                 //debugging to see if left and right arrows are assigned and alternating
-                Debug.Log(leftArrow);  // Check if leftArrow is null
-                Debug.Log(rightArrow); // Check if rightArrow is null
+
+                // Check if leftArrow is null
+                Debug.Log(leftArrow);
+
+                // Check if rightArrow is null
+                Debug.Log(rightArrow);
                 Debug.Log("LeftArrowActive: " + leftArrowActive + ", Left Arrow: " + leftArrow.GetComponent<Image>().sprite.name + ", Right Arrow: " + rightArrow.GetComponent<Image>().sprite.name);
             }
         }
@@ -206,7 +211,9 @@ namespace FMS.TapperRedone.Interactables
             {
                 Debug.Log("Quit key pressed");
                 EndCocktailMiniGame(false);
-                return; // Ensure we stop further processing in this frame
+
+                // Ensure we stop further processing in this frame
+                return; 
             }
 
 
@@ -242,7 +249,8 @@ namespace FMS.TapperRedone.Interactables
             }
             else //to modify to just receive current base score
             {
-                scoreMultiplier += 0.2f;  // Lesser multiplier for a normal hit, to change
+                // Lesser multiplier for a normal hit, to change
+                scoreMultiplier += 0.2f; 
                 Debug.Log("Good hit! Score multiplier: " + scoreMultiplier);
             }
         }
@@ -293,8 +301,11 @@ namespace FMS.TapperRedone.Interactables
                 // Create a new Item for the cocktail
                 Item cocktailItem = new Item
                 {
-                    itemName = cocktailItemType.ToString(), // Set name as the type's name
-                    itemType = cocktailItemType.Value // Set the item type
+                    // Set name as the type's name
+                    itemName = cocktailItemType.ToString(),
+
+                    // Set the item type
+                    itemType = cocktailItemType.Value 
 
                     //for when we will have the specific sprite icon
                    // itemIcon = GetCocktailIcon(cocktailItemType.Value)
@@ -320,7 +331,8 @@ namespace FMS.TapperRedone.Interactables
             // Revert any UI or gameplay visibility settings here, returns visibility
             if (cocktailShakerRenderer != null)
             {
-                cocktailShakerRenderer.enabled = true; // Keep it visible post-gameplay as needed
+                // Keep it visible post-gameplay as needed
+                cocktailShakerRenderer.enabled = true; 
             }
             if (leftArrow != null) leftArrow.SetActive(false);
             if (rightArrow != null) rightArrow.SetActive(false);
@@ -354,10 +366,12 @@ namespace FMS.TapperRedone.Interactables
         {
             yield return new WaitForSeconds(miniGameDuration);
 
-            if (isMiniGameActive) // Only end if still active (not manually quit)
+            // Only end if still active (not manually quit)
+            // Ends game and gives drink if timer runs out
+            if (isMiniGameActive) 
             {
                 Debug.Log("Minigame Timer Ran out");
-                EndCocktailMiniGame(givesDrink: true); // Ends game and gives drink if timer runs out
+                EndCocktailMiniGame(givesDrink: true); 
             }
         }
 
@@ -366,8 +380,9 @@ namespace FMS.TapperRedone.Interactables
         {
             if (Input.GetKeyDown(Quit))
             {
+                // Ends without giving drink
                 Debug.Log("Player attempted to quit the mini-game.");
-                EndCocktailMiniGame(givesDrink: false); // Ends without giving drink
+                EndCocktailMiniGame(givesDrink: false); 
             }
         }
     }

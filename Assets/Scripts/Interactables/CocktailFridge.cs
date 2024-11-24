@@ -5,10 +5,19 @@ namespace FMS.TapperRedone.Interactables
 {
     public class CocktailFridge : InteractableObject
     {
-        public Inventory.Item[] Ingredients; //array to store colour coded ingredients items as ItemType
-        private SpriteRenderer FridgeSpriteRenderer; // Reference to the SpriteRenderer of the fridge
+        //array to store colour coded ingredients items as ItemType
+        public Inventory.Item[] Ingredients;
 
-        private enum ColorCategory //short enum list for the colour window of error
+        // Reference to the SpriteRenderer of the fridge
+        private SpriteRenderer FridgeSpriteRenderer;
+
+        // Assign this in the inspector to set what color category this fridge belongs to
+        //editable in inspector but not public
+        [SerializeField]
+        private ColorCategory FridgeColorCategory;
+
+        //short enum list for the colour window of error
+        private enum ColorCategory
         {
             Red,
             Yellow,
@@ -28,75 +37,53 @@ namespace FMS.TapperRedone.Interactables
         public override void Interact(Characters.PlayerInteraction player)
         {
             base.Interact(player);
-           
 
-            if (FridgeSpriteRenderer != null)
+            // Use FridgeColorCategory directly
+            Inventory.Item itemToSpawn = GetIngredientForCategory(FridgeColorCategory);
+
+            // debugging to confirm if color exists
+            if (itemToSpawn != null)
             {
-                Color fridgeColor = FridgeSpriteRenderer.color;
-                Inventory.Item itemToSpawn = GetItemForColor(fridgeColor);
-
-                if (itemToSpawn != null)  //debugging to confirm if colour exists
-                {
-                    player.CurrentInventory.AddItem(itemToSpawn);
-                }
-                else
-                {
-                    Debug.LogWarning("No item found for the color: " + fridgeColor);
-                }
+                player.CurrentInventory.AddItem(itemToSpawn);
             }
             else
             {
-                Debug.LogError("SpriteRenderer component is missing!");
+                Debug.LogWarning("No item found for the color category: " + FridgeColorCategory);
             }
+
+
         }
 
-        private Inventory.Item GetItemForColor(Color color) //which ingredient to give to player based on the fridge colour
+        private Inventory.Item GetIngredientByType(Inventory.Item.ItemType type)
         {
-            switch (GetColorCategory(color))
+            // Iterate through the Ingredients array to find the matching item
+            foreach (var ingredient in Ingredients)
+            {
+                if (ingredient.itemType == type)
+                {
+                    return ingredient;
+                }
+            }
+
+            // Return null if no matching item is found
+            return null;
+        }
+
+        private Inventory.Item GetIngredientForCategory(ColorCategory category)
+        {
+            switch (category)
             {
                 case ColorCategory.Red:
                     return GetIngredientByType(Inventory.Item.ItemType.RedIngredient);
-
                 case ColorCategory.Blue:
                     return GetIngredientByType(Inventory.Item.ItemType.BlueIngredient);
-               
                 case ColorCategory.Yellow:
                     return GetIngredientByType(Inventory.Item.ItemType.YellowIngredient);
                 default:
                     return null;
             }
-
-        }
-
-        private ColorCategory GetColorCategory(Color color) //maps the Color to a ColorCategory enum predifined
-        {
-            // Here we compare colors with a small tolerance for floating-point precision issues
-            if (ColorsAreClose(color, new Color(0.934f, 0f, 0f, 1f)))
-                return ColorCategory.Red;
-
-            if (ColorsAreClose(color, new Color(1f, 0.9f, 0f, 1f)))
-                return ColorCategory.Yellow;
-
-            if (ColorsAreClose(color, new Color(0f, 0.7f, 1f, 1f)))
-                return ColorCategory.Blue;
-
-            return ColorCategory.Unknown;
-        }
-
-        private bool ColorsAreClose(Color color1, Color color2, float tolerance = 0.1f) //some math from chatgpt to create a window of error of the adjusted colors on the prefab
-        {                                                                               //compares colors with a tolerance to handle small differences due to floating-point precision
-            return Mathf.Abs(color1.r - color2.r) < tolerance &&                        //tolerance can be adjusted
-                   Mathf.Abs(color1.g - color2.g) < tolerance &&                        //this hurt my brain  a bit
-                   Mathf.Abs(color1.b - color2.b) < tolerance &&
-                   Mathf.Abs(color1.a - color2.a) < tolerance;
-        }
-
-        private Inventory.Item GetIngredientByType(Inventory.Item.ItemType type) //retrives the Item (itemClass) from Inventory Class based on the Ingredients array
-        {
-            return Ingredients.FirstOrDefault(item => item.itemType == type);
         }
     }
-    
 }
 
 
