@@ -15,37 +15,51 @@ namespace FMS.TapperRedone.Interactables
     {
 
         // References to the sprites for the arrows
-        public Sprite leftUIPressed;
-        public Sprite leftUIUnpressed;
-        public Sprite rightUIPressed;
-        public Sprite rightUIUnpressed;
+        [Header("Arrow Sprites")]
+        [SerializeField] private Sprite leftUIPressed;
+        [SerializeField] private Sprite leftUIUnpressed;
+        [SerializeField] private Sprite rightUIPressed;
+        [SerializeField] private Sprite rightUIUnpressed;
 
-        public SpriteRenderer cocktailShakerRenderer;       // Assign this with the Cocktail Shaker's Sprite Renderer in the Inspector
-        public GameObject leftArrow;                        // Assign the LeftArrow object here
-        public GameObject rightArrow;                       // Assign the RightArrow object here
+        [Header("References")]
+        [SerializeField] private SpriteRenderer cocktailShakerRenderer;       // Assign this with the Cocktail Shaker's Sprite Renderer in the Inspector
+        [SerializeField] private GameObject leftArrow;                        // Assign the LeftArrow object here
+        [SerializeField] private GameObject rightArrow;                       // Assign the RightArrow object here
+        [SerializeField] private CanvasGroup cocktailCanvasGroup;             // Reference to your Canvas Group for the mini-game UI
 
-        private PlayerInteraction player;                   // Store player reference
+       
         private bool detectedInputDuringMiniGame = false;
         public Item itemToSpawn;
-            
-        public KeyCode leftKey = KeyCode.A;                 // Key for left arrow
-        public KeyCode rightKey = KeyCode.D;                // Key for right arrow
-        public KeyCode Quit = KeyCode.Q;                    //hit Q to quit, escape pauses game entirely
 
-        public float arrowSwitchSpeed = 0.5f;               // Speed at which arrows switch, adjust for difficulty
-        private bool leftArrowActive = true;                // Determine which arrow is currently active
-        private bool isMiniGameActive = false;              // State of the minigame
-
-        private float scoreMultiplier = 1f;                 // Score multiplier based on timing
-        private float perfectHitWindow = 0.2f;              // Time window for a perfect hit
-
-        public CanvasGroup cocktailCanvasGroup;             // Reference to your Canvas Group for the mini-game UI
+        [Header("Game Settings")]
+        [SerializeField] private float arrowSwitchSpeed = 0.5f;              // Speed at which arrows switch, adjust for difficulty
+        [SerializeField] private float perfectHitWindow = 0.2f;              // Time window for a perfect hit
 
         [Tooltip("Duration of the mini-game in seconds.")]
-        public float miniGameDuration = 10f;                // Default to 10 seconds, can be adjusted in the inspector
+        public float miniGameDuration = 10f;                                // Default to 10 seconds, can be adjusted in the inspector
 
-        private Coroutine rhythmCoroutine;                  // Coroutine to manage rhythm game
+        private PlayerInteraction player;                                   // Store player reference
+        private bool leftArrowActive = true;                                // Determine which arrow is currently active
+        private bool isMiniGameActive = false;                              // State of the minigame
+        private float scoreMultiplier = 1f;                                 // Score multiplier based on timing
+        private Coroutine rhythmCoroutine;                                  // Coroutine to manage rhythm game  
 
+        // Axis names for input (customize in Unity's Input settings)
+        private const string LeftAxis = "Horizontal";
+        private const string QuitKey = "Cancel";
+
+        private void Awake()
+        {
+            // Null checks moved to Awake
+            if (cocktailShakerRenderer == null)
+                Debug.LogError("CocktailShakerRenderer is not assigned!");
+
+            if (leftArrow == null || rightArrow == null)
+                Debug.LogError("Arrow GameObjects are not assigned!");
+
+            if (cocktailCanvasGroup == null)
+                Debug.LogError("CocktailCanvasGroup is not assigned!");
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -53,30 +67,39 @@ namespace FMS.TapperRedone.Interactables
             GameManager.OnGameStateChanged += OnGameStateChanged;
 
             // Set the Cocktail Shaker to be visible at the start
+            // Ensure initial state
             if (cocktailShakerRenderer != null)
-            {
                 cocktailShakerRenderer.enabled = true;
-            }
 
             // Ensure arrows are hidden until the minigame starts
-            if (leftArrow != null) leftArrow.SetActive(false);
-            if (rightArrow != null) rightArrow.SetActive(false);
+            if (leftArrow != null)
+                leftArrow.SetActive(false);
 
-
+            if (rightArrow != null)
+                rightArrow.SetActive(false);
         }
 
         // Update is called once per frame
         void Update()
         {
-
             if (isMiniGameActive)
-                CheckForQuit();
-
-            // Only run the mini-game logic if the game state is CocktailMiniGame
-            if (GameManager.Instance.State == GameManager.GameState.CocktailMiniGame)
-            {
                 DetectPlayerInput();
+
+            // Quit detection is always checked
+            if (Input.GetButtonDown(QuitKey))
+            {
+                EndCocktailMiniGame(false);
             }
+
+            /* Is this stil necessary if OnGameStateChanged changes the game state and not in updated?
+             * if (isMiniGameActive)
+                 CheckForQuit();
+
+             // Only run the mini-game logic if the game state is CocktailMiniGame
+             if (GameManager.Instance.State == GameManager.GameState.CocktailMiniGame)
+             {
+                 DetectPlayerInput();
+             }*/
         }
 
         //changes gamestate to cocktail minigame
@@ -117,124 +140,44 @@ namespace FMS.TapperRedone.Interactables
         {
             isMiniGameActive = true;
 
-            detectedInputDuringMiniGame = false;
-
-            // Hide or show relevant elements for the minigame
-            if (cocktailShakerRenderer != null)
-            {
-                // Ensure it remains visible during gameplay
-                cocktailShakerRenderer.enabled = true; 
-            }
-
-            // Set initial left arrow sprite
-            if (leftArrow != null) 
-            { 
-                leftArrow.SetActive(true);
-                leftArrow.GetComponent<Image>().sprite = leftUIUnpressed;
-            }
-
-            // Set initial right arrow sprite
-            if (rightArrow != null)
-            {
-                rightArrow.SetActive(true);
-                rightArrow.GetComponent<Image>().sprite = rightUIUnpressed;
-            }
-
-            // Enable the Canvas for the UI arrows
-            if (cocktailCanvasGroup != null)
-            {
-                cocktailCanvasGroup.alpha = 1f;
-                cocktailCanvasGroup.interactable = true;
-                cocktailCanvasGroup.blocksRaycasts = true;
-            }
+            // Enable UI elements
+            SetUIVisibility(true);
 
             rhythmCoroutine = StartCoroutine(SwitchArrowsCoroutine());
-
-            // Start the timer coroutine for automatic end
             StartCoroutine(MiniGameTimer());
         }
 
+        //alternates leftArrowActive boolean on a timed interval, ensuring regular and predictable switching
         private IEnumerator SwitchArrowsCoroutine()
         {
-            while (GameManager.Instance.State == GameManager.GameState.CocktailMiniGame)
+            while (isMiniGameActive)
             {
-                if (Input.GetKeyDown(Quit))
-                {
-                    Debug.Log("Quit key pressed");
-                    EndCocktailMiniGame(false);
-
-                    // Exit the coroutine
-                    yield break; 
-                }
-
-                // Alternate between left and right arrow
                 leftArrowActive = !leftArrowActive;
 
-                // Switch the sprite based on active arrow
-                //Sets the sprite property of the Image component on each arrow to either the pressed or unpressed state
-                if (leftArrowActive)
-                {
-                    if (leftArrow != null && leftArrow.GetComponent<Image>() != null)
-                        leftArrow.GetComponent<Image>().sprite = leftUIUnpressed;
+                // Update arrow sprites
+                UpdateArrowSprites();
 
-                    if (rightArrow != null && rightArrow.GetComponent<Image>() != null)
-                        rightArrow.GetComponent<Image>().sprite = rightUIPressed; 
-                }
-                else
-                {
-                    if (leftArrow != null && leftArrow.GetComponent<Image>() != null)
-                        leftArrow.GetComponent<Image>().sprite = leftUIPressed;
-
-                    if (rightArrow != null && rightArrow.GetComponent<Image>() != null)
-                        rightArrow.GetComponent<Image>().sprite = rightUIUnpressed;  
-                }
-
-                // Wait for the defined switch speed
                 yield return new WaitForSeconds(arrowSwitchSpeed);
-
-                //debugging to see if left and right arrows are assigned and alternating
-
-                // Check if leftArrow is null
-                Debug.Log(leftArrow);
-
-                // Check if rightArrow is null
-                Debug.Log(rightArrow);
-                Debug.Log("LeftArrowActive: " + leftArrowActive + ", Left Arrow: " + leftArrow.GetComponent<Image>().sprite.name + ", Right Arrow: " + rightArrow.GetComponent<Image>().sprite.name);
             }
         }
 
         //check if player hit the btn at the right time, works in tandem with coroutine
         private void DetectPlayerInput()
         {
-           //putting quit option here to see if the player can quit by hitting Q
-            if (Input.GetKeyDown(Quit))
+            float input = Input.GetAxis(LeftAxis);
+
+            // Check for input in the direction of the active arrow
+            if ((leftArrowActive && input < 0) || (!leftArrowActive && input > 0))
             {
-                Debug.Log("Quit key pressed");
-                EndCocktailMiniGame(false);
-
-                // Ensure we stop further processing in this frame
-                return; 
+                float timeSinceSwitch = arrowSwitchSpeed - Mathf.Abs(Time.time % arrowSwitchSpeed);
+                CalculateScore(timeSinceSwitch);
             }
-
 
             //arrowSwitchSpeed contorls how quickly arrows alternate, adjust for difficulty
             //perfectHitWindow defines how much time after the switch is considered a perfect hit to gain the score multiplier
 
             // Detect input for the left arrow, is arrow active+did player hit btn
             //uses the difference between the current time and the time the arrow switched (time % arrowswitch), used to calculate score
-
-            if (leftArrowActive && Input.GetKeyDown(leftKey))
-            {
-                float timeSinceSwitch = arrowSwitchSpeed - Mathf.Abs(Time.time % arrowSwitchSpeed);
-                CalculateScore(timeSinceSwitch);
-            }
-
-            // Detect input for the right arrow
-            else if (!leftArrowActive && Input.GetKeyDown(rightKey))
-            {
-                float timeSinceSwitch = arrowSwitchSpeed - Mathf.Abs(Time.time % arrowSwitchSpeed);
-                CalculateScore(timeSinceSwitch);
-            }
         }
 
         //multiplier increases based on timing accuracy
@@ -252,6 +195,22 @@ namespace FMS.TapperRedone.Interactables
                 // Lesser multiplier for a normal hit, to change
                 scoreMultiplier += 0.2f; 
                 Debug.Log("Good hit! Score multiplier: " + scoreMultiplier);
+            }
+        }
+
+        //pressed/unpressed is assigned w/in SwitchArrowsCoroutine each time the arrow switches
+        //sprites are are toggled based on the current state of leftArrowActive
+        private void UpdateArrowSprites()
+        {
+            if (leftArrowActive)
+            {
+                leftArrow.GetComponent<Image>().sprite = leftUIUnpressed;
+                rightArrow.GetComponent<Image>().sprite = rightUIPressed;
+            }
+            else
+            {
+                leftArrow.GetComponent<Image>().sprite = leftUIPressed;
+                rightArrow.GetComponent<Image>().sprite = rightUIUnpressed;
             }
         }
 
@@ -328,22 +287,8 @@ namespace FMS.TapperRedone.Interactables
 
             isMiniGameActive = false;
 
-            // Revert any UI or gameplay visibility settings here, returns visibility
-            if (cocktailShakerRenderer != null)
-            {
-                // Keep it visible post-gameplay as needed
-                cocktailShakerRenderer.enabled = true; 
-            }
-            if (leftArrow != null) leftArrow.SetActive(false);
-            if (rightArrow != null) rightArrow.SetActive(false);
-
-            // Disable the Canvas for the UI arrows
-            if (cocktailCanvasGroup != null)
-            {
-                cocktailCanvasGroup.alpha = 0f;
-                cocktailCanvasGroup.interactable = false;
-                cocktailCanvasGroup.blocksRaycasts = false;
-            }
+            // Hide UI elements
+            SetUIVisibility(false);
 
             //only gives drink if the game ended naturally with the timer runing out
             if (givesDrink)
@@ -375,15 +320,31 @@ namespace FMS.TapperRedone.Interactables
             }
         }
 
-        //stupid quit function since update, detect player input and the switcxh arrows coroutine are all not detecting player hitting Q to quit
-        private void CheckForQuit()
+        private void SetUIVisibility(bool isVisible)
         {
-            if (Input.GetKeyDown(Quit))
+            if (cocktailCanvasGroup != null)
             {
-                // Ends without giving drink
-                Debug.Log("Player attempted to quit the mini-game.");
-                EndCocktailMiniGame(givesDrink: false); 
+                cocktailCanvasGroup.alpha = isVisible ? 1f : 0f;
+                cocktailCanvasGroup.interactable = isVisible;
+                cocktailCanvasGroup.blocksRaycasts = isVisible;
             }
+
+            if (leftArrow != null) leftArrow.SetActive(isVisible);
+            if (rightArrow != null) rightArrow.SetActive(isVisible);
+
+            if (cocktailShakerRenderer != null)
+                cocktailShakerRenderer.enabled = isVisible;
         }
+
+        //stupid quit function since update, detect player input and the switcxh arrows coroutine are all not detecting player hitting Q to quit
+        /* private void CheckForQuit()
+         {
+             if (Input.GetKeyDown(Quit))
+             {
+                 // Ends without giving drink
+                 Debug.Log("Player attempted to quit the mini-game.");
+                 EndCocktailMiniGame(givesDrink: false); 
+             }
+         }*/
     }
 }
