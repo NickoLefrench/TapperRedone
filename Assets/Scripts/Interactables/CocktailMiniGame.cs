@@ -41,8 +41,11 @@ namespace FMS.TapperRedone.Interactables
         private PlayerInteraction player;                                   // Store player reference
         private bool leftArrowActive = true;                                // Determine which arrow is currently active
         private bool isMiniGameActive = false;                              // State of the minigame
-        private float scoreMultiplier = 1f;                                 // Score multiplier based on timing
         private Coroutine rhythmCoroutine;                                  // Coroutine to manage rhythm game  
+
+        // TunableHandler integration
+        [SerializeField] private string scoreMultiplierTunableName = "ScoreMultiplier"; // Name in TunableHandler
+        private float scoreMultiplier = 1f;                                            // Score multiplier based on timing
 
         // Axis names for input (customize in Unity's Input settings)
         private const string LeftAxis = "Horizontal";
@@ -77,6 +80,9 @@ namespace FMS.TapperRedone.Interactables
 
             if (rightArrow != null)
                 rightArrow.SetActive(false);
+
+            // Initialize the scoreMultiplier from TunableHandler
+            scoreMultiplier = TunableHandler.Instance.GetTunableValue(scoreMultiplierTunableName, 1f);
         }
 
         // Update is called once per frame
@@ -90,16 +96,6 @@ namespace FMS.TapperRedone.Interactables
             {
                 EndCocktailMiniGame(false);
             }
-
-            /* Is this stil necessary if OnGameStateChanged changes the game state and not in updated?
-             * if (isMiniGameActive)
-                 CheckForQuit();
-
-             // Only run the mini-game logic if the game state is CocktailMiniGame
-             if (GameManager.Instance.State == GameManager.GameState.CocktailMiniGame)
-             {
-                 DetectPlayerInput();
-             }*/
         }
 
         //changes gamestate to cocktail minigame
@@ -196,6 +192,9 @@ namespace FMS.TapperRedone.Interactables
                 scoreMultiplier += 0.2f; 
                 Debug.Log("Good hit! Score multiplier: " + scoreMultiplier);
             }
+
+            // Update the score multiplier in the TunableHandler
+            TunableHandler.Instance.SetTunableValue(scoreMultiplierTunableName, scoreMultiplier);
         }
 
         //pressed/unpressed is assigned w/in SwitchArrowsCoroutine each time the arrow switches
@@ -335,16 +334,5 @@ namespace FMS.TapperRedone.Interactables
             if (cocktailShakerRenderer != null)
                 cocktailShakerRenderer.enabled = isVisible;
         }
-
-        //stupid quit function since update, detect player input and the switcxh arrows coroutine are all not detecting player hitting Q to quit
-        /* private void CheckForQuit()
-         {
-             if (Input.GetKeyDown(Quit))
-             {
-                 // Ends without giving drink
-                 Debug.Log("Player attempted to quit the mini-game.");
-                 EndCocktailMiniGame(givesDrink: false); 
-             }
-         }*/
     }
 }
