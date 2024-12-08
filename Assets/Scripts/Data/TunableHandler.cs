@@ -73,12 +73,5 @@ namespace FMS.TapperRedone.Data
 
 		// Singleton instance of the handler
 		private static TunableHandler Instance;
-
-       /* // trying to connect scoremultiplier too 
-        public float GetScoreMultiplier()
-        {
-            // Return score multiplier value
-            return someScoreMultiplier;
-        }*/
-    }
+	}
 }

@@ -51,8 +51,6 @@ namespace FMS.TapperRedone.Interactables
         private const string LeftAxis = "Horizontal";
         private const string QuitKey = "Cancel";
 
-        //scoreMultiplier += TunableHandler.Instance.GetScoreMultiplier(); wtf tunable
-
         private void Awake()
         {
             // Null checks moved to Awake
