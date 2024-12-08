@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9ad4baed7a7d1d64aa8112b3124fb219
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - leftUIPressed: {fileID: 21300000, guid: e95041cff2bb5714caee626694eac508, type: 3}
+  - leftUIUnpressed: {fileID: 21300000, guid: b0e527559e421f549b36539033c2cd0e, type: 3}
+  - rightUIPressed: {fileID: 21300000, guid: 01c3acdd75e226b468e66b74c01fcc15, type: 3}
+  - rightUIUnpressed: {fileID: 21300000, guid: d07619dada073504685ef83427cb44ff, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

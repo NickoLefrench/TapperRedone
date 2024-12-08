@@ -51,7 +51,7 @@ namespace FMS.TapperRedone.Interactables
         }
         private void Update()
         {
-            if (Input.GetButtonDown("BeerPour"))
+            if (Input.GetButtonDown("BeerPour"))//having this in update, would it be able to trigger anytime by hitting the button?
             {
                 detectedInputDuringMiniGame = true;
             }
