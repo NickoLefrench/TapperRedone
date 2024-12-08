@@ -155,7 +155,7 @@ namespace FMS.TapperRedone.Interactables
         //check if player hit the btn at the right time, works in tandem with coroutine
         private void DetectPlayerInput()
         {
-            float input = Input.GetAxis(LeftAxis);
+            float input = Input.GetAxisRaw(LeftAxis);
 
             // Check for input in the direction of the active arrow
             if ((leftArrowActive && input < 0) || (!leftArrowActive && input > 0))
@@ -294,6 +294,14 @@ namespace FMS.TapperRedone.Interactables
                 StopCoroutine(rhythmCoroutine);
             }
 
+            //determine the score after the minigame
+            int FinalScore = Mathf.RoundToInt(scoreMultiplier * 2f);
+            GameManager.Instance.AddScore(FinalScore);
+
+            //reset score and multiplier for next round
+            scoreMultiplier = 1f;
+            FinalScore = 0;
+
             // Return to base state via GameManager
             GameManager.Instance.EndCocktailMiniGame();
         }
@@ -323,8 +331,6 @@ namespace FMS.TapperRedone.Interactables
             if (leftArrow != null) leftArrow.SetActive(isVisible);
             if (rightArrow != null) rightArrow.SetActive(isVisible);
 
-            if (cocktailShakerRenderer != null)
-                cocktailShakerRenderer.enabled = isVisible;
         }
 
       
