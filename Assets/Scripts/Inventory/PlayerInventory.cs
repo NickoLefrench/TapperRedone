@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.Assertions;
 
 using FMS.TapperRedone.Data;
+
+using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace FMS.TapperRedone.Inventory
 {
@@ -57,6 +58,25 @@ namespace FMS.TapperRedone.Inventory
         public bool HasItemOfType(Item.ItemType itemType)
         {
             return itemsList.Exists(item => item.itemType == itemType);
+        }
+
+        public bool HasDrink()
+        {
+            return itemsList.Exists(item => item.IsDrink);
+        }
+
+        public Item RemoveDrink()
+        {
+            Item foundItem = itemsList.Find(item => item.IsDrink);
+            if (foundItem == null)
+            {
+                return null;
+            }
+            else
+            {
+                itemsList.Remove(foundItem);
+                return foundItem;
+            }
         }
 
         public Item RemoveFirstItemOfType(Item.ItemType itemType)

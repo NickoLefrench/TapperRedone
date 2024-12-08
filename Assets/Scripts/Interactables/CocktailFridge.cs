@@ -85,5 +85,3 @@ namespace FMS.TapperRedone.Interactables
         }
     }
 }
-
-

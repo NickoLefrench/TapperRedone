@@ -50,3 +50,6 @@ TagManager:
   - name: In front of Bar
     uniqueID: 256700565
     locked: 0
+  - name: In front of Characters
+    uniqueID: 1837983267
+    locked: 0

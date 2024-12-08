@@ -69,3 +69,6 @@ MonoBehaviour:
   - Name: NPC.DRINKING_TIME
     Tunable:
       Value: 3
+  - Name: NIGHT.DURATION
+    Tunable:
+      Value: 10

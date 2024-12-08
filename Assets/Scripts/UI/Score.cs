@@ -1,29 +1,30 @@
-using TMPro;
-using UnityEngine;
-
 using FMS.TapperRedone.Managers;
+
+using TMPro;
+
+using UnityEngine;
 
 namespace FMS.TapperRedone.UI
 {
-	public class Score : MonoBehaviour
-	{
-		public TextMeshProUGUI ScoreText;
+    [RequireComponent(typeof(TextMeshProUGUI))]
+    public class Score : MonoBehaviour
+    {
+        private TextMeshProUGUI ScoreText;
 
-		void Start()
-		{
-			if (ScoreText == null)
-			{
-				Debug.LogError("ScoreText is not assigned in the inspector!");
-				return;
-			}
+        private void Awake()
+        {
+            ScoreText = GetComponent<TextMeshProUGUI>();
+        }
 
-			ScoreText.text = GameManager.Instance.Score.ToString() + " Space Shillings";
-			GameManager.OnScoreChanged += OnScoreChanged;
-		}
+        private void Start()
+        {
+            OnScoreChanged(GameManager.StatManager.Score);
+            StatManager.OnScoreChanged += OnScoreChanged;
+        }
 
-		private void OnScoreChanged(int newScore)
-		{
-			ScoreText.text = $"{newScore} Space Shillings";
-		}
-	}
+        private void OnScoreChanged(int newScore)
+        {
+            ScoreText.text = $"{newScore} Space Shillings";
+        }
+    }
 }

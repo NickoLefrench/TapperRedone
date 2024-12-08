@@ -1,140 +1,148 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.Assertions;
 
 using FMS.TapperRedone.Characters;
 using FMS.TapperRedone.Data;
 
+using UnityEngine;
+using UnityEngine.Assertions;
+
 namespace FMS.TapperRedone.Managers
 {
-	// The PatronManager, a component on the singleton GameManager, spawns BarPatrons for the bar
-	public class PatronManager : MonoBehaviour
-	{
-		public BarPatron PatronPrefab;
-		public GameObject SpawnLocation;
-		public GameObject SeatsParent;
+    // The PatronManager, a component on the singleton GameManager, spawns BarPatrons for the bar
+    public class PatronManager : MonoBehaviour
+    {
+        public BarPatron PatronPrefab;
+        public GameObject SpawnLocation;
+        public GameObject SeatsParent;
 
-		private bool running = false;
-		private int maxPatrons;
-		private int currentPatrons = 0;
-		private int totalPatrons = 0;
-		private float nextSpawnTime = Mathf.NegativeInfinity;
-		private float respawnTimer;
-		private Dictionary<Transform, BarPatron> managedSeats = new();
+        public int CurrentPatrons { get; private set; } = 0;
 
-		public static PatronManager Instance => GameManager.PatronManager;
+        private bool running = false;
+        private int maxPatrons;
+        private int totalPatrons = 0;
+        private float nextSpawnTime = Mathf.NegativeInfinity;
+        private float respawnTimer;
+        private Dictionary<Transform, BarPatron> managedSeats = new();
 
-		public void Start()
-		{
-			maxPatrons = TunableHandler.GetTunableInt("NPC.MAX_COUNT");
-			respawnTimer = TunableHandler.GetTunableFloat("NPC.RESPAWN_TIMER");
+        public static PatronManager Instance => GameManager.PatronManager;
 
-			Assert.AreNotEqual(SeatsParent, null, "The empty GameObject containing all the available seat positions must be a set parameter on PatronManager!");
-			if (SeatsParent != null)
-			{
-				int seatsCount = SeatsParent.transform.childCount;
-				managedSeats.EnsureCapacity(seatsCount);
-				for (int i = 0; i < seatsCount; i++)
-				{
-					managedSeats.Add(SeatsParent.transform.GetChild(i), null);
-				}
-			}
+        public void Start()
+        {
+            maxPatrons = TunableHandler.GetTunableInt("NPC.MAX_COUNT");
+            respawnTimer = TunableHandler.GetTunableFloat("NPC.RESPAWN_TIMER");
 
-			GameManager.OnGameStateChanged += OnGameStateChanged;
-		}
+            Assert.AreNotEqual(SeatsParent, null, "The empty GameObject containing all the available seat positions must be a set parameter on PatronManager!");
+            if (SeatsParent != null)
+            {
+                int seatsCount = SeatsParent.transform.childCount;
+                managedSeats.EnsureCapacity(seatsCount);
+                for (int i = 0; i < seatsCount; i++)
+                {
+                    managedSeats.Add(SeatsParent.transform.GetChild(i), null);
+                }
+            }
 
-		private void OnGameStateChanged(GameManager.GameState newState)
-		{
-			running = newState != GameManager.GameState.Inactive;
-			if (!running)
-			{
-				ResetAllPatrons();
-			}
-		}
+            GameManager.OnGameStateChanged += OnGameStateChanged;
+        }
 
-		private void ResetAllPatrons()
-		{
-			// Need to set ToList, as we are modifying the dictionary while iterating on it, and that can break iterator.
-			foreach (Transform seat in managedSeats.Keys.ToList())
-			{
-				if (managedSeats[seat] != null)
-				{
-					Destroy(managedSeats[seat].gameObject);
-					managedSeats[seat] = null;
-				}
-			}
+        private void OnGameStateChanged(GameManager.GameState newState)
+        {
+            bool newRunning = newState == GameManager.GameState.MainGame || newState == GameManager.GameState.BeerMiniGame || newState == GameManager.GameState.CocktailMiniGame;
+            if (running && !newRunning)
+            {
+                ResetAllPatrons();
+            }
+            else if (!running && newRunning)
+            {
+                nextSpawnTime = Time.time;
+            }
 
-			running = false;
-			currentPatrons = 0;
-			totalPatrons = 0;
-			nextSpawnTime = Mathf.NegativeInfinity;
-		}
+            running = newRunning;
+        }
 
-		public void CleanupPatron(BarPatron patron)
-		{
-			KeyValuePair<Transform, BarPatron> foundPair = managedSeats.FirstOrDefault(pair => pair.Value == patron);
-			// Could be unequal if we get default(KeyValuePair<>) as returned value
-			if (foundPair.Value == patron)
-			{
-				managedSeats[foundPair.Key] = null;
-				currentPatrons--;
-			}
-			// nextSpawnTime = Time.time + respawnTimer;
-		}
+        private void ResetAllPatrons()
+        {
+            // Need to set ToList, as we are modifying the dictionary while iterating on it, and that can break iterator.
+            foreach (Transform seat in managedSeats.Keys.ToList())
+            {
+                if (managedSeats[seat] != null)
+                {
+                    Destroy(managedSeats[seat].gameObject);
+                    managedSeats[seat] = null;
+                }
+            }
 
-		public void Update()
-		{
-			if (running && currentPatrons < maxPatrons && nextSpawnTime <= Time.time)
-			{
-				SpawnNewPatron();
-			}
-		}
+            running = false;
+            CurrentPatrons = 0;
+            totalPatrons = 0;
+            nextSpawnTime = Mathf.NegativeInfinity;
+        }
 
-		private void SpawnNewPatron()
-		{
-			// Select seat to spawn in - random from empty options
-			int randomSeat = UnityEngine.Random.Range(0, managedSeats.Count - currentPatrons);
-			Transform selectedSeat = null;
-			foreach (Transform seat in managedSeats.Keys)
-			{
-				// Skip already occupied
-				if (managedSeats[seat] != null)
-				{
-					continue;
-				}
+        public void CleanupPatron(BarPatron patron)
+        {
+            KeyValuePair<Transform, BarPatron> foundPair = managedSeats.FirstOrDefault(pair => pair.Value == patron);
+            // Could be unequal if we get default(KeyValuePair<>) as returned value
+            if (foundPair.Value == patron)
+            {
+                managedSeats[foundPair.Key] = null;
+                CurrentPatrons--;
+            }
+            // nextSpawnTime = Time.time + respawnTimer;
+        }
 
-				// Skip empty seat if not reached index
-				if (randomSeat > 0)
-				{
-					randomSeat--;
-					continue;
-				}
+        public void Update()
+        {
+            if (running && GameManager.Instance.RemainingTime > 0.0f && CurrentPatrons < maxPatrons && nextSpawnTime <= Time.time)
+            {
+                SpawnNewPatron();
+            }
+        }
 
-				// Found seat
-				selectedSeat = seat;
-				break;
-			}
+        private void SpawnNewPatron()
+        {
+            // Select seat to spawn in - random from empty options
+            int randomSeat = UnityEngine.Random.Range(0, managedSeats.Count - CurrentPatrons);
+            Transform selectedSeat = null;
+            foreach (Transform seat in managedSeats.Keys)
+            {
+                // Skip already occupied
+                if (managedSeats[seat] != null)
+                {
+                    continue;
+                }
 
-			if (selectedSeat == null)
-			{
-				Debug.LogError($"Failed to find an empty seat despite {currentPatrons} out of {managedSeats.Count} seats occupied");
-				return;
-			}
+                // Skip empty seat if not reached index
+                if (randomSeat > 0)
+                {
+                    randomSeat--;
+                    continue;
+                }
 
-			// Spawn object
-			BarPatron newPatron = Instantiate(PatronPrefab);
-			managedSeats[selectedSeat] = newPatron;
+                // Found seat
+                selectedSeat = seat;
+                break;
+            }
 
-			// Set any final properties
-			totalPatrons++;
-			currentPatrons++;
-			string newName = $"Patron {totalPatrons}";
-			newPatron.gameObject.name = newName;
-			newPatron.Setup(SpawnLocation.transform, selectedSeat);
-			Debug.Log($"Spawned {newName} on seat {selectedSeat.name}");
+            if (selectedSeat == null)
+            {
+                Debug.LogError($"Failed to find an empty seat despite {CurrentPatrons} out of {managedSeats.Count} seats occupied");
+                return;
+            }
 
-			nextSpawnTime = Time.time + respawnTimer;
-		}
-	}
+            // Spawn object
+            BarPatron newPatron = Instantiate(PatronPrefab);
+            managedSeats[selectedSeat] = newPatron;
+
+            // Set any final properties
+            totalPatrons++;
+            CurrentPatrons++;
+            string newName = $"Patron {totalPatrons}";
+            newPatron.gameObject.name = newName;
+            newPatron.Setup(SpawnLocation.transform, selectedSeat);
+            Debug.Log($"Spawned {newName} on seat {selectedSeat.name}");
+
+            nextSpawnTime = Time.time + respawnTimer;
+        }
+    }
 }
