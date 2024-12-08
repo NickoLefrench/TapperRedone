@@ -114,15 +114,18 @@ namespace FMS.TapperRedone.Interactables
         {
             //store the player ref
             base.Interact(player);
-            this.player = player; 
+            this.player = player;
+
+            GameManager.Instance.StartCocktailMiniGame();
 
             // Checks to see if player could receive a beer at end of interaction
             //must add detection to see if cx has ingredients
-            if (player.CurrentInventory.CanAddItem(itemToSpawn)) 
-            {
+            //supposed to check if player is already holding drink, commented as ingredients was preventing interaction
+            /*  if (player.CurrentInventory.CanAddItem(itemToSpawn)) 
+              {
 
-                GameManager.Instance.StartCocktailMiniGame();
-            }
+
+              }*/
 
         }
 
@@ -248,6 +251,9 @@ namespace FMS.TapperRedone.Interactables
             // If a cocktail has been determined, create the Item and add it to the inventory
             if (cocktailItemType.HasValue)
             {
+                //determine the score after the minigame
+                int FinalScore = Mathf.RoundToInt(scoreMultiplier * 2f);
+
                 // Create a new Item for the cocktail
                 Item cocktailItem = new Item
                 {
@@ -255,10 +261,12 @@ namespace FMS.TapperRedone.Interactables
                     itemName = cocktailItemType.ToString(),
 
                     // Set the item type
-                    itemType = cocktailItemType.Value 
+                    itemType = cocktailItemType.Value,
 
                     //for when we will have the specific sprite icon
                    // itemIcon = GetCocktailIcon(cocktailItemType.Value)
+
+                    itemScore = FinalScore,
                 };
 
                 // Add the cocktail to the player's inventory
@@ -294,13 +302,8 @@ namespace FMS.TapperRedone.Interactables
                 StopCoroutine(rhythmCoroutine);
             }
 
-            //determine the score after the minigame
-            int FinalScore = Mathf.RoundToInt(scoreMultiplier * 2f);
-            GameManager.Instance.AddScore(FinalScore);
-
             //reset score and multiplier for next round
             scoreMultiplier = 1f;
-            FinalScore = 0;
 
             // Return to base state via GameManager
             GameManager.Instance.EndCocktailMiniGame();

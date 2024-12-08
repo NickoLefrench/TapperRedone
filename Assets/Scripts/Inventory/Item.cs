@@ -10,6 +10,7 @@ namespace FMS.TapperRedone.Inventory
         public Sprite itemIcon; // Optionally use an icon
         public int amount;
         public ItemType itemType;
+        public int itemScore;
 
         public enum ItemType //the items that the player will be able to pick up
         {

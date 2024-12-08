@@ -21,7 +21,7 @@ namespace FMS.TapperRedone.Characters
 		};
 
 		public float WalkSpeed;
-		public GameObject CoinsPrefab;
+		public Coin CoinsPrefab;
 		public float CoinSpawnOffsetY;
 
 		// What is the maximum time can stay in this state; means different things depending on active state
@@ -139,14 +139,21 @@ namespace FMS.TapperRedone.Characters
 			float maxTime = TunableHandler.GetTunableFloat("NPC.MAX_WAIT_TIME");
 			StateTimeRemaining = UnityEngine.Random.Range(minTime, maxTime);
 			// For now, simple only Beer option.
-			OrderItem = Item.ItemType.Beer;
+
+			//this should be random array between beer and cocktails
+			OrderItem = Item.ItemType.GreenCocktail;
+
+
 		}
 
 		private void SpawnCoins()
 		{
 			Vector3 coinLocation = transform.position + new Vector3(0, CoinSpawnOffsetY, 0);
-			GameObject spawnedCoins = Instantiate(CoinsPrefab, coinLocation, Quaternion.identity);
-		}
+			Coin spawnedCoins = Instantiate(CoinsPrefab, coinLocation, Quaternion.identity);
+
+			spawnedCoins.scoreValue = receivedItem.itemScore;
+
+        }
 
 		// Returns whether state time has reached 0.
 		private bool AdvanceStateTime()

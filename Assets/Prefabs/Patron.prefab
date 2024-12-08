@@ -144,5 +144,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WalkSpeed: 2.5
-  CoinsPrefab: {fileID: 7216825734669961348, guid: 8da803892a9b6424286afb25025b7d15, type: 3}
+  CoinsPrefab: {fileID: 3751053249968606472, guid: 8da803892a9b6424286afb25025b7d15, type: 3}
   CoinSpawnOffsetY: 1.25
