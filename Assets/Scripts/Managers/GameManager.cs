@@ -123,15 +123,8 @@ namespace FMS.TapperRedone.Managers
                 StartCocktailMiniGame();//initiate cocktail minigame
                 break;
 
-            case GameState.Leaderboards:
-                Leaderboards();
-                break;
-
             case GameState.EndofNight:
                 EndofNight();
-                break;
-
-            case GameState.ScoreUI: //dont think this should be included here, tbd
                 break;
 
             default:
@@ -139,17 +132,6 @@ namespace FMS.TapperRedone.Managers
             }
 
             OnGameStateChanged?.Invoke(newState); //avoids a null being thrown
-        }
-
-        public void AddScore(int addToScore)
-        {
-            Score += addToScore;
-            OnScoreChanged?.Invoke(Score);
-        }
-
-        public void Leaderboards()
-        {
-
         }
 
         public void EndofNight()
@@ -166,7 +148,7 @@ namespace FMS.TapperRedone.Managers
         public void EndCocktailMiniGame()
         {
             Debug.Log("The Cocktail Minigame has ended, returning to regular movement");
-            UpdateGameState(GameState.BaseMovement); // Return to BaseMovement or any other appropriate state
+            UpdateGameState(GameState.MainGame); // Return to BaseMovement or any other appropriate state
         }
     }
 }
