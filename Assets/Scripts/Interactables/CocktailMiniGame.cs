@@ -91,15 +91,7 @@ namespace FMS.TapperRedone.Interactables
                 EndCocktailMiniGame(false);
             }
 
-            /* Is this stil necessary if OnGameStateChanged changes the game state and not in updated?
-             * if (isMiniGameActive)
-                 CheckForQuit();
-
-             // Only run the mini-game logic if the game state is CocktailMiniGame
-             if (GameManager.Instance.State == GameManager.GameState.CocktailMiniGame)
-             {
-                 DetectPlayerInput();
-             }*/
+           
         }
 
         //changes gamestate to cocktail minigame
@@ -128,7 +120,6 @@ namespace FMS.TapperRedone.Interactables
             //must add detection to see if cx has ingredients
             if (player.CurrentInventory.CanAddItem(itemToSpawn)) 
             {
-              //  GameManager.Instance.UpdateGameState(GameManager.GameState.CocktailMiniGame); - legacy code, seeiong if other option works
 
                 GameManager.Instance.StartCocktailMiniGame();
             }
@@ -336,15 +327,6 @@ namespace FMS.TapperRedone.Interactables
                 cocktailShakerRenderer.enabled = isVisible;
         }
 
-        //stupid quit function since update, detect player input and the switcxh arrows coroutine are all not detecting player hitting Q to quit
-        /* private void CheckForQuit()
-         {
-             if (Input.GetKeyDown(Quit))
-             {
-                 // Ends without giving drink
-                 Debug.Log("Player attempted to quit the mini-game.");
-                 EndCocktailMiniGame(givesDrink: false); 
-             }
-         }*/
+      
     }
 }
