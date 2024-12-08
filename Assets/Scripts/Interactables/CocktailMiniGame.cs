@@ -14,8 +14,6 @@ namespace FMS.TapperRedone.Interactables
     public class CocktailMiniGame : InteractableObject
     {
 
-        TunableHandler tunableHandler = TunableHandler.GetInstance();
-
         // References to the sprites for the arrows
         [Header("Arrow Sprites")]
         [SerializeField] private Sprite leftUIPressed;
@@ -86,7 +84,7 @@ namespace FMS.TapperRedone.Interactables
                 rightArrow.SetActive(false);
 
             // Initialize the scoreMultiplier from TunableHandler
-            scoreMultiplier = TunableHandler.GetInstance().GetTunableValue(scoreMultiplierTunableName, 1f);
+            scoreMultiplier = TunableHandler.Instance.GetTunableValue(scoreMultiplierTunableName, 1f);
         }
 
         // Update is called once per frame
@@ -198,7 +196,7 @@ namespace FMS.TapperRedone.Interactables
             }
 
             // Update the score multiplier in the TunableHandler
-            TunableHandler.GetInstance().SetTunableValue(scoreMultiplierTunableName, scoreMultiplier);
+            TunableHandler.Instance.SetTunableValue(scoreMultiplierTunableName, scoreMultiplier);
         }
 
         //pressed/unpressed is assigned w/in SwitchArrowsCoroutine each time the arrow switches

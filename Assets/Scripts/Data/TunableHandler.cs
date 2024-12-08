@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace FMS.TapperRedone.Data
@@ -7,10 +6,8 @@ namespace FMS.TapperRedone.Data
 	// A singleton class that manages design tunables - a list of variables defined at editor time.
 	public class TunableHandler : MonoBehaviour, ISerializationCallbackReceiver
 	{
-        private static TunableHandler _instance; // Singleton instance, so cocktail minigame can access tunable
-
-        // Ensure the existence of only one tunable handler at any one time
-        private void Awake()
+		// Ensure the existence of only one tunable handler at any one time
+		private void Awake()
 		{
 			if (Instance != null && Instance != this)
 			{
@@ -77,21 +74,11 @@ namespace FMS.TapperRedone.Data
 		// Singleton instance of the handler
 		private static TunableHandler Instance;
 
-        /* // trying to connect scoremultiplier too 
-         public float GetScoreMultiplier()
-         {
-             // Return score multiplier value
-             return someScoreMultiplier;
-         }*/
-
-		//Method so that other classes can access instance of tunable handler without making tunable public
-        public static TunableHandler GetInstance()
+       /* // trying to connect scoremultiplier too 
+        public float GetScoreMultiplier()
         {
-            if (_instance == null)
-            {
-                _instance = new TunableHandler();
-            }
-            return _instance;
-        }
+            // Return score multiplier value
+            return someScoreMultiplier;
+        }*/
     }
 }
