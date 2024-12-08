@@ -148,9 +148,12 @@ MonoBehaviour:
   CoinsPrefab: {fileID: 3751053249968606472, guid: 8da803892a9b6424286afb25025b7d15, type: 3}
   CoinSpawnOffsetY: 1.25
   SpeechBubble: {fileID: 1112012897492254500}
-  OrderOptions: 00000000
+  OrderOptions: 00000000050000000600000007000000
   OrderSprites:
   - {fileID: 21300000, guid: 0bd582107ff17fc4aa74c14d30e743e2, type: 3}
+  - {fileID: 21300000, guid: 156bf10a4b82fd5488e90cd8a0d3036f, type: 3}
+  - {fileID: 21300000, guid: d87b1a8335beba441a0c6905a0f65bfe, type: 3}
+  - {fileID: 21300000, guid: ab6d14222ff91ba45b519ba58b25c1df, type: 3}
 --- !u!1 &8049292345903884280
 GameObject:
   m_ObjectHideFlags: 0
