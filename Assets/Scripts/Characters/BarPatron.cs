@@ -23,7 +23,7 @@ namespace FMS.TapperRedone.Characters
         };
 
         public float WalkSpeed;
-        public GameObject CoinsPrefab;
+        public Coin CoinsPrefab;
         public float CoinSpawnOffsetY;
         public SpriteRenderer SpeechBubble;
 
@@ -163,7 +163,9 @@ namespace FMS.TapperRedone.Characters
         private void SpawnCoins()
         {
             Vector3 coinLocation = transform.position + new Vector3(0, CoinSpawnOffsetY, 0);
-            GameObject spawnedCoins = Instantiate(CoinsPrefab, coinLocation, Quaternion.identity);
+            Coin spawnedCoins = Instantiate(CoinsPrefab, coinLocation, Quaternion.identity);
+        
+            spawnedCoins.scoreValue = receivedItem.itemScore;
         }
 
         // Returns whether state time has reached 0.

@@ -10,6 +10,7 @@ namespace FMS.TapperRedone.Inventory
         public Sprite itemIcon; // Optionally use an icon
         public int amount;
         public ItemType itemType;
+        public int itemScore;
 
         public enum ItemType //the items that the player will be able to pick up
         {
@@ -18,9 +19,9 @@ namespace FMS.TapperRedone.Inventory
             RedIngredient,
             BlueIngredient,
             YellowIngredient,
-            GreenCocktail, // Blue and yellow
-            OrangeCocktail, // Red and yellow
             PurpleCocktail, // Blue and red
+            OrangeCocktail, // Red and yellow
+            GreenCocktail, // Blue and yellow
         }
 
         public bool IsDrink
@@ -28,9 +29,9 @@ namespace FMS.TapperRedone.Inventory
             get
             {
                 return itemType == ItemType.Beer
-                    || itemType == ItemType.GreenCocktail
+                    || itemType == ItemType.PurpleCocktail
                     || itemType == ItemType.OrangeCocktail
-                    || itemType == ItemType.PurpleCocktail;
+                    || itemType == ItemType.GreenCocktail;
             }
         }
 
