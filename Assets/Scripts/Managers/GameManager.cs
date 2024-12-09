@@ -117,38 +117,7 @@ namespace FMS.TapperRedone.Managers
             Debug.Log($"Updating state of GameManager from {State} to {newState}");
             State = newState;
 
-            switch (newState)
-            {
-            case GameState.CocktailMiniGame:
-                StartCocktailMiniGame();//initiate cocktail minigame
-                break;
-
-            case GameState.EndofNight:
-                EndofNight();
-                break;
-
-            default:
-                break;
-            }
-
             OnGameStateChanged?.Invoke(newState); //avoids a null being thrown
-        }
-
-        public void EndofNight()
-        {
-
-        }
-
-        public void StartCocktailMiniGame()
-        {
-            Debug.Log("The Cocktail Minigame has begon");
-            UpdateGameState(GameState.CocktailMiniGame);
-        }
-
-        public void EndCocktailMiniGame()
-        {
-            Debug.Log("The Cocktail Minigame has ended, returning to regular movement");
-            UpdateGameState(GameState.MainGame); // Return to BaseMovement or any other appropriate state
         }
     }
 }

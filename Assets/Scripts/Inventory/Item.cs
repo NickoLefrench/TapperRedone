@@ -19,9 +19,9 @@ namespace FMS.TapperRedone.Inventory
             RedIngredient,
             BlueIngredient,
             YellowIngredient,
-            PurpleCocktail,
-            OrangeCocktail, 
-            GreenCocktail,
+            PurpleCocktail, // Blue and red
+            OrangeCocktail, // Red and yellow
+            GreenCocktail, // Blue and yellow
         }
 
         public bool IsDrink

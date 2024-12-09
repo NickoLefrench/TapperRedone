@@ -3588,7 +3588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1919761278694646024, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_Name
-      value: RedCocktailFridge
+      value: RedFridge
       objectReference: {fileID: 0}
     - target: {fileID: 1919761278694646024, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_Layer
@@ -5307,7 +5307,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -200, y: -200}
-  m_SizeDelta: {x: 400, y: 50}
+  m_SizeDelta: {x: 450, y: 50}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1289515636
 MonoBehaviour:
@@ -5914,7 +5914,7 @@ MonoBehaviour:
     itemIcon: {fileID: 21300000, guid: 4fbb9fea8751f414aa6e19ead45d6b46, type: 3}
     amount: 1
     itemType: 0
-    itemScore: 0
+    itemScore: 5
 --- !u!1 &1438551993
 GameObject:
   m_ObjectHideFlags: 0
@@ -6885,7 +6885,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1919761278694646024, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_Name
-      value: RedCocktailFridge
+      value: BlueFridge
       objectReference: {fileID: 0}
     - target: {fileID: 1919761278694646024, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_Layer
@@ -9505,7 +9505,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1919761278694646024, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_Name
-      value: BlueCocktailFridge
+      value: YellowFridge
       objectReference: {fileID: 0}
     - target: {fileID: 1919761278694646024, guid: 9d5f873f161916f469adc4061dab8d69, type: 3}
       propertyPath: m_Layer

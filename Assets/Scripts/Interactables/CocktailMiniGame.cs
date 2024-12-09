@@ -1,12 +1,11 @@
-using FMS.TapperRedone.Characters;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI; // For UI elements
 
-using FMS.TapperRedone.Data;
+using FMS.TapperRedone.Characters;
 using FMS.TapperRedone.Inventory;
 using FMS.TapperRedone.Managers;
+
+using UnityEngine;
+using UnityEngine.UI; // For UI elements
 
 namespace FMS.TapperRedone.Interactables
 {
@@ -27,8 +26,7 @@ namespace FMS.TapperRedone.Interactables
         [SerializeField] private GameObject rightArrow;                       // Assign the RightArrow object here
         [SerializeField] private CanvasGroup cocktailCanvasGroup;             // Reference to your Canvas Group for the mini-game UI
 
-       
-        private bool detectedInputDuringMiniGame = false;
+
         public Item itemToSpawn;
 
         [Header("Game Settings")]
@@ -91,7 +89,7 @@ namespace FMS.TapperRedone.Interactables
                 EndCocktailMiniGame(false);
             }
 
-           
+
         }
 
         //changes gamestate to cocktail minigame
@@ -110,23 +108,14 @@ namespace FMS.TapperRedone.Interactables
         }
 
         //CocktailMiniGame Controller, similar to beer
-        public override void Interact(PlayerInteraction player) 
+        public override void Interact(PlayerInteraction player)
         {
             //store the player ref
             base.Interact(player);
             this.player = player;
 
-            GameManager.Instance.StartCocktailMiniGame();
-
-            // Checks to see if player could receive a beer at end of interaction
-            //must add detection to see if cx has ingredients
-            //supposed to check if player is already holding drink, commented as ingredients was preventing interaction
-            /*  if (player.CurrentInventory.CanAddItem(itemToSpawn)) 
-              {
-
-
-              }*/
-
+            // TODO check that there are correct ingredients to be able to make a cocktail
+            GameManager.Instance.UpdateGameState(GameManager.GameState.CocktailMiniGame);
         }
 
         //rythm mini game
@@ -175,19 +164,19 @@ namespace FMS.TapperRedone.Interactables
         }
 
         //multiplier increases based on timing accuracy
-        private void CalculateScore(float timeSinceSwitch) 
+        private void CalculateScore(float timeSinceSwitch)
         {
 
             // Increase multiplier for a perfect hit
             if (timeSinceSwitch <= perfectHitWindow)
             {
-                scoreMultiplier += 0.5f; 
+                scoreMultiplier += 0.5f;
                 Debug.Log("Perfect hit! Score multiplier: " + scoreMultiplier);
             }
             else //to modify to just receive current base score
             {
                 // Lesser multiplier for a normal hit, to change
-                scoreMultiplier += 0.2f; 
+                scoreMultiplier += 0.2f;
                 Debug.Log("Good hit! Score multiplier: " + scoreMultiplier);
             }
         }
@@ -209,7 +198,7 @@ namespace FMS.TapperRedone.Interactables
         }
 
         //give drink to player which corresponds to ingredients that the player has, to be adjusted
-        private void GiveCorrespondingDrink() 
+        private void GiveCorrespondingDrink()
         {
             // Check if the player has the necessary ingredients for the cocktails
             bool hasRed = player.CurrentInventory.HasItemOfType(Inventory.Item.ItemType.RedIngredient);
@@ -229,7 +218,7 @@ namespace FMS.TapperRedone.Interactables
                 player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.RedIngredient);
                 player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.BlueIngredient);
             }
-            else if (hasRed && hasYellow) 
+            else if (hasRed && hasYellow)
             {
                 cocktailItemType = Item.ItemType.OrangeCocktail;
                 Debug.Log("Orange cocktail created");
@@ -246,6 +235,10 @@ namespace FMS.TapperRedone.Interactables
                 //remove  Red and Blue ingredients from the players inventory
                 player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.YellowIngredient);
                 player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.BlueIngredient);
+            }
+            else
+            {
+                Debug.Log("Incorrect colors to create a cocktail");
             }
 
             // If a cocktail has been determined, create the Item and add it to the inventory
@@ -264,7 +257,7 @@ namespace FMS.TapperRedone.Interactables
                     itemType = cocktailItemType.Value,
 
                     //for when we will have the specific sprite icon
-                   // itemIcon = GetCocktailIcon(cocktailItemType.Value)
+                    // itemIcon = GetCocktailIcon(cocktailItemType.Value)
 
                     itemScore = FinalScore,
                 };
@@ -296,7 +289,7 @@ namespace FMS.TapperRedone.Interactables
                 GiveCorrespondingDrink();
             }
 
-                //end the rythm coroutine
+            //end the rythm coroutine
             if (rhythmCoroutine != null)
             {
                 StopCoroutine(rhythmCoroutine);
@@ -306,7 +299,7 @@ namespace FMS.TapperRedone.Interactables
             scoreMultiplier = 1f;
 
             // Return to base state via GameManager
-            GameManager.Instance.EndCocktailMiniGame();
+            GameManager.Instance.UpdateGameState(GameManager.GameState.MainGame);
         }
 
         private IEnumerator MiniGameTimer()
@@ -315,10 +308,10 @@ namespace FMS.TapperRedone.Interactables
 
             // Only end if still active (not manually quit)
             // Ends game and gives drink if timer runs out
-            if (isMiniGameActive) 
+            if (isMiniGameActive)
             {
                 Debug.Log("Minigame Timer Ran out");
-                EndCocktailMiniGame(givesDrink: true); 
+                EndCocktailMiniGame(true);
             }
         }
 
@@ -331,11 +324,13 @@ namespace FMS.TapperRedone.Interactables
                 cocktailCanvasGroup.blocksRaycasts = isVisible;
             }
 
-            if (leftArrow != null) leftArrow.SetActive(isVisible);
-            if (rightArrow != null) rightArrow.SetActive(isVisible);
+            if (leftArrow != null)
+                leftArrow.SetActive(isVisible);
+            if (rightArrow != null)
+                rightArrow.SetActive(isVisible);
 
         }
 
-      
+
     }
 }
