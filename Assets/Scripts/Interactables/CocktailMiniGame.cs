@@ -80,16 +80,16 @@ namespace FMS.TapperRedone.Interactables
         // Update is called once per frame
         void Update()
         {
-            if (isMiniGameActive)
-                DetectPlayerInput();
-
             // Quit detection is always checked
             if (Input.GetButtonDown(QuitKey))
             {
                 EndCocktailMiniGame(false);
             }
 
-
+            if (isMiniGameActive)
+            {
+                DetectPlayerInput();
+            }
         }
 
         //changes gamestate to cocktail minigame
