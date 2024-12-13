@@ -61,8 +61,15 @@ namespace FMS.TapperRedone.Interactables
         {
             if (player.CurrentInventory != null && itemToSpawn != null)
             {
+                // Assign the appropriate sprite for the beer (if not already assigned)
+                // beerSprite should be a Sprite assigned in the inspector or initialized elsewhere
+               // itemToSpawn.itemIcon = beerSprite; commented out for now, need to work on sprites
+
+                // Add the beer to the player's inventory
                 player.CurrentInventory.AddItem(itemToSpawn);
             }
+
+            //transition back to main game
             GameManager.Instance.UpdateGameState(GameManager.GameState.MainGame);
         }
 

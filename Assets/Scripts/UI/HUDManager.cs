@@ -18,6 +18,12 @@ public class HUDManager : MonoBehaviour
         // Assuming PlayerInventory is attached to the player
         playerInventory = FindObjectOfType<PlayerInventory>();
 
+       // Ensures activation of HUD
+        if (playerInventory != null)
+        {
+            playerInventory.OnDrinkChanged += UpdateDrinkHUD; 
+        }
+
         // Initialize HUD
         UpdateDrinkHUD();
     }
@@ -34,13 +40,28 @@ public class HUDManager : MonoBehaviour
         {
             // Get the first drink in the inventory
             Item drink = playerInventory.itemsList.Find(item => item.IsDrink);
+            
+            //update  drink image
             drinkHUDImage.sprite = drink.itemIcon;
-            drinkHUDImage.enabled = true; // Ensure the image is visible
+
+            // Ensure the image is visible
+            drinkHUDImage.enabled = true; 
         }
         else
         {
-            drinkHUDImage.sprite = defaultSprite; // Set to a default or empty sprite
-            drinkHUDImage.enabled = defaultSprite != null; // Hide if no default sprite
+            // Set to a default or empty sprite
+            drinkHUDImage.sprite = defaultSprite;
+
+            // Hide if no default sprite
+            drinkHUDImage.enabled = defaultSprite != null;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (playerInventory != null)
+        {
+            playerInventory.OnDrinkChanged -= UpdateDrinkHUD; // Unsubscribe from the event
         }
     }
 }

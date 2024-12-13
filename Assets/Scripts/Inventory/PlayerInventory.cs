@@ -16,6 +16,10 @@ namespace FMS.TapperRedone.Inventory
 
         private int MaxIngredients = 0;
 
+        // Event to notify when a drink is added or removed
+        public delegate void DrinkChanged();
+        public event DrinkChanged OnDrinkChanged;
+
         private void Start()
         {
             MaxIngredients = TunableHandler.GetTunableInt("INVENTORY.MAX_INGREDIENTS");
@@ -27,6 +31,12 @@ namespace FMS.TapperRedone.Inventory
             {
                 itemsList.Add(item);
                 Debug.Log("Item added: " + item.itemName);
+
+                // Notify listeners about the drink change
+                if (item.IsDrink)
+                {
+                    OnDrinkChanged?.Invoke();
+                }
             }
             else
             {
@@ -75,6 +85,10 @@ namespace FMS.TapperRedone.Inventory
             else
             {
                 itemsList.Remove(foundItem);
+
+                // Notify about the drink change
+                OnDrinkChanged?.Invoke(); 
+
                 return foundItem;
             }
         }

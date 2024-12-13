@@ -208,11 +208,18 @@ namespace FMS.TapperRedone.Interactables
             //to avoid uninitialized errors
             Item.ItemType? cocktailItemType = null;
 
+            // Placeholder for the cocktail's sprite
+           // Sprite cocktailSprite = null;
+
+
             // Determine which cocktail to give based on the ingredients the player has
             if (hasRed && hasBlue)
             {
                 cocktailItemType = Item.ItemType.PurpleCocktail;
                 Debug.Log("Purple cocktail created");
+
+                // Assign the appropriate sprite
+                //cocktailSprite = purpleCocktailSprite; 
 
                 //remove  Red and Blue ingredients from the players inventory
                 player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.RedIngredient);
@@ -223,6 +230,9 @@ namespace FMS.TapperRedone.Interactables
                 cocktailItemType = Item.ItemType.OrangeCocktail;
                 Debug.Log("Orange cocktail created");
 
+                // Assign the appropriate sprite
+                //cocktailSprite = orangeCocktailSprite; 
+
                 //remove  Red and Yellow ingredients from the players inventory
                 player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.RedIngredient);
                 player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.YellowIngredient);
@@ -231,6 +241,9 @@ namespace FMS.TapperRedone.Interactables
             {
                 cocktailItemType = Item.ItemType.GreenCocktail;
                 Debug.Log("Green cocktail created");
+
+                // Assign the appropriate sprite
+               // cocktailSprite = greenCocktailSprite; 
 
                 //remove  Red and Blue ingredients from the players inventory
                 player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.YellowIngredient);
@@ -258,6 +271,11 @@ namespace FMS.TapperRedone.Interactables
 
                     //for when we will have the specific sprite icon
                     // itemIcon = GetCocktailIcon(cocktailItemType.Value)
+
+                    //OR?
+
+                    // Assign the sprite for the cocktail
+                    // itemIcon = cocktailSprite, 
 
                     itemScore = FinalScore,
                 };
