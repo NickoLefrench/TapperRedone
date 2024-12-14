@@ -61,7 +61,8 @@ public class HUDManager : MonoBehaviour
     {
         if (playerInventory != null)
         {
-            playerInventory.OnDrinkChanged -= UpdateDrinkHUD; // Unsubscribe from the event
+            // Unsubscribe from the event
+            playerInventory.OnDrinkChanged -= UpdateDrinkHUD; 
         }
     }
 }

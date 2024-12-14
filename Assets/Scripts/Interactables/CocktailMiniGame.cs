@@ -42,6 +42,10 @@ namespace FMS.TapperRedone.Interactables
         private float scoreMultiplier = 1f;                                 // Score multiplier based on timing
         private Coroutine rhythmCoroutine;                                  // Coroutine to manage rhythm game  
 
+        [SerializeField] private Sprite purpleCocktailSprite;               // Sprite for the purple cocktail
+        [SerializeField] private Sprite orangeCocktailSprite;               // Sprite for the orange cocktail
+        [SerializeField] private Sprite greenCocktailSprite;                // Sprite for the green cocktail
+
         // Axis names for input (customize in Unity's Input settings)
         private const string LeftAxis = "Horizontal";
         private const string QuitKey = "Cancel";
@@ -209,7 +213,7 @@ namespace FMS.TapperRedone.Interactables
             Item.ItemType? cocktailItemType = null;
 
             // Placeholder for the cocktail's sprite
-           // Sprite cocktailSprite = null;
+            Sprite cocktailSprite = null;
 
 
             // Determine which cocktail to give based on the ingredients the player has
@@ -219,7 +223,7 @@ namespace FMS.TapperRedone.Interactables
                 Debug.Log("Purple cocktail created");
 
                 // Assign the appropriate sprite
-                //cocktailSprite = purpleCocktailSprite; 
+                cocktailSprite = purpleCocktailSprite; 
 
                 //remove  Red and Blue ingredients from the players inventory
                 player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.RedIngredient);
@@ -231,7 +235,7 @@ namespace FMS.TapperRedone.Interactables
                 Debug.Log("Orange cocktail created");
 
                 // Assign the appropriate sprite
-                //cocktailSprite = orangeCocktailSprite; 
+                cocktailSprite = orangeCocktailSprite; 
 
                 //remove  Red and Yellow ingredients from the players inventory
                 player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.RedIngredient);
@@ -243,7 +247,7 @@ namespace FMS.TapperRedone.Interactables
                 Debug.Log("Green cocktail created");
 
                 // Assign the appropriate sprite
-               // cocktailSprite = greenCocktailSprite; 
+                cocktailSprite = greenCocktailSprite; 
 
                 //remove  Red and Blue ingredients from the players inventory
                 player.CurrentInventory.RemoveFirstItemOfType(Item.ItemType.YellowIngredient);
@@ -275,7 +279,7 @@ namespace FMS.TapperRedone.Interactables
                     //OR?
 
                     // Assign the sprite for the cocktail
-                    // itemIcon = cocktailSprite, 
+                     itemIcon = cocktailSprite, 
 
                     itemScore = FinalScore,
                 };
