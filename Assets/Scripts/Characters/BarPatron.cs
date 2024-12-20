@@ -26,6 +26,7 @@ namespace FMS.TapperRedone.Characters
         public Coin CoinsPrefab;
         public float CoinSpawnOffsetY;
         public SpriteRenderer SpeechBubble;
+        [SerializeField] private BarPatronSounds patronSounds;
 
         // TODO after issue #2: Add randomization to cocktail types
         public List<Item.ItemType> OrderOptions;
@@ -164,7 +165,7 @@ namespace FMS.TapperRedone.Characters
         {
             Vector3 coinLocation = transform.position + new Vector3(0, CoinSpawnOffsetY, 0);
             Coin spawnedCoins = Instantiate(CoinsPrefab, coinLocation, Quaternion.identity);
-        
+
             spawnedCoins.scoreValue = receivedItem.itemScore;
         }
 
@@ -200,12 +201,14 @@ namespace FMS.TapperRedone.Characters
                 if (returnedItem.itemType == OrderItem)
                 {
                     // Correct order fulfilled - start drinking
+                    patronSounds.PlaySound(BarPatronSounds.SoundType.HappyOrder);
                     StateTimeRemaining = TunableHandler.GetTunableFloat("NPC.DRINKING_TIME");
                     UpdateState(State.Drinking);
                 }
                 else
                 {
                     // Incorrect order - just leave
+                    patronSounds.PlaySound(BarPatronSounds.SoundType.SadOrder);
                     HideSpeechBubble();
                     UpdateState(State.Leaving);
                 }
