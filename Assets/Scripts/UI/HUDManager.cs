@@ -28,12 +28,6 @@ public class HUDManager : MonoBehaviour
         UpdateDrinkHUD();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void UpdateDrinkHUD()
     {
         if (playerInventory.HasDrink())
@@ -41,10 +35,7 @@ public class HUDManager : MonoBehaviour
             // Get the first drink in the inventory
             Item drink = playerInventory.itemsList.Find(item => item.IsDrink);
             
-            //update  drink image
             drinkHUDImage.sprite = drink.itemIcon;
-
-            // Ensure the image is visible
             drinkHUDImage.enabled = true; 
         }
         else

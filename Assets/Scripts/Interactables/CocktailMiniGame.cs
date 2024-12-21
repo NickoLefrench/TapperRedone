@@ -273,11 +273,6 @@ namespace FMS.TapperRedone.Interactables
                     // Set the item type
                     itemType = cocktailItemType.Value,
 
-                    //for when we will have the specific sprite icon
-                    // itemIcon = GetCocktailIcon(cocktailItemType.Value)
-
-                    //OR?
-
                     // Assign the sprite for the cocktail
                      itemIcon = cocktailSprite, 
 
