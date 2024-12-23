@@ -7720,6 +7720,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drinkHUDImage: {fileID: 1730558363}
   defaultSprite: {fileID: 0}
+  playerInventory: {fileID: 1568234309}
 --- !u!114 &1730558363
 MonoBehaviour:
   m_ObjectHideFlags: 0

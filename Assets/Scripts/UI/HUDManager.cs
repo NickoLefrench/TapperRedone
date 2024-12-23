@@ -10,30 +10,31 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private Image drinkHUDImage;        // Drag your DrinkHUDImage here in the inspector
     [SerializeField] private Sprite defaultSprite;       // Sprite to show when no drink is held
 
-    private PlayerInventory playerInventory;
+    [SerializeField] private PlayerInventory playerInventory;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Assuming PlayerInventory is attached to the player
-        playerInventory = FindObjectOfType<PlayerInventory>();
-
-       // Ensures activation of HUD
-        if (playerInventory != null)
+        // Ensure playerInventory is assigned
+        if (playerInventory == null)
         {
-            playerInventory.OnDrinkChanged += UpdateDrinkHUD; 
+            Debug.LogError("PlayerInventory is not assigned in HUDManager!");
+            return;
         }
 
-        // Initialize HUD
-        UpdateDrinkHUD();
+        // Subscribe to the event
+        playerInventory.OnDrinkChanged += UpdateDrinkHUD;
+
+        // Initialize HUD with the current state
+        UpdateDrinkHUD(playerInventory.HasDrink() ? playerInventory.itemsList.Find(item => item.IsDrink) : null);
     }
 
-    private void UpdateDrinkHUD()
+    private void UpdateDrinkHUD(Item drink)
     {
-        if (playerInventory.HasDrink())
+        if (drink !=null)
         {
             // Get the first drink in the inventory
-            Item drink = playerInventory.itemsList.Find(item => item.IsDrink);
+            //Item drink = playerInventory.itemsList.Find(item => item.IsDrink);
             
             drinkHUDImage.sprite = drink.itemIcon;
             drinkHUDImage.enabled = true; 

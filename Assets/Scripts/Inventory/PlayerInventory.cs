@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,8 +18,8 @@ namespace FMS.TapperRedone.Inventory
         private int MaxIngredients = 0;
 
         // Event to notify when a drink is added or removed
-        public delegate void DrinkChanged();
-        public event DrinkChanged OnDrinkChanged;
+       // public delegate void DrinkChanged(); do i still need?
+        public event Action<Item> OnDrinkChanged;
 
         private void Start()
         {
@@ -35,7 +36,7 @@ namespace FMS.TapperRedone.Inventory
                 // Notify listeners about the drink change
                 if (item.IsDrink)
                 {
-                    OnDrinkChanged?.Invoke();
+                    OnDrinkChanged?.Invoke(item);
                 }
             }
             else
@@ -87,7 +88,7 @@ namespace FMS.TapperRedone.Inventory
                 itemsList.Remove(foundItem);
 
                 // Notify about the drink change
-                OnDrinkChanged?.Invoke(); 
+                OnDrinkChanged?.Invoke(null);
 
                 return foundItem;
             }

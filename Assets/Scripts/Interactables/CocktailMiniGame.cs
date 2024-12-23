@@ -264,6 +264,13 @@ namespace FMS.TapperRedone.Interactables
                 //determine the score after the minigame
                 int FinalScore = Mathf.RoundToInt(scoreMultiplier * 2f);
 
+                // nullable check
+                if (cocktailSprite == null)
+                {
+                    Debug.LogError($"Cocktail sprite is missing for {cocktailItemType.Value}.");
+                    return; 
+                }
+
                 // Create a new Item for the cocktail
                 Item cocktailItem = new Item
                 {
