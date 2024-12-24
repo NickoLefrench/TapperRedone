@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,6 +17,10 @@ namespace FMS.TapperRedone.Inventory
 
         private int MaxIngredients = 0;
 
+        // Event to notify when a drink is added or removed
+       // public delegate void DrinkChanged(); do i still need?
+        public event Action<Item> OnDrinkChanged;
+
         private void Start()
         {
             MaxIngredients = TunableHandler.GetTunableInt("INVENTORY.MAX_INGREDIENTS");
@@ -27,6 +32,12 @@ namespace FMS.TapperRedone.Inventory
             {
                 itemsList.Add(item);
                 Debug.Log("Item added: " + item.itemName);
+
+                // Notify listeners about the drink change
+                if (item.IsDrink)
+                {
+                    OnDrinkChanged?.Invoke(item);
+                }
             }
             else
             {
@@ -75,6 +86,10 @@ namespace FMS.TapperRedone.Inventory
             else
             {
                 itemsList.Remove(foundItem);
+
+                // Notify about the drink change
+                OnDrinkChanged?.Invoke(null);
+
                 return foundItem;
             }
         }
@@ -92,36 +107,5 @@ namespace FMS.TapperRedone.Inventory
                 return foundItem;
             }
         }
-
-        /*
-        public void DropItem(Item item, Vector3 dropPosition)
-        {
-            // Remove the item from the inventory
-            itemsList.Remove(item);
-
-            if (itemPrefab == null) //confirm that there is an item prefab associated in the inventory script inthe scene
-            {
-                Debug.LogError("Item prefab is not assigned in the Inventory!");
-                return;
-            }
-
-
-            // Instantiate the item prefab at the drop position
-            GameObject droppedItem = Instantiate(itemPrefab, dropPosition, Quaternion.identity);
-
-            //confirms whther or not the player dropped the item
-            if (droppedItem != null)
-            {
-                Debug.Log("Dropped item: " + item.itemName + " at position: " + dropPosition);
-            }
-            else
-            {
-                Debug.LogError("Failed to drop the item.");
-            }
-
-        
-            //If player give wrong drink to cx, then no points/money should be allocated
-        }
-        */
     }
 }

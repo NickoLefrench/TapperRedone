@@ -13,13 +13,14 @@ namespace FMS.TapperRedone.Interactables
     public class BeerTap : InteractableObject
     {
         public GameObject MiniGameUIParent;
-        public RectTransform tickRectTransform; //assgin the following in the inspector
+        public RectTransform tickRectTransform;                   //assgin the following in the inspector
         public RectTransform stationaryTickRectTransform;
         public float barEndPosition;
         public float timeToMove;
         public Item itemToSpawn;
+        [SerializeField] private Sprite beerSprite;               // Sprite for the beer
 
-        private PlayerInteraction player; // Store player reference
+        private PlayerInteraction player;                         // Store player reference
         private bool detectedInputDuringMiniGame = false;
 
         private void Start()
@@ -37,10 +38,13 @@ namespace FMS.TapperRedone.Interactables
             StartBeerMiniGame();
         }
 
-        public override void Interact(PlayerInteraction player) //BeerMiniGame Controller
+        //BeerMiniGame Controller
+        public override void Interact(PlayerInteraction player)
         {
             base.Interact(player);
-            this.player = player; //store the player ref
+
+            //store the player ref
+            this.player = player; 
 
             // Checks to see if player could receive a beer at end of interaction
             if (player.CurrentInventory.CanAddItem(itemToSpawn))
@@ -51,7 +55,7 @@ namespace FMS.TapperRedone.Interactables
         }
         private void Update()
         {
-            if (Input.GetButtonDown("BeerPour"))//having this in update, would it be able to trigger anytime by hitting the button?
+            if (Input.GetButtonDown("BeerPour"))
             {
                 detectedInputDuringMiniGame = true;
             }
@@ -61,8 +65,15 @@ namespace FMS.TapperRedone.Interactables
         {
             if (player.CurrentInventory != null && itemToSpawn != null)
             {
+                // Assign the appropriate sprite for the beer (if not already assigned)
+                // beerSprite should be a Sprite assigned in the inspector or initialized elsewhere
+                itemToSpawn.itemIcon = beerSprite; 
+
+                // Add the beer to the player's inventory
                 player.CurrentInventory.AddItem(itemToSpawn);
             }
+
+            //transition back to main game
             GameManager.Instance.UpdateGameState(GameManager.GameState.MainGame);
         }
 
@@ -73,7 +84,8 @@ namespace FMS.TapperRedone.Interactables
             StartCoroutine(AnimateMiniGame(true));
         }
 
-        private IEnumerator AnimateMiniGame(bool movingRight) //moves the tick to the right and bounces back at the end of the bar
+        //moves the tick to the right and bounces back at the end of the bar
+        private IEnumerator AnimateMiniGame(bool movingRight) 
         {
             while (!detectedInputDuringMiniGame)
             {
@@ -96,8 +108,11 @@ namespace FMS.TapperRedone.Interactables
             {
                 detectedInputDuringMiniGame = false;
 
-                float distance = Mathf.Abs(tickRectTransform.anchoredPosition.x - stationaryTickRectTransform.anchoredPosition.x); //why is the hit threshold so huge??
-                float hitThreshold = 2f;          //hit threshold, adjusted to smaller, was 10f
+                //why is the hit threshold so huge??
+                float distance = Mathf.Abs(tickRectTransform.anchoredPosition.x - stationaryTickRectTransform.anchoredPosition.x);
+
+                //hit threshold, adjusted to smaller, was 10f
+                float hitThreshold = 2f;          
                 bool perfectHit = distance <= hitThreshold;
 
                 Debug.Log("BeerMiniGame: " + (perfectHit ? "Hit!" : "Missed."));
