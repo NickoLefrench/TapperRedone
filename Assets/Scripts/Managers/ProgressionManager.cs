@@ -1,3 +1,4 @@
+using FMS.TapperRedone.Characters;
 using FMS.TapperRedone.Interactables;
 using FMS.TapperRedone.Managers;
 using System.Collections;
@@ -8,6 +9,12 @@ using static FMS.TapperRedone.Inventory.Item;
 public class ProgressionManager : MonoBehaviour
 {
     public int currentNight = 1;    //will increase which each completion
+
+    private List<BarPatron> activePatrons = new();
+
+    //activePatrons = PatronManager.Instance.GetActivePatrons();
+
+    public static ProgressionManager Instance { get; private set; }
 
     // Define night-specific configurations (can use ScriptableObjects instead)
     [System.Serializable]
@@ -23,6 +30,30 @@ public class ProgressionManager : MonoBehaviour
 
     // Event for other classes
     public event System.Action<int> OnNightChange;
+
+   //  private int currentNight = 1; necessary?
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public int GetCurrentNight()
+    {
+        return currentNight;
+    }
+
+    public void SetCurrentNight(int night)
+    {
+        currentNight = night;
+    }
+
 
     public void StartNight(int night)
     {
@@ -42,24 +73,50 @@ public class ProgressionManager : MonoBehaviour
     private void UpdateInteractables(NightConfig config)
     {
         //enabling beer interaction, enable/disable in Beetap
-        BeerTap.Instance.SetInteractable(config.enableBeerTap);
+        // Enabling beer interaction, enable/disable in BeerTap
+        if (BeerTap.Instance != null)
+        {
+            BeerTap.Instance.SetInteractable(config.enableBeerTap);
+        }
+        else
+        {
+            Debug.LogError("BeerTap.Instance is null!");
+        }
 
         //enabling cocktail interaction, enable/disable in CocktailMiniGame and CocktailFridge
-        CocktailShaker.Instance.SetInteractable(config.enableCocktailTools);
+
+        //the following is setup for cocktail shaker, For current PR, focusing on Beers only on Night 1
+        /*CocktailShaker.Instance.SetInteractable(config.enableCocktailTools);
        
         //unsure 
         foreach (var fridge in Fridge.AllFridges)
         {
             fridge.SetInteractable(config.enableCocktailTools);
-        }
+        }*/
     }
 
     private void UpdatePatronOrders(NightConfig config)
     {
         //Passing allowedOrders list to the PatronManager, so patrons only order from this list
-        PatronManager.Instance.SetPatronOrderPreferences(config.allowedOrders);
+        // Passing allowedOrders list to the PatronManager, so patrons only order from this list
+        if (PatronManager.Instance != null)
+        {
+            PatronManager.Instance.SetPatronOrderPreferences(config.allowedOrders);
+        }
+        else
+        {
+            Debug.LogError("PatronManager.Instance is null!");
+        }
     }
 
+    public void SetPatronOrderPreferences(List<ItemType> orders)
+    {
+        activePatrons = PatronManager.Instance.GetActivePatrons();
+        foreach (var patron in activePatrons)
+        {
+            patron.SetAllowedOrders(orders);
+        }
+    }
 
 }
 

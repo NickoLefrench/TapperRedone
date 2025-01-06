@@ -143,6 +143,48 @@ namespace FMS.TapperRedone.Managers
             Debug.Log($"Spawned {newName} on seat {selectedSeat.name}");
 
             nextSpawnTime = Time.time + respawnTimer;
+
+            // Determine allowed orders based on the night
+            var allowedOrders = GetAllowedOrders();
+            newPatron.SetAllowedOrders(allowedOrders);
+        }
+
+        public List<BarPatron> GetActivePatrons()
+        {
+            List<BarPatron> patrons = new();
+            foreach (var seat in managedSeats.Values)
+            {
+                if (seat != null)
+                {
+                    patrons.Add(seat);
+                }
+            }
+            return patrons;
+        }
+
+        public void SetPatronOrderPreferences(List<BarPatron.OrderType> allowedOrders)
+        {
+           /* foreach (var patron in managedSeats.Values.Where(p => p != null))
+            {
+                patron.SetAllowedOrders(allowedOrders);
+            }*/
+
+            foreach (var patron in GetActivePatrons())
+            {
+                patron.SetAllowedOrders(orders);
+            }
+        }
+
+        private List<BarPatron.OrderType> GetAllowedOrders()
+        {
+            int currentNight = ProgressionManager.Instance.GetCurrentNight();
+
+            return currentNight switch
+            {
+                1 => new List<BarPatron.OrderType> { BarPatron.OrderType.Beer },
+                2 => new List<BarPatron.OrderType> { BarPatron.OrderType.Cocktail },
+                _ => new List<BarPatron.OrderType> { BarPatron.OrderType.Beer, BarPatron.OrderType.Cocktail }
+            };
         }
     }
 }
