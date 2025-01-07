@@ -3,6 +3,8 @@ using FMS.TapperRedone.Interactables;
 using FMS.TapperRedone.Managers;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 using UnityEngine;
 using static FMS.TapperRedone.Inventory.Item;
 
@@ -16,13 +18,13 @@ public class ProgressionManager : MonoBehaviour
 
     public static ProgressionManager Instance { get; private set; }
 
-    // Define night-specific configurations (can use ScriptableObjects instead)
+    // Define night-specific configurations 
     [System.Serializable]
     public class NightConfig
     {
-        public bool enableBeerTap;              //For BeerTap
-        public bool enableCocktailTools;        //for CocktailMiniGame and CocktailFridge
-        public List<ItemType> allowedOrders;    //for BarPatron
+        public bool enableBeerTap;                           //For BeerTap
+        public bool enableCocktailTools;                    //for CocktailMiniGame and CocktailFridge
+        public List<BarPatron.OrderType> allowedOrders;    //for BarPatron
     }
 
     //defining GameState
@@ -42,6 +44,19 @@ public class ProgressionManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    public void Start()
+    {
+        // Ensure the current night is set to a valid value
+        if (currentNight <= 0 || currentNight > nightConfigs.Count)
+        {
+            Debug.LogError("Invalid night configuration! Defaulting to Night 1.");
+            currentNight = 1;
+        }
+
+        // Start the current night
+        StartNight(currentNight);
     }
 
     public int GetCurrentNight()
@@ -73,7 +88,6 @@ public class ProgressionManager : MonoBehaviour
     private void UpdateInteractables(NightConfig config)
     {
         //enabling beer interaction, enable/disable in Beetap
-        // Enabling beer interaction, enable/disable in BeerTap
         if (BeerTap.Instance != null)
         {
             BeerTap.Instance.SetInteractable(config.enableBeerTap);
@@ -95,10 +109,9 @@ public class ProgressionManager : MonoBehaviour
         }*/
     }
 
+    //Passing allowedOrders list to the PatronManager, so patrons only order from this list
     private void UpdatePatronOrders(NightConfig config)
     {
-        //Passing allowedOrders list to the PatronManager, so patrons only order from this list
-        // Passing allowedOrders list to the PatronManager, so patrons only order from this list
         if (PatronManager.Instance != null)
         {
             PatronManager.Instance.SetPatronOrderPreferences(config.allowedOrders);
@@ -114,9 +127,21 @@ public class ProgressionManager : MonoBehaviour
         activePatrons = PatronManager.Instance.GetActivePatrons();
         foreach (var patron in activePatrons)
         {
-            patron.SetAllowedOrders(orders);
+            // Convert the orders to the expected type
+            List<BarPatron.OrderType> allowedOrders = orders
+                .Cast<BarPatron.OrderType>()
+                .ToList();
+
+            patron.SetAllowedOrders(allowedOrders);
         }
     }
 
+    //config for night 1, will probably change with cocktail implementation
+    NightConfig night1Config = new NightConfig
+    {
+        allowedOrders = new List<BarPatron.OrderType> { BarPatron.OrderType.Beer },
+        enableBeerTap = true,
+        enableCocktailTools = false
+    };
 }
 

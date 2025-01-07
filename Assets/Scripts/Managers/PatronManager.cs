@@ -164,14 +164,16 @@ namespace FMS.TapperRedone.Managers
 
         public void SetPatronOrderPreferences(List<BarPatron.OrderType> allowedOrders)
         {
-           /* foreach (var patron in managedSeats.Values.Where(p => p != null))
+            /*foreach (var patron in managedSeats.Values.Where(p => p != null))
             {
                 patron.SetAllowedOrders(allowedOrders);
             }*/
 
-            foreach (var patron in GetActivePatrons())
+            var activePatrons = GetActivePatrons();
+            foreach (var patron in activePatrons)
             {
-                patron.SetAllowedOrders(orders);
+                patron.SetAllowedOrders(allowedOrders);
+                patron.RegenerateOrder();
             }
         }
 

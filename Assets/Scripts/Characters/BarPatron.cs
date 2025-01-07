@@ -54,6 +54,7 @@ namespace FMS.TapperRedone.Characters
         public void SetAllowedOrders(List<OrderType> orders)
         {
             allowedOrders = orders;
+            Debug.Log($"Patron {name}: Allowed orders updated to {string.Join(", ", orders)}");
         }
 
         public OrderType GetOrder()
@@ -240,6 +241,12 @@ namespace FMS.TapperRedone.Characters
                     UpdateState(State.Leaving);
                 }
             }
+        }
+
+        public void RegenerateOrder()
+        {
+            OrderType newOrder = GetOrder(); // Generate a new order
+            Debug.Log($"{name} regenerated order: {newOrder}");
         }
     }
 }
