@@ -44,31 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3642f166702e935439a7d1021ce5d6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tunableSerialized:
-  - Name: MINI_GAME.BEER.SCORE
-    Tunable:
-      Value: 5
-  - Name: MINI_GAME.BEER.PERFECT_BONUS
-    Tunable:
-      Value: 2
-  - Name: INVENTORY.MAX_INGREDIENTS
-    Tunable:
-      Value: 3
-  - Name: NPC.MAX_COUNT
-    Tunable:
-      Value: 2
-  - Name: NPC.RESPAWN_TIMER
-    Tunable:
-      Value: 5
-  - Name: NPC.MIN_WAIT_TIME
-    Tunable:
-      Value: 90
-  - Name: NPC.MAX_WAIT_TIME
-    Tunable:
-      Value: 120
-  - Name: NPC.DRINKING_TIME
-    Tunable:
-      Value: 3
-  - Name: NIGHT.DURATION
-    Tunable:
-      Value: 10
+  _tunableSerialized: []
+  NpcTunables:
+    MaxCount: 2
+    RespawnTime: 5
+    MinWaitTime: 90
+    MaxWaitTime: 120
+    DrinkingTime: 3
+  NightTunables:
+    Duration: 10
+  MinigameTunables:
+    BeerScore: 5
+    BeerPerfectBonus: 2

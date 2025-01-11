@@ -29,8 +29,8 @@ namespace FMS.TapperRedone.Managers
 
         public void Start()
         {
-            maxPatrons = TunableHandler.GetTunableInt("NPC.MAX_COUNT");
-            respawnTimer = TunableHandler.GetTunableFloat("NPC.RESPAWN_TIMER");
+            maxPatrons = TunableHandler.Instance.NpcTunables.MaxCount;
+            respawnTimer = TunableHandler.Instance.NpcTunables.RespawnTime;
 
             Assert.AreNotEqual(SeatsParent, null, "The empty GameObject containing all the available seat positions must be a set parameter on PatronManager!");
             if (SeatsParent != null)

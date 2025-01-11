@@ -99,7 +99,7 @@ namespace FMS.TapperRedone.Managers
         public void OnGameStart()
         {
             UpdateGameState(GameState.StartOfNight);
-            nightEndTime = Time.time + TunableHandler.GetTunableFloat("NIGHT.DURATION");
+            nightEndTime = Time.time + TunableHandler.Instance.NightTunables.Duration;
         }
 
         public void UpdateGameState(GameState newState)
