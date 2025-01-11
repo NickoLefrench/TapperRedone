@@ -146,8 +146,8 @@ namespace FMS.TapperRedone.Characters
 
         private void SelectOrderParameters()
         {
-            float minTime = TunableHandler.GetTunableFloat("NPC.MIN_WAIT_TIME");
-            float maxTime = TunableHandler.GetTunableFloat("NPC.MAX_WAIT_TIME");
+            float minTime = TunableHandler.Instance.NpcTunables.MinWaitTime;
+            float maxTime = TunableHandler.Instance.NpcTunables.MaxWaitTime;
             StateTimeRemaining = UnityEngine.Random.Range(minTime, maxTime);
 
             int chosenItemIdx = UnityEngine.Random.Range(0, OrderOptions.Count - 1);
@@ -202,7 +202,7 @@ namespace FMS.TapperRedone.Characters
                 {
                     // Correct order fulfilled - start drinking
                     patronSounds.PlaySound(BarPatronSounds.SoundType.HappyOrder);
-                    StateTimeRemaining = TunableHandler.GetTunableFloat("NPC.DRINKING_TIME");
+                    StateTimeRemaining = TunableHandler.Instance.NpcTunables.DrinkingTime;
                     UpdateState(State.Drinking);
                 }
                 else

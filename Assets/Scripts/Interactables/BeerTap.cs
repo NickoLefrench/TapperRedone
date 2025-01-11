@@ -44,7 +44,7 @@ namespace FMS.TapperRedone.Interactables
             base.Interact(player);
 
             //store the player ref
-            this.player = player; 
+            this.player = player;
 
             // Checks to see if player could receive a beer at end of interaction
             if (player.CurrentInventory.CanAddItem(itemToSpawn))
@@ -67,7 +67,7 @@ namespace FMS.TapperRedone.Interactables
             {
                 // Assign the appropriate sprite for the beer (if not already assigned)
                 // beerSprite should be a Sprite assigned in the inspector or initialized elsewhere
-                itemToSpawn.itemIcon = beerSprite; 
+                itemToSpawn.itemIcon = beerSprite;
 
                 // Add the beer to the player's inventory
                 player.CurrentInventory.AddItem(itemToSpawn);
@@ -85,7 +85,7 @@ namespace FMS.TapperRedone.Interactables
         }
 
         //moves the tick to the right and bounces back at the end of the bar
-        private IEnumerator AnimateMiniGame(bool movingRight) 
+        private IEnumerator AnimateMiniGame(bool movingRight)
         {
             while (!detectedInputDuringMiniGame)
             {
@@ -112,14 +112,14 @@ namespace FMS.TapperRedone.Interactables
                 float distance = Mathf.Abs(tickRectTransform.anchoredPosition.x - stationaryTickRectTransform.anchoredPosition.x);
 
                 //hit threshold, adjusted to smaller, was 10f
-                float hitThreshold = 2f;          
+                float hitThreshold = 2f;
                 bool perfectHit = distance <= hitThreshold;
 
                 Debug.Log("BeerMiniGame: " + (perfectHit ? "Hit!" : "Missed."));
-                int score = TunableHandler.GetTunableInt("MINI_GAME.BEER.SCORE");
+                int score = TunableHandler.Instance.MinigameTunables.BeerScore;
                 if (perfectHit)
                 {
-                    score += TunableHandler.GetTunableInt("MINI_GAME.BEER.PERFECT_BONUS");
+                    score += TunableHandler.Instance.MinigameTunables.BeerPerfectBonus;
                 }
                 GameManager.StatManager.Score += score;
                 GameManager.StatManager.savedData.CurrentBeers++;

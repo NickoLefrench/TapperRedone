@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using FMS.TapperRedone.Data;
-
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -15,16 +13,11 @@ namespace FMS.TapperRedone.Inventory
         public List<Item> itemsList = new(); //creating list and initialize it
         public GameObject itemPrefab; // Assign this in the inspector
 
-        private int MaxIngredients = 0;
+        private int MaxIngredients = 3;
 
         // Event to notify when a drink is added or removed
-       // public delegate void DrinkChanged(); do i still need?
+        // public delegate void DrinkChanged(); do i still need?
         public event Action<Item> OnDrinkChanged;
-
-        private void Start()
-        {
-            MaxIngredients = TunableHandler.GetTunableInt("INVENTORY.MAX_INGREDIENTS");
-        }
 
         public void AddItem(Item item)
         {
