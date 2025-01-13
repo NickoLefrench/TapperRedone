@@ -182,6 +182,8 @@ namespace FMS.TapperRedone.Characters
             OrderItem = OrderOptions[chosenItemIdx];
             SpeechBubble.sprite = OrderSprites[chosenItemIdx];
             SpeechBubble.gameObject.SetActive(true);
+
+
         }
 
         private void HideSpeechBubble()

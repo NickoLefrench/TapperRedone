@@ -44,6 +44,8 @@ namespace FMS.TapperRedone.Managers
             }
 
             GameManager.OnGameStateChanged += OnGameStateChanged;
+
+            //StartNight(1);
         }
 
         private void OnGameStateChanged(GameManager.GameState newState)
