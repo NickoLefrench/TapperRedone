@@ -23,6 +23,19 @@ namespace FMS.TapperRedone.Interactables
         private PlayerInteraction player;                         // Store player reference
         private bool detectedInputDuringMiniGame = false;
 
+        //setting up BeerTap as singleton
+        public static BeerTap Instance { get; private set; }
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+        }
+
         private void Start()
         {
             GameManager.OnGameStateChanged += OnGameStateChanged;
@@ -127,6 +140,17 @@ namespace FMS.TapperRedone.Interactables
             }
 
             MiniGameUIParent.SetActive(false);
+        }
+
+        public void SetInteractable(bool isInteractable)
+        {
+            // enable/disable the BeerTap's interaction with each night, called in progressionManager
+            Collider collider = GetComponent<Collider>();
+            if (collider != null)
+            {
+                collider.enabled = isInteractable;
+            }
+            Debug.Log($"BeerTap interactable set to {isInteractable}");
         }
     }
 }

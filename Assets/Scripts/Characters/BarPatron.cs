@@ -7,6 +7,10 @@ using FMS.TapperRedone.Inventory;
 
 using UnityEngine;
 
+using static FMS.TapperRedone.Inventory.Item;
+
+using Random = UnityEngine.Random;
+
 namespace FMS.TapperRedone.Characters
 {
     public class BarPatron : InteractableObject
@@ -40,6 +44,30 @@ namespace FMS.TapperRedone.Characters
         private Vector3 spawnPosition;
         private Transform seat;
         private Item receivedItem = null;
+
+        //what is the batron allowed ordering
+        public enum OrderType { Beer, Cocktail }
+
+        private List<OrderType> allowedOrders;
+
+        //validating orders
+        public void SetAllowedOrders(List<OrderType> orders)
+        {
+            allowedOrders = orders;
+            Debug.Log($"Patron {name}: Allowed orders updated to {string.Join(", ", orders)}");
+        }
+
+        public OrderType GetOrder()
+        {
+            if (allowedOrders == null || allowedOrders.Count == 0)
+            {
+                Debug.LogError("Allowed orders are not set for this patron!");
+                return OrderType.Beer; // Default to Beer as a fallback
+            }
+
+            return allowedOrders[Random.Range(0, allowedOrders.Count)];
+        }
+
 
         public void Setup(Transform spawnTransform, Transform assignedSeat)
         {
@@ -154,6 +182,8 @@ namespace FMS.TapperRedone.Characters
             OrderItem = OrderOptions[chosenItemIdx];
             SpeechBubble.sprite = OrderSprites[chosenItemIdx];
             SpeechBubble.gameObject.SetActive(true);
+
+
         }
 
         private void HideSpeechBubble()
@@ -213,6 +243,12 @@ namespace FMS.TapperRedone.Characters
                     UpdateState(State.Leaving);
                 }
             }
+        }
+
+        public void RegenerateOrder()
+        {
+            OrderType newOrder = GetOrder(); // Generate a new order
+            Debug.Log($"{name} regenerated order: {newOrder}");
         }
     }
 }
