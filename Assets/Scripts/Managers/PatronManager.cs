@@ -7,6 +7,8 @@ using FMS.TapperRedone.Data;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+using FMS.TapperRedone.Inventory;
+
 namespace FMS.TapperRedone.Managers
 {
     // The PatronManager, a component on the singleton GameManager, spawns BarPatrons for the bar
@@ -164,10 +166,10 @@ namespace FMS.TapperRedone.Managers
             return patrons;
         }
 
-        public void SetPatronOrderPreferences(List<BarPatron.OrderType> allowedOrders)
+        public void SetPatronOrderPreferences(List<Item.ItemType> allowedOrders)
         {
             /*foreach (var patron in managedSeats.Values.Where(p => p != null))
-            {
+            {F
                 patron.SetAllowedOrders(allowedOrders);
             }*/
 
@@ -179,15 +181,15 @@ namespace FMS.TapperRedone.Managers
             }
         }
 
-        private List<BarPatron.OrderType> GetAllowedOrders()
+        private List<Item.ItemType> GetAllowedOrders()
         {
             int currentNight = ProgressionManager.Instance.GetCurrentNight();
 
             return currentNight switch
             {
-                1 => new List<BarPatron.OrderType> { BarPatron.OrderType.Beer },
-                2 => new List<BarPatron.OrderType> { BarPatron.OrderType.Cocktail },
-                _ => new List<BarPatron.OrderType> { BarPatron.OrderType.Beer, BarPatron.OrderType.Cocktail }
+                1 => new List<Item.ItemType> { Item.ItemType.Beer },
+                2 => new List<Item.ItemType> { Item.ItemType.PurpleCocktail, Item.ItemType.OrangeCocktail, Item.ItemType.GreenCocktail },
+                _ => new List<Item.ItemType> { Item.ItemType.Beer, Item.ItemType.PurpleCocktail, Item.ItemType.OrangeCocktail, Item.ItemType.GreenCocktail }
             };
         }
     }

@@ -4,9 +4,10 @@ using FMS.TapperRedone.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using FMS.TapperRedone.Inventory;
 
 using UnityEngine;
-using static FMS.TapperRedone.Inventory.Item;
+//using static FMS.TapperRedone.Inventory.Item;
 
 public class ProgressionManager : MonoBehaviour
 {
@@ -122,7 +123,7 @@ public class ProgressionManager : MonoBehaviour
         }
     }
 
-    public void SetPatronOrderPreferences(List<Item.ItemType> orders)
+    public void SetPatronOrderProgression(List<Item.ItemType> orders)
     {
         activePatrons = PatronManager.Instance.GetActivePatrons();
         foreach (var patron in activePatrons)
