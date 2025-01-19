@@ -175,7 +175,7 @@ namespace FMS.TapperRedone.Managers
             foreach (var patron in activePatrons)
             {
                 patron.SetAllowedOrders(allowedOrders);
-                patron.RegenerateOrder();
+               
             }
         }
 

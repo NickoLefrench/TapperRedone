@@ -46,26 +46,37 @@ namespace FMS.TapperRedone.Characters
         private Item receivedItem = null;
 
         //what is the batron allowed ordering
-        public enum OrderType { Beer, Cocktail }
-
-        private List<OrderType> allowedOrders;
+        // List of indexes in OrderOptions and OrderSprites
+        private List<int> allowedOrderIndexes;
 
         //validating orders
-        public void SetAllowedOrders(List<OrderType> orders)
+        public void SetAllowedOrders(List<Item.ItemType> allowedOrders)
         {
-            allowedOrders = orders;
-            Debug.Log($"Patron {name}: Allowed orders updated to {string.Join(", ", orders)}");
-        }
+            // Initialize or clear the allowedOrderIndexes list
+            allowedOrderIndexes = new List<int>();
 
-        public OrderType GetOrder()
-        {
-            if (allowedOrders == null || allowedOrders.Count == 0)
+            // Match the allowedOrders to indexes in OrderOptions
+            for (int i = 0; i < OrderOptions.Count; i++)
             {
-                Debug.LogError("Allowed orders are not set for this patron!");
-                return OrderType.Beer; // Default to Beer as a fallback
+                if (allowedOrders.Contains(OrderOptions[i]))
+                {
+                    allowedOrderIndexes.Add(i); // Add the index if it's allowed
+                }
             }
 
-            return allowedOrders[Random.Range(0, allowedOrders.Count)];
+            Debug.Log($"Allowed orders set for {name}: {string.Join(", ", allowedOrders)}");
+        }
+
+        public Item.ItemType GetOrder()
+        {
+            if (allowedOrderIndexes == null || allowedOrderIndexes.Count == 0)
+            {
+                Debug.LogError("Allowed orders are not set for this patron!");
+                return Item.ItemType.Beer; // Default to Beer as a fallback
+            }
+
+            int randomIndex = allowedOrderIndexes[Random.Range(0, allowedOrderIndexes.Count)];
+            return OrderOptions[randomIndex];
         }
 
 
@@ -174,16 +185,30 @@ namespace FMS.TapperRedone.Characters
 
         private void SelectOrderParameters()
         {
-            float minTime = TunableHandler.GetTunableFloat("NPC.MIN_WAIT_TIME");
+           /* float minTime = TunableHandler.GetTunableFloat("NPC.MIN_WAIT_TIME");
             float maxTime = TunableHandler.GetTunableFloat("NPC.MAX_WAIT_TIME");
             StateTimeRemaining = UnityEngine.Random.Range(minTime, maxTime);
 
             int chosenItemIdx = UnityEngine.Random.Range(0, OrderOptions.Count - 1);
             OrderItem = OrderOptions[chosenItemIdx];
             SpeechBubble.sprite = OrderSprites[chosenItemIdx];
+            SpeechBubble.gameObject.SetActive(true);*/
+
+            if (allowedOrderIndexes ==  null || allowedOrderIndexes.Count == 0)
+            {
+                Debug.Log($"Allowed orders are not set for {name}!");
+                return;
+            }
+
+            //pick rand allowed index
+            int chosenIndex = allowedOrderIndexes[Random.Range(0, allowedOrderIndexes.Count)];
+
+            //undate order  item and speech bubble sprite based on cheson order
+            Item.ItemType chosenOrder = OrderOptions[chosenIndex];
+            Sprite chosenSprite = OrderSprites[chosenIndex];
+
+            SpeechBubble.sprite = chosenSprite;
             SpeechBubble.gameObject.SetActive(true);
-
-
         }
 
         private void HideSpeechBubble()
@@ -245,10 +270,6 @@ namespace FMS.TapperRedone.Characters
             }
         }
 
-        public void RegenerateOrder()
-        {
-            OrderType newOrder = GetOrder(); // Generate a new order
-            Debug.Log($"{name} regenerated order: {newOrder}");
-        }
+        
     }
 }

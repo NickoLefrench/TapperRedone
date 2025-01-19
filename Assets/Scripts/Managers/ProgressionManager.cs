@@ -24,7 +24,7 @@ public class ProgressionManager : MonoBehaviour
     {
         public bool enableBeerTap;                           //For BeerTap
         public bool enableCocktailTools;                    //for CocktailMiniGame and CocktailFridge
-        public List<BarPatron.OrderType> allowedOrders;    //for BarPatron
+        public List<Item.ItemType> allowedOrders;    //for BarPatron
     }
 
     //defining GameState
@@ -122,24 +122,19 @@ public class ProgressionManager : MonoBehaviour
         }
     }
 
-    public void SetPatronOrderPreferences(List<ItemType> orders)
+    public void SetPatronOrderPreferences(List<Item.ItemType> orders)
     {
         activePatrons = PatronManager.Instance.GetActivePatrons();
         foreach (var patron in activePatrons)
         {
-            // Convert the orders to the expected type
-            List<BarPatron.OrderType> allowedOrders = orders
-                .Cast<BarPatron.OrderType>()
-                .ToList();
-
-            patron.SetAllowedOrders(allowedOrders);
+            patron.SetAllowedOrders(orders);
         }
     }
 
     //config for night 1, will probably change with cocktail implementation
     NightConfig night1Config = new NightConfig
     {
-        allowedOrders = new List<BarPatron.OrderType> { BarPatron.OrderType.Beer },
+        allowedOrders = new List<Item.ItemType> { Item.ItemType.Beer },
         enableBeerTap = true,
         enableCocktailTools = false
     };
