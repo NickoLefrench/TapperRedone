@@ -3224,7 +3224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6f96e3fe9877974391033eead42dd2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentNight: 1
+  currentNight: 0
   nightConfigs:
   - enableBeerTap: 1
     enableCocktailTools: 0
