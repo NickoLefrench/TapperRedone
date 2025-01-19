@@ -65,6 +65,17 @@ namespace FMS.TapperRedone.Characters
             }
 
             Debug.Log($"Allowed orders set for {name}: {string.Join(", ", allowedOrders)}");
+
+            //debigging to seee why patrons walk away immediatly
+            if (allowedOrders == null || allowedOrders.Count == 0)
+            {
+                Debug.LogError($"Patron {name} has no valid orders!");
+            }
+            else
+            {
+                Debug.Log($"Patron {name} allowed orders: {string.Join(", ", allowedOrders)}");
+            }
+           // orders = allowedOrders;
         }
 
         public Item.ItemType GetOrder()

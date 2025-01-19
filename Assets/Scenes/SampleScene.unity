@@ -3229,6 +3229,12 @@ MonoBehaviour:
   - enableBeerTap: 1
     enableCocktailTools: 0
     allowedOrders: 00000000
+  - enableBeerTap: 0
+    enableCocktailTools: 1
+    allowedOrders: 050000000600000007000000
+  - enableBeerTap: 1
+    enableCocktailTools: 1
+    allowedOrders: 05000000060000000700000000000000
 --- !u!1 &891101034
 GameObject:
   m_ObjectHideFlags: 0

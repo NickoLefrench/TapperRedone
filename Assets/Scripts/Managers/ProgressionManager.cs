@@ -29,7 +29,8 @@ public class ProgressionManager : MonoBehaviour
     }
 
     //defining GameState
-    public List<NightConfig> nightConfigs;
+    [SerializeField]
+    private List<NightConfig> nightConfigs;
 
     // Event for other classes
     public event System.Action<int> OnNightChange;
@@ -123,22 +124,15 @@ public class ProgressionManager : MonoBehaviour
         }
     }
 
-    public void SetPatronOrderProgression(List<Item.ItemType> orders)
-    {
-        activePatrons = PatronManager.Instance.GetActivePatrons();
-        foreach (var patron in activePatrons)
-        {
-            patron.SetAllowedOrders(orders);
-        }
-    }
-
     //config for night 1, will probably change with cocktail implementation
-    NightConfig night1Config = new NightConfig
+   /* commenting out for now to se if adjusted it to be adjustable in the inspactor
+    * 
+    * NightConfig night1Config = new NightConfig
     {
         allowedOrders = new List<Item.ItemType> { Item.ItemType.Beer },
         enableBeerTap = true,
         enableCocktailTools = false
-    };
+    };*/
 
   
 }
