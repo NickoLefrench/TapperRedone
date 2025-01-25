@@ -196,14 +196,6 @@ namespace FMS.TapperRedone.Characters
 
         private void SelectOrderParameters()
         {
-           /* float minTime = TunableHandler.GetTunableFloat("NPC.MIN_WAIT_TIME");
-            float maxTime = TunableHandler.GetTunableFloat("NPC.MAX_WAIT_TIME");
-            StateTimeRemaining = UnityEngine.Random.Range(minTime, maxTime);
-
-            int chosenItemIdx = UnityEngine.Random.Range(0, OrderOptions.Count - 1);
-            OrderItem = OrderOptions[chosenItemIdx];
-            SpeechBubble.sprite = OrderSprites[chosenItemIdx];
-            SpeechBubble.gameObject.SetActive(true);*/
 
             if (allowedOrderIndexes ==  null || allowedOrderIndexes.Count == 0)
             {

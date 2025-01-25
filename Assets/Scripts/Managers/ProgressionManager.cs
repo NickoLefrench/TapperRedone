@@ -99,16 +99,7 @@ public class ProgressionManager : MonoBehaviour
             Debug.LogError("BeerTap.Instance is null!");
         }
 
-        //enabling cocktail interaction, enable/disable in CocktailMiniGame and CocktailFridge
-
-        //the following is setup for cocktail shaker, For current PR, focusing on Beers only on Night 1
-        /*CocktailShaker.Instance.SetInteractable(config.enableCocktailTools);
        
-        //unsure 
-        foreach (var fridge in Fridge.AllFridges)
-        {
-            fridge.SetInteractable(config.enableCocktailTools);
-        }*/
     }
 
     //Passing allowedOrders list to the PatronManager, so patrons only order from this list
@@ -123,17 +114,6 @@ public class ProgressionManager : MonoBehaviour
             Debug.LogError("PatronManager.Instance is null!");
         }
     }
-
-    //config for night 1, will probably change with cocktail implementation
-   /* commenting out for now to se if adjusted it to be adjustable in the inspactor
-    * 
-    * NightConfig night1Config = new NightConfig
-    {
-        allowedOrders = new List<Item.ItemType> { Item.ItemType.Beer },
-        enableBeerTap = true,
-        enableCocktailTools = false
-    };*/
-
   
 }
 

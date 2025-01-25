@@ -168,11 +168,6 @@ namespace FMS.TapperRedone.Managers
 
         public void SetPatronOrderPreferences(List<Item.ItemType> allowedOrders)
         {
-            /*foreach (var patron in managedSeats.Values.Where(p => p != null))
-            {F
-                patron.SetAllowedOrders(allowedOrders);
-            }*/
-
             var activePatrons = GetActivePatrons();
             foreach (var patron in activePatrons)
             {
