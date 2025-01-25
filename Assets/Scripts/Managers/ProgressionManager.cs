@@ -89,17 +89,12 @@ public class ProgressionManager : MonoBehaviour
 
     private void UpdateInteractables(NightConfig config)
     {
-        //enabling beer interaction, enable/disable in Beetap
-        if (BeerTap.Instance != null)
+        // Loop through all active BeerTap instances
+        foreach (var beerTap in BeerTap.AllBeerTaps)
         {
-            BeerTap.Instance.SetInteractable(config.enableBeerTap);
-        }
-        else
-        {
-            Debug.LogError("BeerTap.Instance is null!");
+            beerTap.SetInteractable(config.enableBeerTap);
         }
 
-       
     }
 
     //Passing allowedOrders list to the PatronManager, so patrons only order from this list

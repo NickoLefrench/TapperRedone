@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 
 using FMS.TapperRedone.Characters;
 using FMS.TapperRedone.Data;
@@ -23,17 +24,26 @@ namespace FMS.TapperRedone.Interactables
         private PlayerInteraction player;                         // Store player reference
         private bool detectedInputDuringMiniGame = false;
 
-        //setting up BeerTap as singleton
-        public static BeerTap Instance { get; private set; }
+        // Static list to store all active BeerTap instances
+        public static List<BeerTap> AllBeerTaps { get; private set; } = new List<BeerTap>();
+
 
         private void Awake()
         {
-            if (Instance != null && Instance != this)
+            // Add this BeerTap to the list of active BeerTaps
+            if (!AllBeerTaps.Contains(this))
             {
-                Destroy(gameObject);
-                return;
+                AllBeerTaps.Add(this);
             }
-            Instance = this;
+        }
+
+        // Remove this BeerTap from the list when destroyed
+        private void OnDestroy()
+        {
+            if (AllBeerTaps.Contains(this))
+            {
+                AllBeerTaps.Remove(this);
+            }
         }
 
         private void Start()
