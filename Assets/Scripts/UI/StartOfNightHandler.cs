@@ -67,7 +67,8 @@ namespace FMS.TapperRedone.UI
 
         private void AdjustSavedData()
         {
-            GameManager.StatManager.Score = 0;
+            // Don't reset score over night, instead save it as it could be consumed for "upgrades".
+            // GameManager.StatManager.Score = 0;
             GameManager.StatManager.CurrentNight++;
 
             GameManager.StatManager.savedData.CurrentBeers = 0;

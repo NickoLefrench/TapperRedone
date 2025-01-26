@@ -90,9 +90,13 @@ namespace FMS.TapperRedone.Managers
         private void UpdateSavedDataOnNewRun()
         {
             SavedData savedData = StatManager.savedData;
+            savedData.CurrentBeers = 0;
             savedData.RunNight = 0;
             savedData.RunTotalScore = 0;
             savedData.RunTotalBeers = 0;
+
+            StatManager.Score = 0;
+            Debug.Log("Reset values for current and run");
         }
 
         //Start conditions of every new night
