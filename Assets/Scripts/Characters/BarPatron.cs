@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using FMS.TapperRedone.Data;
 using FMS.TapperRedone.Interactables;
@@ -50,6 +51,9 @@ namespace FMS.TapperRedone.Characters
         private List<int> allowedOrderIndexes;
 
         //validating orders
+        /*Purpose: Gives a patron a list of possible orders.
+         * Input: [Beer], [RedCocktail, BlueCocktail], etc.
+         * Still no actual drink is chosen by the patron yet — just sets what they can choose from*/
         public void SetAllowedOrders(List<Item.ItemType> allowedOrders)
         {
             // Initialize or clear the allowedOrderIndexes list
@@ -194,6 +198,7 @@ namespace FMS.TapperRedone.Characters
             return willReachTarget;
         }
 
+        //is this function even being called?
         private void SelectOrderParameters()
         {
 
@@ -207,7 +212,10 @@ namespace FMS.TapperRedone.Characters
             int chosenIndex = allowedOrderIndexes[Random.Range(0, allowedOrderIndexes.Count)];
 
             //undate order  item and speech bubble sprite based on cheson order
-            Item.ItemType chosenOrder = OrderOptions[chosenIndex];
+            // Item.ItemType chosenOrder = OrderOptions[chosenIndex]; commented out to try the following line option instead
+
+            OrderItem = OrderOptions[chosenIndex];
+
             Sprite chosenSprite = OrderSprites[chosenIndex];
 
             SpeechBubble.sprite = chosenSprite;
@@ -273,6 +281,20 @@ namespace FMS.TapperRedone.Characters
             }
         }
 
-        
+        //trying something to assign a random drink after patron spawns
+        private Item.ItemType order;
+
+        public void DecideOrder()
+        {
+            if (allowedOrderIndexes == null || allowedOrderIndexes.Count == 0)
+            {
+                Debug.LogWarning($"No allowed orders for {gameObject.name}");
+                return;
+            }
+
+            int index = Random.Range(0, allowedOrderIndexes.Count);
+            order = OrderOptions[allowedOrderIndexes[index]];
+            Debug.Log($"{gameObject.name} decided to order: {order}");
+        }
     }
 }

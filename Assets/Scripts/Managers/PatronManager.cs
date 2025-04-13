@@ -151,6 +151,8 @@ namespace FMS.TapperRedone.Managers
             // Determine allowed orders based on the night
             var allowedOrders = GetAllowedOrders();
             newPatron.SetAllowedOrders(allowedOrders);
+
+            newPatron.DecideOrder();
         }
 
         public List<BarPatron> GetActivePatrons()
@@ -166,6 +168,9 @@ namespace FMS.TapperRedone.Managers
             return patrons;
         }
 
+        /*Purpose: Sets the patron's possible orders via SetAllowedOrders(...).
+         * It’s more of a setup utility — the bridge between GetAllowedOrders() and the actual patron.
+         * It doesn't make a decision for the patron either.*/
         public void SetPatronOrderPreferences(List<Item.ItemType> allowedOrders)
         {
             var activePatrons = GetActivePatrons();
@@ -176,6 +181,9 @@ namespace FMS.TapperRedone.Managers
             }
         }
 
+        /*Purpose: It figures out what drink types are available tonight (e.g., only beer on Night 1).
+         Output: Returns a list like [Beer] or [RedCocktail, GreenCocktail].
+         It does not assign anything to a specific patron.*/
         private List<Item.ItemType> GetAllowedOrders()
         {
             int currentNight = ProgressionManager.Instance.GetCurrentNight();
