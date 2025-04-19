@@ -127,6 +127,7 @@ namespace FMS.TapperRedone.Characters
                 // In current implementation, order is automatically selected, does not require interaction
                 // In very first implementation, only orders beer.
                 SelectOrderParameters();
+                StateTimeRemaining = 10f;   //see if the customer waits to order and receive order
                 UpdateState(State.WaitingOrder);
                 break;
             case State.WaitingOrder:
