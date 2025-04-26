@@ -76,15 +76,31 @@ public class ProgressionManager : MonoBehaviour
     {
         currentNight = night;
 
-        // Apply night-specific configuration
-        NightConfig config = nightConfigs[currentNight - 1];
-        UpdateInteractables(config);
-        UpdatePatronOrders(config);
+        // Validate night number
+        if (currentNight < 1)
+        {
+            Debug.LogWarning($"Invalid night number {currentNight} passed to StartNight(). Defaulting to Night 1.");
+            currentNight = 1;
+        }
+
+        // Apply night-specific setup
+        if (currentNight - 1 < nightConfigs.Count)
+        {
+            NightConfig config = nightConfigs[currentNight - 1];
+            UpdateInteractables(config);
+        }
+        else
+        {
+            Debug.LogWarning($"No NightConfig found for night {currentNight}. Using defaults.");
+            // Optionally, call some ResetToDefaultInteractables() if you want to.
+        }
+
+        // Always set up allowed patron orders based on current night
+        var allowedOrders = PatronManager.Instance.GetAllowedOrders();
+        PatronManager.Instance.SetPatronOrderPreferences(allowedOrders);
 
         // Notify listeners
-        OnNightChange?.Invoke(currentNight); 
-
-        //maybe call other classes, such as display tutorial for new mechanics?
+        OnNightChange?.Invoke(currentNight);
     }
 
     private void UpdateInteractables(NightConfig config)

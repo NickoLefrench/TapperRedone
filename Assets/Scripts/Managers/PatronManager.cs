@@ -184,7 +184,7 @@ namespace FMS.TapperRedone.Managers
         /*Purpose: It figures out what drink types are available tonight (e.g., only beer on Night 1).
          Output: Returns a list like [Beer] or [RedCocktail, GreenCocktail].
          It does not assign anything to a specific patron.*/
-        private List<Item.ItemType> GetAllowedOrders()
+        public List<Item.ItemType> GetAllowedOrders()
         {
             int currentNight = ProgressionManager.Instance.GetCurrentNight();
 
